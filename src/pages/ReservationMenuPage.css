@@ -1,0 +1,44 @@
+/* 이 파일은 ReservationMenuPage 컴포넌트 전용 스타일을 담고 있습니다. */
+
+.reservation-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.reservation-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid #ddd;
+    position: relative;
+}
+
+.reservation-section:last-child {
+    border-right: none;
+}
+
+.large-button {
+    padding: 30px 60px;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    text-align: center;
+}
+
+#btn-reserve { background-color: #007bff; }
+#btn-reserve:hover { background-color: #0056b3; }
+
+#btn-history { background-color: #28a745; }
+#btn-history:hover { background-color: #1e7e34; }
+
+#btn-complaint { background-color: #dc3545; }
+#btn-complaint:hover { background-color: #bd2130; }
