@@ -1,0 +1,93 @@
+/* 전체 컨테이너 */
+.place-focus-main-container {
+    padding: 24px;
+}
+
+/* 방 목록 */
+.room-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background 0.2s, font-weight 0.2s;
+}
+
+.room-item:last-child {
+    border-bottom: none;
+}
+
+.room-item.selected {
+    background: #f1e6ff;
+    font-weight: bold;
+}
+
+/* 달력 셀 */
+.day-cell {
+    padding: 10px 5px;
+    border: 1px solid #ddd;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    background: #fff;
+}
+
+.day-cell.selected-date {
+    background: #d1c4e9;
+    font-weight: bold;
+}
+
+.day-cell.past-date {
+    background: #e9ecef;
+    color: #adb5bd;
+    cursor: default;
+}
+
+.day-cell:hover:not(.past-date):not(.selected-date) {
+    background: #f1e6ff;
+}
+
+/* 달력 요일 헤더 */
+.calendar-header-day {
+    background: #6f42c1;
+    color: #fff;
+    padding: 8px 0;
+    font-weight: bold;
+}
+
+/* 버튼 스타일 (공통) */
+.place-focus-main-container button {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+/* 예약 버튼 */
+.place-focus-main-container .next-step-btn {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    background: #6f42c1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.place-focus-main-container .next-step-btn:hover {
+    background: #5936a9;
+}
+
+/* 뒤로가기 버튼 */
+.place-focus-main-container .back-btn {
+    padding: 8px 16px;
+    background: #888;
+    color: #fff;
+    border-radius: 6px;
+    border: none;
+    margin-bottom: 16px;
+}
+
+.place-focus-main-container .back-btn:hover {
+    background: #555;
+}

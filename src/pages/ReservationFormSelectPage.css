@@ -1,4 +1,4 @@
-/* 이 파일은 ReservationFormSelectPage 컴포넌트 전용 스타일을 담고 있습니다. */
+/* 이 파일은 ReservationMenuPage 컴포넌트 전용 스타일을 담고 있습니다. */
 
 .reservationFormSelect-container {
     display: flex;
@@ -34,18 +34,18 @@
     text-align: center;
 }
 
-#btn-timeSelected {
+#btn-timeFocused {
     background-color: #007bff;
 }
 
-#btn-timeSelected:hover {
+#btn-timeFocused:hover {
     background-color: #0056b3;
 }
 
-#btn-spaceSelected {
+#btn-spaceFocused {
     background-color: #28a745;
 }
 
-#btn-spaceSelected:hover {
+#btn-spaceFocused:hover {
     background-color: #1e7e34;
 }
