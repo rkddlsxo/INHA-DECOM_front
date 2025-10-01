@@ -1,0 +1,51 @@
+/* 이 파일은 ReservationFormSelectPage 컴포넌트 전용 스타일을 담고 있습니다. */
+
+.reservationFormSelect-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.reservationFormSelect-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid #ddd;
+    position: relative;
+}
+
+.reservationFormSelect-section:last-child {
+    border-right: none;
+}
+
+.large-button {
+    padding: 30px 60px;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    text-align: center;
+}
+
+#btn-timeSelected {
+    background-color: #007bff;
+}
+
+#btn-timeSelected:hover {
+    background-color: #0056b3;
+}
+
+#btn-spaceSelected {
+    background-color: #28a745;
+}
+
+#btn-spaceSelected:hover {
+    background-color: #1e7e34;
+}

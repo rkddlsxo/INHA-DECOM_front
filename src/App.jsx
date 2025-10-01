@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MainPage from './pages/MainPages';
 import ReservationMenuPage from './pages/ReservationMenuPage';
-
+import ReservationFormSelectPage from './pages/ReservationFormSelectPage';
 function App() {
   const [page, setPage] = useState('main');
 
@@ -11,6 +11,8 @@ function App() {
         return <MainPage onNavigate={setPage} />;
       case 'reservation':
         return <ReservationMenuPage onNavigate={setPage} />;
+      case 'reservationFormSelect':
+        return <ReservationFormSelectPage onNavigate={setPage} />;
       default:
         return <MainPage onNavigate={setPage} />;
     }
