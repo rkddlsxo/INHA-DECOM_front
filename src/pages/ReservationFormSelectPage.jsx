@@ -12,13 +12,13 @@ const ReservationFormSelectPage = ({ onNavigate }) => {
                     ← 뒤로
                 </button>
             </div>
-            <div className="reservationFormSelect-section" style={{ backgroundColor: '#e9f7ff' }}>
-                <button onClick={() => onNavigate('reservationFormSelect')} id="btn-reserve" className="large-button">
+            <div className="reservation-section" style={{ backgroundColor: '#e9f7ff' }}>
+                <button onClick={() => onNavigate('timeFocusSelect')} id="btn-reserve" className="large-button">
                     시간 먼저 선택
                 </button>
             </div>
-            <div className="reservationFormSelect-section" style={{ backgroundColor: '#e9fff1' }}>
-                <button onClick={() => onNavigate('history')} id="btn-history" className="large-button">
+            <div className="reservation-section" style={{ backgroundColor: '#e9fff1' }}>
+                <button onClick={() => onNavigate('placeFocusSelect')} id="btn-history" className="large-button">
                     공간 먼저 선택
                 </button>
             </div>
