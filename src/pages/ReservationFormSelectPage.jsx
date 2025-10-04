@@ -1,7 +1,7 @@
 import React from 'react';
 import './ReservationFormSelectPage.css';
 
-const ReservationFormSelectPage = ({ onNavigate }) => {
+const reservationFormSelectPage = ({ onNavigate }) => {
     return (
         <div className="reservationFormSelect-container">
             <div className="absolute top-4 left-4">
@@ -26,4 +26,4 @@ const ReservationFormSelectPage = ({ onNavigate }) => {
     );
 };
 
-export default ReservationFormSelectPage;
+export default reservationFormSelectPage;
