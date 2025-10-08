@@ -109,13 +109,9 @@ const RegisterPage = ({ onNavigate }) => {
 
                 {error && <p className="error-message">{error}</p>}
 
-                {/* 회원가입 버튼: 새로 추가한 .register-button 클래스 적용 */}
-                <button type="submit" className="register-button" disabled={isLoading}>
-                    {isLoading ? '가입 처리 중...' : '회원가입'}
-                </button>
 
                 {/* 로그인 페이지로 돌아가기 버튼 (옵션) */}
-                <button type="button" onClick={() => onNavigate('login')} className="secondary-button" disabled={isLoading}>
+                <button type="button" onClick={() => onNavigate('loginPage')} className="secondary-button" disabled={isLoading}>
                     로그인 페이지로 돌아가기
                 </button>
             </form>
