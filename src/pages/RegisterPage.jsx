@@ -4,6 +4,8 @@ import './LoginPage.css';
 // 만약 회원가입 전용 스타일을 RegisterPage.css에 따로 만들었다면,
 // import './RegisterPage.css'; 도 추가합니다.
 
+const API_URL = 'http://localhost:8080/api/register';
+
 const RegisterPage = ({ onNavigate }) => {
     // 백엔드 명세: id (학번), username (이름), password (비밀번호)
     const [id, setId] = useState('');
@@ -40,7 +42,7 @@ const RegisterPage = ({ onNavigate }) => {
         setError('');
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/api/register', {
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id, username, password }),
@@ -106,8 +108,17 @@ const RegisterPage = ({ onNavigate }) => {
                         disabled={isLoading}
                     />
                 </div>
-
                 {error && <p className="error-message">{error}</p>}
+
+                <button
+                    type="submit"
+                    className="login-button"
+                    disabled={isLoading}
+                >
+                    {isLoading ? '처리 중...' : '회원가입'}
+                </button>
+
+
 
 
                 {/* 로그인 페이지로 돌아가기 버튼 (옵션) */}

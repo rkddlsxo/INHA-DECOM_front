@@ -29,12 +29,12 @@ const LoginPage = ({ onNavigate, handleLogin }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        //테스트용 바로 넘어가게 만들기
-        if (id && password) {
-            handleLogin(true);
-            onNavigate('main');
-            return;
-        }
+        // //테스트용 바로 넘어가게 만들기
+        // if (id && password) {
+        //     handleLogin(true);
+        //     onNavigate('main');
+        //     return;
+        // }
         // 3-1. 클라이언트 측 유효성 검사 (필수 입력 확인)
         if (!id || !password) {
             setError('학번과 비밀번호를 모두 입력해주세요.');
