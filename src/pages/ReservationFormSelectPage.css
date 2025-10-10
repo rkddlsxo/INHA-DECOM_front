@@ -1,0 +1,63 @@
+/* 이 파일은 ReservationMenuPage 컴포넌트 전용 스타일을 담고 있습니다. */
+
+.reservationFormSelect-container {
+    display: flex;
+    flex-direction: column;
+    /* 세로 방향으로 변경 */
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    /* 버튼들 사이 간격 */
+}
+
+.reservationFormSelect-section {
+    /* flex-grow: 1; 제거 - 세로 배치에서는 불필요 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* border-right: 1px solid #ddd; 제거 - 세로 배치에서는 불필요 */
+    position: relative;
+    width: 300px;
+    /* 고정 너비 설정 */
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.reservationFormSelect-section:last-child {
+    /* border-right: none; 제거 */
+}
+
+.large-button {
+    padding: 30px 60px;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    text-align: center;
+    width: 100%;
+    /* 버튼이 섹션 너비에 맞춤 */
+}
+
+#btn-timeFocused {
+    background-color: #007bff;
+}
+
+#btn-timeFocused:hover {
+    background-color: #0056b3;
+}
+
+#btn-spaceFocused {
+    background-color: #28a745;
+}
+
+#btn-spaceFocused:hover {
+    background-color: #1e7e34;
+}
