@@ -6,6 +6,7 @@ import PlaceFocusSelectPage from './pages/PlaceFocusSelectPage';
 import ReservationDetailsPage from './pages/ReservationDetailsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import BookingHistoryPage from './pages/BookingHistoryPage';
 function App() {
   const [page, setPage] = useState('loginPage');
   const [isLoggedIn, setIsLoggedIn] = useState(false);// 로그인 상태 관리
@@ -27,6 +28,8 @@ function App() {
         return <LoginPage onNavigate={setPage} handleLogin={handleLoginSuccess} />;
       case 'registerPage':
         return <RegisterPage onNavigate={setPage} />;
+      case 'bookingHistory':
+        return <BookingHistoryPage onNavigate={setPage} />;
       default:
         return <MainPage onNavigate={setPage} />;
     }

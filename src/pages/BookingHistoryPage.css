@@ -1,0 +1,278 @@
+.login-container {
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 10px 40px 10px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.top-title {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.page-title {
+    color: #2877ff;
+    font-size: 2.5em;
+    margin-bottom: 0;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.history-container {
+    width: 100%;
+    max-width: 900px;
+    background-color: #fff;
+    padding: 40px 32px 48px 32px;
+    border-radius: 22px;
+    box-shadow: 0 8px 36px 0 rgba(120, 130, 190, 0.08);
+    margin-bottom: 44px;
+    /* flex, align-items 등 제거 */
+}
+
+.table-center-box {
+    width: 100%;
+    /* flex 관련 제거 */
+}
+
+.history-table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    background: none;
+    box-sizing: border-box;
+    table-layout: auto;
+}
+
+.history-table th,
+.history-table td {
+    border: none;
+    border-bottom: 1.2px solid #eaeaea;
+    padding: 18px 0;
+    text-align: center;
+    font-size: 1.08em;
+    min-width: 88px;
+    box-sizing: border-box;
+    background-color: #fff;
+    word-break: keep-all;
+}
+
+.history-table th {
+    background-color: #f7f8fa;
+    color: #14376e;
+    font-weight: bold;
+    font-size: 1.14em;
+    border-top: 1.5px solid #eee;
+    letter-spacing: 0.01em;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4.5px 18px;
+    border-radius: 7px;
+    font-weight: bold;
+    font-size: 1em;
+    text-align: center;
+    color: #fff;
+}
+
+.status-대기,
+.status-확정대기 {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.status-확정 {
+    background-color: #28a745;
+}
+
+.status-사용중 {
+    background-color: #007bff;
+}
+
+.status-지난예약 {
+    background-color: #6c757d;
+}
+
+.status-취소 {
+    background-color: #dc3545;
+}
+
+#no-history {
+    width: 100%;
+    text-align: center;
+    padding: 24px 0 10px 0;
+    color: #6c757d;
+    font-size: 1.18em;
+}
+
+.back-button.fixed-left {
+    position: fixed;
+    top: 28px;
+    left: 28px;
+    z-index: 2000;
+    margin-top: 0;
+    padding: 10px 25px;
+    font-size: 1em;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(120, 130, 190, 0.09);
+    transition: background-color 0.3s;
+}
+
+.back-button.fixed-left:hover {
+    background-color: #5a6268;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 28px 24px;
+    border-radius: 18px;
+    width: 96%;
+    max-width: 440px;
+    box-shadow: 0 5px 27px rgba(140, 160, 200, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-title {
+    color: #2877ff;
+    border-bottom: 2px solid #2877ff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.20em;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+
+.close-btn {
+    color: #aaa;
+    align-self: flex-end;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: color 0.19s;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #007bff
+}
+
+#modal-details {
+    width: 100%;
+}
+
+.detail-item {
+    margin-bottom: 12px;
+    border-bottom: 1px dotted #ececec;
+    padding-bottom: 5px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detail-item strong {
+    display: inline-block;
+    min-width: 96px;
+    color: #007bff;
+    font-size: 1em;
+}
+
+.edit-item {
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.edit-item strong {
+    min-width: 96px;
+    color: #007bff;
+}
+
+.edit-input,
+.edit-select {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #fafbff;
+}
+
+.readonly-text {
+    color: #999;
+    font-size: 0.9em;
+    padding-left: 4px;
+}
+
+.modal-buttons {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    width: 100%;
+}
+
+.cancel-btn,
+.edit-btn,
+.confirm-btn {
+    padding: 10px 20px;
+    border-radius: 7px;
+    font-size: 1em;
+    min-width: 98px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cancel-btn {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.cancel-btn:hover:not(:disabled) {
+    background-color: #c82333;
+}
+
+.cancel-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.edit-btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.edit-btn:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.edit-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.confirm-btn {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.confirm-btn:hover {
+    background-color: #218838;
+}
