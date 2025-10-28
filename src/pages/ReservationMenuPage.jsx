@@ -13,7 +13,7 @@ const ReservationMenuPage = ({ onNavigate }) => {
         </button>
       </div>
       <div className="reservation-section" style={{ backgroundColor: '#e9f7ff' }}>
-        <button onClick={() => onNavigate('reservationFormSelect')} id="btn-reserve" className="large-button">
+        <button onClick={() => onNavigate('reservationFormSelectPage')} id="btn-reserve" className="large-button">
           예약하기
         </button>
       </div>

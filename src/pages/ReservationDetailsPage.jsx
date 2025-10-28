@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 // ReservationDetailsPage.css 파일은 이전 답변에서 새로 생성한 스타일을 사용합니다.
 import './ReservationDetailsPage.css';
 
+// 💡 상수: 이전 페이지 경로를 저장하는 Local Storage 키
+const LAST_PAGE_KEY = 'lastReservationSelectPage';
+
 const ReservationDetailsPage = ({ onNavigate }) => {
     // 1. 상태 관리
     const [bookingData, setBookingData] = useState(null);
@@ -9,9 +12,12 @@ const ReservationDetailsPage = ({ onNavigate }) => {
     const [isFinalSubmitDisabled, setIsFinalSubmitDisabled] = useState(true);
     const [showCheckAlert, setShowCheckAlert] = useState(false);
 
+    // 💡 이전 페이지 경로 상태 추가
+    const [prevPage, setPrevPage] = useState('reservationFormSelectPage');
+
     // 폼 데이터 상태: 상태 키를 HTML 요소의 ID와 일치시킴
     const [formData, setFormData] = useState({
-        organizationType: '', // <--- select box 값 저장
+        organizationType: '',
         organizationName: '',
         phone: '',
         email: '',
@@ -24,13 +30,21 @@ const ReservationDetailsPage = ({ onNavigate }) => {
     // 2. 데이터 로딩 (ComponentDidMount 역할)
     useEffect(() => {
         const storedData = localStorage.getItem('tempBookingData');
+        const storedPrevPage = localStorage.getItem(LAST_PAGE_KEY);
+
         if (storedData) {
             setBookingData(JSON.parse(storedData));
         } else {
             // 예약 정보가 없는 경우, 이전 페이지로 이동
             alert("예약 정보가 없습니다. 장소 선택 페이지로 돌아갑니다.");
-            onNavigate('placeFocusSelect');
+            onNavigate(storedPrevPage || 'reservationFormSelectPage'); // 저장된 경로로 이동 시도
         }
+
+        // 💡 이전 페이지 경로 설정
+        if (storedPrevPage) {
+            setPrevPage(storedPrevPage);
+        }
+
 
         // 팝업 외부 클릭 처리
         const handleOutsideClick = (event) => {
@@ -54,7 +68,6 @@ const ReservationDetailsPage = ({ onNavigate }) => {
 
     // 4. 이벤트 핸들러
 
-    // 폼 입력 핸들러 (모든 input, select에 연결)
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         setFormData(prev => ({
@@ -63,7 +76,6 @@ const ReservationDetailsPage = ({ onNavigate }) => {
         }));
     };
 
-    // 라디오 버튼 핸들러 (ac-use 전용)
     const handleRadioChange = (e) => {
         setFormData(prev => ({
             ...prev,
@@ -71,7 +83,6 @@ const ReservationDetailsPage = ({ onNavigate }) => {
         }));
     };
 
-    // 체크박스 핸들러
     const handleRuleCheck = (index) => (e) => {
         const newRulesChecked = [...formData.rulesChecked];
         newRulesChecked[index] = e.target.checked;
@@ -81,13 +92,12 @@ const ReservationDetailsPage = ({ onNavigate }) => {
         }));
     };
 
-    // 팝업 열기 버튼 클릭 핸들러
     const handleOpenModal = (e) => {
         e.preventDefault();
 
         // 필수 입력 필드 검증
-        if (!formData.organizationName || !formData.phone || !formData.email || !formData.eventName || formData.numPeople < 1) {
-            alert("필수 입력 항목(단체명/이름, 연락처, 이메일, 행사명, 인원)을 모두 채워주세요.");
+        if (!formData.organizationType || !formData.organizationName || !formData.phone || !formData.email || !formData.eventName || formData.numPeople < 1) {
+            alert("필수 입력 항목(사용단체, 단체명/이름, 연락처, 이메일, 행사명, 인원)을 모두 채워주세요.");
             return;
         }
 
@@ -96,52 +106,66 @@ const ReservationDetailsPage = ({ onNavigate }) => {
         setShowCheckAlert(true);
     };
 
-    // 최종 예약 확정 및 제출 핸들러
-    const handleFinalSubmit = () => {
+    // 💡 최종 예약 확정 및 제출 핸들러 (서버 통신 로직)
+    const handleFinalSubmit = async () => {
         if (isFinalSubmitDisabled) {
             setShowCheckAlert(true);
             alert("모든 필수 확인 사항에 동의해야 최종 확정이 가능합니다.");
             return;
         }
 
-        if (!bookingData) return; // 데이터가 없는 경우 방지
+        if (!bookingData) return;
 
-        // 1. 새로운 예약 객체 생성 및 초기 상태 설정
         const newBooking = {
-            id: Date.now(),
-            dateKey: bookingData.date.replace(/[^0-9]/g, ''),
             date: bookingData.date,
             startTime: bookingData.startTime,
             endTime: bookingData.endTime,
             room: bookingData.roomName,
             location: bookingData.roomLocation,
-            // 사용자 입력 정보
             applicant: formData.organizationName,
             phone: formData.phone,
             email: formData.email,
             eventName: formData.eventName,
             numPeople: formData.numPeople,
             acUse: formData.acUse,
-            organizationType: formData.organizationType, // 사용단체 추가
-            status: '확정대기' // 초기 상태
+            organizationType: formData.organizationType,
+            status: '확정대기' // 초기 상태 (서버 DB에 저장될 상태)
         };
 
-        // 2. 기존 예약 목록을 Local Storage에서 불러오거나, 없으면 새 배열 생성
-        const existingBookings = JSON.parse(localStorage.getItem('bookingHistory')) || [];
+        try {
+            const response = await fetch(`${API_BASE_URL}/bookings`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newBooking),
+            });
 
-        // 3. 새 예약을 목록에 추가
-        existingBookings.push(newBooking);
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: '서버 응답 오류' }));
+                throw new Error(`예약 제출 실패: ${errorData.message || response.statusText}`);
+            }
 
-        // 4. 업데이트된 목록을 Local Storage에 저장
-        localStorage.setItem('bookingHistory', JSON.stringify(existingBookings));
+            // 💡 임시 데이터 및 이전 경로 삭제
+            localStorage.removeItem('tempBookingData');
+            localStorage.removeItem(LAST_PAGE_KEY);
 
-        // 5. 임시 데이터 삭제
-        localStorage.removeItem('tempBookingData');
 
-        // 팝업 메시지 출력 및 페이지 이동
-        alert(`🎉 ${formData.organizationName}님의 예약 정보가 최종 확정되었습니다! 메인 페이지로 이동합니다.`);
-        onNavigate('main');
+            alert(`🎉 ${formData.organizationName}님의 예약이 접수되었습니다! (상태: 확정대기)`);
+            onNavigate('main');
+
+        } catch (error) {
+            console.error('Final Submit Error:', error);
+            alert(`예약 제출 중 오류가 발생했습니다: ${error.message}`);
+        }
     };
+
+    // 💡 뒤로 가기 버튼 핸들러
+    const handleGoBack = () => {
+        // 저장된 경로로 이동 (예: 'timeFocusSelectPage' 또는 'placeFocusSelectPage')
+        onNavigate(prevPage);
+    };
+
 
     // 5. 렌더링
     if (!bookingData) {
@@ -149,7 +173,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
             <div className="p-8 text-center">
                 <p>예약 정보를 로딩 중이거나 유효하지 않습니다.</p>
                 <button
-                    onClick={() => onNavigate('placeFocusSelect')}
+                    onClick={handleGoBack}
                     className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
                 >
                     장소 선택 페이지로 돌아가기
@@ -163,7 +187,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
             {/* 뒤로가기 버튼 */}
             <div className="absolute top-4 left-4">
                 <button
-                    onClick={() => onNavigate('placeFocusSelect')}
+                    onClick={handleGoBack} // 💡 수정된 뒤로 가기 핸들러 사용
                     className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition z-10"
                 >
                     ← 뒤로
@@ -176,7 +200,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
             <div className="summary-box">
                 <h2>선택하신 예약 정보 확인</h2>
                 <div className="summary-item">
-                    <strong>스터디룸:</strong>
+                    <strong>장소:</strong>
                     <span>{bookingData.roomName || '정보 없음'}</span>
                 </div>
                 <div className="summary-item">
@@ -199,7 +223,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                 <div className="form-group">
                     <label htmlFor="organizationType">사용단체</label>
                     <select
-                        id="organizationType" // ID를 organizationType으로 변경
+                        id="organizationType"
                         value={formData.organizationType}
                         onChange={handleInputChange}
                         required
