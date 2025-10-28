@@ -6,10 +6,6 @@ const LAST_PAGE_KEY = 'lastReservationSelectPage';
 
 // --- 상수 및 유틸리티 ---
 
-// 1. 장소 마스터 데이터는 서버에서 가져와야 하므로 비워둡니다.
-const MASTER_SPACES_ALL = [];
-const groupedSpaces = {};
-
 const API_BASE_URL = 'http://localhost:8080/api';
 const today = new Date();
 
@@ -46,33 +42,35 @@ const generateMinuteOptions = (type) => {
     }
     return minutes;
 };
+// --- (생략된 getReservationStatus, getMasterBookedTimes 로직은 이 코드가 동작하려면 필요합니다) ---
 // ------------------------------------
 
 
 // --- 메인 컴포넌트 ---
 
 const PlaceFocusSelectPage = ({ onNavigate }) => {
+    // 💡 서버에서 받아온 전체 장소 마스터 데이터
+    const [allMasterSpaces, setAllMasterSpaces] = useState([]);
+
     const [selectedRooms, setSelectedRooms] = useState([]);
     const [displayDate, setDisplayDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
     const [selectedDate, setSelectedDate] = useState(null); // YYYY-MM-DD
 
     const [selectedHour, setSelectedHour] = useState({ start: '09', end: '10' });
     const [selectedMinute, setSelectedMinute] = useState({ start: '00', end: '09' });
-
     const [selectedTimeRange, setSelectedTimeRange] = useState({ start: '09:00', end: '10:09' });
 
     const [selectedFinalRoomId, setSelectedFinalRoomId] = useState(null);
-
-    // groupedSpaces가 비어있으므로 초기 확장 상태도 비어있음
     const [expandedCategories, setExpandedCategories] = useState({});
 
     const [roomAvailabilityCache, setRoomAvailabilityCache] = useState({});
-    const [loading, setLoading] = useState(false); // 월별 로딩
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [timeLoading, setTimeLoading] = useState(false); // 시간표 로딩 전용 상태
+    const [timeLoading, setTimeLoading] = useState(false);
 
     // 캘린더 날짜 배열 생성
     const { calendarCells, displayYear, displayMonth } = useMemo(() => {
+        // ... (캘린더 로직 유지)
         const year = displayDate.getFullYear();
         const month = displayDate.getMonth();
         const daysInMonth = getDaysInMonth(year, month);
@@ -85,21 +83,52 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         return { calendarCells: cells, displayYear: year, displayMonth: month };
     }, [displayDate]);
 
+    // 💡 장소 데이터를 그룹화하는 useMemo (allMasterSpaces에 의존)
+    const groupedSpaces = useMemo(() => {
+        return allMasterSpaces.reduce((groups, space) => {
+            const category = space.category;
+            const subCategory = space.subCategory || space.name;
+            if (!groups[category]) groups[category] = {};
+            if (!groups[category][subCategory]) groups[category][subCategory] = [];
+            groups[category][subCategory].push(space);
+            return groups;
+        }, {});
+    }, [allMasterSpaces]);
+
     // 💡 시간 옵션 목록
     const hourOptions = useMemo(() => generateHourOptions(), []);
-    const startMinuteOptions = useMemo(() => generateMinuteOptions('start'), []);
-    const endTimeOptions = useMemo(() => generateMinuteOptions('end'), []);
 
 
-    // 💡 EFFECT: 선택된 룸이 변경되거나 월이 변경되면 월별 가용성 로드
+    // 🚨 0. 장소 마스터 데이터를 서버에서 로드
+    useEffect(() => {
+        const fetchMasterSpaces = async () => {
+            setLoading(true);
+            try {
+                // 💡 마스터 데이터 로드 API 엔드포인트 가정
+                const response = await fetch(`${API_BASE_URL}/masters/spaces`);
+                if (!response.ok) throw new Error('마스터 장소 목록 로드 실패');
+                const data = await response.json();
+
+                setAllMasterSpaces(data);
+
+                // 장소 목록 로드 후 초기 확장 상태 설정
+                const initialExpandedState = Object.keys(groupSpaces(data)).reduce((acc, category) => { acc[category] = true; return acc; }, {});
+                setExpandedCategories(initialExpandedState);
+
+            } catch (err) {
+                setError(`장소 목록 로드 실패: ${err.message}`);
+                setAllMasterSpaces([]); // 실패 시 목록 비우기
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchMasterSpaces();
+    }, []); // 컴포넌트 마운트 시 1회 실행
+
+
+    // 💡 EFFECT 2: 선택된 룸이 변경되거나 월이 변경되면 월별 가용성 로드
     useEffect(() => {
         if (selectedRooms.length === 0) return;
-
-        if (selectedRooms.length === 1) {
-            setSelectedFinalRoomId(selectedRooms[0].id);
-        } else {
-            setSelectedFinalRoomId(null);
-        }
 
         const fetchAllMonthData = async () => {
             setLoading(true);
@@ -109,7 +138,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
             const promises = selectedRooms.map(room => {
                 const roomMonthCache = roomAvailabilityCache[room.id];
                 if (!roomMonthCache || !roomMonthCache[currentMonthKey]) {
-                    return fetchMonthAvailability(room.id, displayYear, displayMonth, currentMonthKey);
+                    return fetchMonthAvailability(room.id, displayYear, displayMonth);
                 }
                 return Promise.resolve();
             });
@@ -140,7 +169,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
             }));
 
         } catch (err) {
-            // 서버 연결이 안되어 있으면 이 에러가 발생합니다.
             setError(`월별 예약 가능 정보를 불러오는 데 실패했습니다: ${err.message}`);
         }
     };
@@ -152,7 +180,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
             // 🚨 실제 서버 통신: GET /api/availability/daily?roomId={id}&date={d}
             const response = await fetch(`${API_BASE_URL}/availability/daily?roomId=${roomId}&date=${dateKey}`);
             if (!response.ok) throw new Error('서버 응답 오류: ' + response.statusText);
-            const dayAvailability = await response.json(); // { '07:00': true/false, ... } 형태의 데이터 기대
+            const dayAvailability = await response.json();
 
             setRoomAvailabilityCache(prev => ({
                 ...prev,
@@ -165,7 +193,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                 }
             }));
         } catch (err) {
-            // 서버 연결이 안되어 있으면 이 에러가 발생합니다.
             setError(`일별 시간 정보를 불러오는 데 실패했습니다: ${err.message}`);
         }
     };
@@ -247,7 +274,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
             }
         }
 
-        // HH:MM 문자열 상태 업데이트 (handleNext에서 사용)
         setSelectedTimeRange({
             start: `${newStartHour}:${newStartMinute}`,
             end: `${newEndHour}:${newEndMinute}`,
@@ -286,6 +312,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                 const isBooked = selectedRooms.some(room => {
                     const dayData = roomAvailabilityCache[room.id]?.[selectedDate];
 
+                    // 데이터가 없으면 (로딩 실패/미로드) 예약 불가능으로 간주
                     if (!dayData || dayData[timePointer] === undefined) return true;
                     return dayData[timePointer] === false;
                 });
@@ -332,7 +359,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         localStorage.setItem('tempBookingData', JSON.stringify(tempBookingData));
         localStorage.setItem(LAST_PAGE_KEY, 'placeFocusSelectPage');
 
-        onNavigate('reservationDetailsPage');
+        onNavigate('ReservationDetailsPage');
     };
 
     // 캘린더 월 이동 함수
@@ -454,6 +481,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
     // 💡 시간 선택 드롭다운에 표시될 가용 시간 옵션 목록 생성
     const getAvailableTimeOptions = (type) => {
         if (!selectedDate || selectedRooms.length === 0 || loading || timeLoading) {
+            // 로딩 중이거나 선택이 안 됐을 때 전체 옵션 반환
             return (type === 'start' ? startTimeOptions : endTimeOptions);
         }
 
@@ -476,6 +504,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
             }
         });
 
+        // 유효성: 선택된 시작/종료 시간에 따라 목록 필터링
         const currentStartTime = `${selectedHour.start}:${selectedMinute.start}`;
         const currentEndTime = `${selectedHour.end}:${selectedMinute.end}`;
 
