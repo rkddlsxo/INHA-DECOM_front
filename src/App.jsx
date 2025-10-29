@@ -6,6 +6,8 @@ import PlaceFocusSelectPage from './pages/PlaceFocusSelectPage';
 import ReservationDetailsPage from './pages/ReservationDetailsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import BookingHistoryPage from './pages/BookingHistoryPage';
+import TimeFocusSelectPage from './pages/TimeFocusSelectPage';
 function App() {
   const [page, setPage] = useState('loginPage');
   const [isLoggedIn, setIsLoggedIn] = useState(false);// 로그인 상태 관리
@@ -17,9 +19,9 @@ function App() {
         return <MainPage onNavigate={setPage} />;
       case 'reservation':
         return <ReservationMenuPage onNavigate={setPage} />;
-      case 'reservationFormSelect':
+      case 'reservationFormSelectPage':
         return <ReservationFormSelectPage onNavigate={setPage} />;
-      case 'placeFocusSelect':
+      case 'placeFocusSelectPage':
         return <PlaceFocusSelectPage onNavigate={setPage} />;
       case 'reservationDetailsPage':
         return <ReservationDetailsPage onNavigate={setPage} />;
@@ -27,6 +29,10 @@ function App() {
         return <LoginPage onNavigate={setPage} handleLogin={handleLoginSuccess} />;
       case 'registerPage':
         return <RegisterPage onNavigate={setPage} />;
+      case 'bookingHistory':
+        return <BookingHistoryPage onNavigate={setPage} />;
+      case 'timeFocusSelectPage':
+        return <TimeFocusSelectPage onNavigate={setPage} />;
       default:
         return <MainPage onNavigate={setPage} />;
     }

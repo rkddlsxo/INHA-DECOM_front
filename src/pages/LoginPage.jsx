@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './LoginPage.css'; // 스타일 파일은 그대로 사용합니다.
 
 // 백엔드 API 주소를 설정합니다. 실제 서버 주소로 변경해주세요.
-const API_URL = 'http://localhost:8080/api/login';
+const API_URL = 'http://localhost:5000/api/login';
 
 // 1. 컴포넌트 이름은 대문자 'LoginPage'로 시작
 // 2. Props는 하나의 객체 인자로 받습니다.
@@ -30,11 +30,11 @@ const LoginPage = ({ onNavigate, handleLogin }) => {
         e.preventDefault();
 
         // //테스트용 바로 넘어가게 만들기
-        // if (id && password) {
-        //     handleLogin(true);
-        //     onNavigate('main');
-        //     return;
-        // }
+        if (id && password) {
+            handleLogin(true);
+            onNavigate('main');
+            return;
+        }
         // 3-1. 클라이언트 측 유효성 검사 (필수 입력 확인)
         if (!id || !password) {
             setError('학번과 비밀번호를 모두 입력해주세요.');
