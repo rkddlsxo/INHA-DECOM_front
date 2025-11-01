@@ -1,4 +1,4 @@
-/* PlaceFocusSelectPage.css (디자인 통일) */
+/* PlaceFocusSelectPage.css (직관성 개선 버전) */
 
 /* ⭐️ TimeFocusSelectPage.css와 동일한 스타일 적용 */
 .reservation-combined-container {
@@ -12,7 +12,7 @@
     box-sizing: border-box;
 }
 
-/* --- 1. 헤더 및 뒤로가기 --- */
+/* --- 1. 헤더 및 뒤로가기 (이전과 동일) --- */
 .back-btn {
     position: absolute;
     top: 1.5rem;
@@ -32,23 +32,19 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
 }
-
 .back-btn:hover {
     background-color: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
-
-
 .page-title {
-    color: #004B8D; /* ⭐️ 인하대 메인 색상 */
+    color: #004B8D; /* 인하대 메인 색상 */
     text-align: center;
     margin-bottom: 0.75rem;
     font-size: 2.25rem;
     font-weight: 700;
     padding-top: 2.5rem;
 }
-
 .page-description {
     text-align: center;
     color: #555;
@@ -56,13 +52,12 @@
     margin-bottom: 3rem;
 }
 
-/* --- 2. 메인 레이아웃 (2단) --- */
+/* --- 2. 메인 레이아웃 (2단) (이전과 동일) --- */
 .selection-area-wrapper {
     display: flex;
     gap: 2.5rem;
     align-items: flex-start;
 }
-
 .room-list-box,
 .schedule-area-box {
     background: #ffffff;
@@ -71,17 +66,14 @@
     border: 1px solid #e9ecef;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
-
 .room-list-box {
     flex: 0 0 380px; /* 너비 고정 */
     max-height: 85vh;
     overflow-y: auto;
 }
-
 .schedule-area-box {
     flex-grow: 1;
 }
-
 .box-title {
     color: #004B8D;
     border-bottom: 2px solid #f0f0f0;
@@ -95,21 +87,19 @@
     gap: 0.75rem;
 }
 
-/* --- 3. 장소 목록 (트리 뷰) --- */
+/* --- 3. 장소 목록 (트리 뷰) (이전과 동일) --- */
 .instruction-text-small {
     font-size: 0.9rem;
     color: #666;
     margin-top: -1rem;
     margin-bottom: 1rem;
 }
-
 .category-group-wrapper {
     margin-bottom: 10px;
     border: 1px solid #eee;
     border-radius: 8px;
     overflow: hidden;
 }
-
 .category-header {
     display: flex;
     justify-content: space-between;
@@ -123,30 +113,24 @@
     border-bottom: 1px solid #eee;
     transition: background-color 0.2s;
 }
-
 .category-header:hover {
     background-color: #f1f3f5;
 }
-
 .category-header strong {
     color: #004B8D;
 }
-
 .toggle-icon {
     font-size: 0.8em;
     font-weight: bold;
     transition: transform 0.2s;
 }
-
 .category-header:not(.expanded) .toggle-icon {
     transform: rotate(-90deg);
 }
-
 .sub-category-content {
     padding: 5px 0;
     background-color: #ffffff;
 }
-
 .sub-category-title {
     padding: 8px 15px;
     font-weight: 600;
@@ -154,11 +138,9 @@
     background-color: #fdfdfd;
     border-bottom: 1px dotted #f0f0f0;
 }
-
 .room-item-list {
     padding: 5px 0;
 }
-
 .room-item {
     padding: 10px 15px 10px 25px;
     cursor: pointer;
@@ -166,22 +148,19 @@
     font-size: 0.95em;
     border-left: 4px solid transparent;
 }
-
 .room-item:hover {
     background-color: #e6f0f8;
 }
-
 .room-item.selected {
     background-color: #e6f0f8;
     border-left: 4px solid #004B8D;
     font-weight: 600;
 }
-
 .room-name-display {
     color: #343a40;
 }
 
-/* --- 4. 달력 --- */
+/* --- 4. 달력 (이전과 동일) --- */
 .calendar-header {
     display: flex;
     justify-content: space-between;
@@ -191,7 +170,6 @@
     font-weight: 600;
     color: #333;
 }
-
 .calendar-header button {
     padding: 0.4rem 0.8rem;
     border: 1px solid #ccc;
@@ -209,14 +187,12 @@
     color: #bbb;
     cursor: not-allowed;
 }
-
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 8px;
     text-align: center;
 }
-
 .calendar-header-day {
     font-weight: 600;
     padding: 0.5rem 0;
@@ -224,6 +200,7 @@
     font-size: 0.9rem;
 }
 
+/* --- (수정) 달력 셀 --- */
 .calendar-grid>.day-cell {
     padding: 0.75rem 0.25rem;
     border: 1px solid #f1f1f1;
@@ -236,6 +213,9 @@
     min-height: 60px;
     font-size: 0.9rem;
     transition: all 0.2s ease;
+    /* 기본 배경색 (available) */
+    background-color: #f0f9f0; 
+    color: #15803d;
 }
 
 .day-cell .date-number {
@@ -247,41 +227,56 @@
     font-size: 0.75rem;
 }
 
+/* (수정) 3가지 상태에 대한 명확한 배경색 및 텍스트 색상 */
 .day-cell.available {
-    background-color: #f0f9f0;
-    color: #15803d;
+    background-color: #f0f9f0; /* 연한 초록 */
+    color: #15803d; /* 진한 초록 */
+}
+.day-cell.partial {
+    background-color: #fefce8; /* 연한 노랑 */
+    color: #a16207; /* 진한 노랑/갈색 */
+}
+.day-cell.partial .availability-status {
+    font-weight: 600; /* 퍼센트 강조 */
 }
 
 .day-cell.booked {
-    background-color: #fef2f2;
-    color: #b91c1c;
+    background-color: #fef2f2; /* 연한 빨강 */
+    color: #b91c1c; /* 진한 빨강 */
     cursor: default;
 }
 
 .day-cell.past-date {
-    background-color: #f1f1f1;
+    background-color: #f1f1f1; /* 회색 */
     color: #aaa;
     cursor: default;
 }
 
-.day-cell.selected-date {
-    border: 2px solid #004B8D;
-    background-color: #e6f0f8;
-    color: #004B8D;
-    font-weight: 700;
+/* (수정) 호버 효과 */
+.day-cell.available:not(.selected-date):not(.past-date):hover {
+    background-color: #dcfce7; /* 더 진한 초록 */
+    border-color: #15803d;
+}
+.day-cell.partial:not(.selected-date):not(.past-date):hover {
+    background-color: #fef9c3; /* 더 진한 노랑 */
+    border-color: #a16207;
 }
 
+
+/* (수정) 선택된 날짜 */
+.day-cell.selected-date {
+    border: 2px solid #004B8D;
+    box-shadow: 0 0 0 2px rgba(0, 75, 141, 0.3);
+    font-weight: 700;
+}
+/* 선택 시 텍스트 색상은 인하대 파란색으로 통일 */
 .day-cell.selected-date .date-number,
 .day-cell.selected-date .availability-status {
     color: #004B8D;
 }
 
-.day-cell.available:not(.selected-date):hover {
-    background-color: #e6f0f8;
-    border-color: #004B8D;
-}
 
-/* --- 5. 시간 선택 (드롭다운) --- */
+/* --- 5. 시간 선택 (드롭다운) (이전과 동일) --- */
 .time-selection-container {
     margin-top: 2rem;
     padding: 1.5rem;
@@ -295,7 +290,6 @@
     font-weight: 600;
     color: #333;
 }
-
 .final-room-select-box {
     margin-bottom: 1.5rem;
 }
@@ -305,13 +299,11 @@
     font-weight: 600;
     color: #333;
 }
-
 .time-inputs-wrapper {
     display: flex;
     gap: 0.75rem;
     align-items: center;
 }
-
 .time-select {
     width: 100%;
     padding: 0.75rem;
@@ -329,13 +321,11 @@
     box-shadow: 0 0 0 3px rgba(0, 75, 141, 0.1);
     outline: none;
 }
-
 .time-separator {
     font-weight: 700;
     color: #555;
     font-size: 1.2rem;
 }
-
 .reservation-summary {
     margin-top: 1.5rem;
     padding: 0.75rem 1rem;
@@ -345,7 +335,6 @@
     font-size: 0.95em;
     color: #333;
 }
-
 .next-button {
     width: 100%;
     padding: 0.8rem 1.5rem;
@@ -367,7 +356,7 @@
     cursor: not-allowed;
 }
 
-/* --- 6. 기타 --- */
+/* --- 6. 기타 (이전과 동일) --- */
 .booked-times-summary {
     margin-top: 2rem;
     padding: 1rem;
@@ -385,7 +374,6 @@
     font-size: 0.9rem;
     color: #333;
 }
-
 .error-text {
     color: #dc3545;
     margin-top: 1.5rem;
@@ -397,7 +385,6 @@
     font-size: 0.95em;
     font-weight: 600;
 }
-
 .loading-text,
 .instruction-text {
     text-align: center;

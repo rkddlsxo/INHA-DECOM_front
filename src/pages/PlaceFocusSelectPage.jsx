@@ -359,26 +359,27 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         setError(null);
     };
 
+    // 이 함수는 이제 {status, percentage} 객체를 반환합니다.
     const getDayStatus = (year, month, day) => {
         const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const monthKey = dateKey.substring(0, 7);
 
-        if (selectedRooms.length === 0) return 'no-room';
+        if (selectedRooms.length === 0) return { status: 'no-room' };
 
         const room = selectedRooms[0];
         const roomCache = roomAvailabilityCache[room.id];
         
         if (!roomCache || !roomCache[monthKey]) {
-            return 'loading';
+            return { status: 'loading' };
         }
 
         const dayData = roomCache[monthKey][dateKey];
 
-        if (dayData && dayData.hasBooking !== undefined) {
-             return dayData.hasBooking ? 'booked' : 'available';
+        if (dayData && dayData.status) {
+             return dayData; // {status: 'partial', percentage: 0.3} 반환
         }
 
-        return 'loading';
+        return { status: 'loading' };
     };
 
     const getCombinedBookedTimeRanges = () => {
@@ -438,44 +439,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         });
 
         return bookedRangesByRoom;
-    };
-
-    const getAvailableTimeOptions = (type) => {
-        const timeOptions = (type === 'start' ? startTimeOptions : endTimeOptions);
-
-        if (!selectedDate || selectedRooms.length === 0 || loading || timeLoading) {
-            return timeOptions;
-        }
-
-        const availableOptions = [];
-        
-        const room = selectedRooms[0];
-        const monthKey = selectedDate.substring(0, 7);
-        const dayData = roomAvailabilityCache[room.id]?.[monthKey]?.[selectedDate];
-
-        const isBooked = (time) => {
-            if (!dayData || dayData[time] === undefined) return true;
-            return dayData[time] === false;
-        };
-
-        timeOptions.forEach(time => {
-            const isValidRule = (type === 'start' && time.slice(-1) === '0') || (type === 'end' && (time.slice(-1) === '9'));
-            
-            if (isValidRule && !isBooked(time)) {
-                availableOptions.push(time);
-            }
-        });
-
-        const currentStartTime = `${selectedHour.start}:${selectedMinute.start}`;
-        const currentEndTime = `${selectedHour.end}:${selectedMinute.end}`;
-
-        if (type === 'end' && currentStartTime) {
-            return availableOptions.filter(time => time > currentStartTime);
-        } else if (type === 'start' && currentEndTime) {
-            return availableOptions.filter(time => time < currentEndTime);
-        }
-
-        return availableOptions;
     };
     
     const startTimeMinuteOptions = useMemo(() => generateMinuteOptions('start'), []);
@@ -577,20 +540,38 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                                     const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                                     const isSelected = selectedDate === formattedDate;
 
-                                    const status = getDayStatus(year, month, day);
-                                    const isClickable = !isPast;
-                                    const statusText = status === 'booked' ? '예약 불가' : status === 'available' ? '사용 가능' : status === 'loading' ? '로딩 중' : '...';
+                                    // --- (수정) 텍스트 및 클릭 가능 여부 설정 ---
+                                    const dayData = getDayStatus(year, month, day);
+                                    const status = dayData.status || 'loading';
+                                    const percentage = dayData.percentage || 0;
+                                    
+                                    const isClickable = !isPast && status !== 'booked'; // 100% 찼으면 클릭 X
+                                    
+                                    let statusText = '...';
+                                    if (isPast) {
+                                        statusText = '지난 날짜';
+                                    } else if (status === 'booked') {
+                                        statusText = '예약 불가';
+                                    } else if (status === 'partial') {
+                                        // '부분 가능' 대신 %를 표시
+                                        statusText = `${Math.round(percentage * 100)}% 예약됨`; 
+                                    } else if (status === 'available') {
+                                        statusText = '사용 가능';
+                                    } else if (status === 'loading') {
+                                        statusText = '로딩 중';
+                                    }
+                                    // --- 수정 끝 ---
 
                                     return (
                                         <div
                                             key={idx}
+                                            // (수정) 인라인 스타일(cellStyle) 제거
                                             className={`day-cell ${isSelected ? 'selected-date' : ''} ${isPast ? 'past-date' : status}`}
                                             onClick={() => isClickable && handleDateClick(year, month, day)}
-                                            style={!isClickable ? { cursor: 'default' } : {}}
                                         >
                                             <span className="date-number">{day}</span>
                                             <span className="availability-status">
-                                                {isPast ? '지난 날짜' : statusText}
+                                                {statusText}
                                             </span>
                                         </div>
                                     );
@@ -615,7 +596,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                             </ul>
                         </div>
                     )}
-
                     
                     {selectedDate && selectedRooms.length > 0 && timeLoading && (
                         <p className="loading-text" style={{ marginTop: '20px' }}>
@@ -623,17 +603,12 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                         </p>
                     )}
 
-
                     
                     {selectedDate && selectedRooms.length > 0 && !timeLoading && (
                         <div className="time-selection-container">
                             <h3>예약 시간대 선택 (10분 단위)</h3>
 
-                            
-                            
-
                             <div className="time-inputs-wrapper">
-                                
                                 <select
                                     value={selectedHour.start}
                                     onChange={(e) => handleTimeInputComponentChange('start', 'hour', e)}
@@ -644,13 +619,11 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                                     ))}
                                 </select>
                                 <span className="time-separator">:</span>
-                                
                                 <select
                                     value={selectedMinute.start}
                                     onChange={(e) => handleTimeInputComponentChange('start', 'minute', e)}
                                     className="time-select"
                                 >
-                                    
                                     {startTimeMinuteOptions.map(m => (
                                         <option key={`sm-${m}`} value={m}>{m}</option>
                                     ))}
@@ -658,7 +631,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
 
                                 <span className="time-separator">~</span>
 
-                                
                                 <select
                                     value={selectedHour.end}
                                     onChange={(e) => handleTimeInputComponentChange('end', 'hour', e)}
@@ -669,13 +641,11 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                                     ))}
                                 </select>
                                 <span className="time-separator">:</span>
-                                
                                 <select
                                     value={selectedMinute.end}
                                     onChange={(e) => handleTimeInputComponentChange('end', 'minute', e)}
                                     className="time-select"
                                 >
-                                    
                                     {endTimeMinuteOptions.map(m => (
                                         <option key={`em-${m}`} value={m}>{m}</option>
                                     ))}
@@ -689,7 +659,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                             <button
                                 onClick={handleNext}
                                 className="next-button"
-                                
                                 disabled={!selectedTimeRange.start || !selectedTimeRange.end || selectedTimeRange.start >= selectedTimeRange.end}
                             >
                                 예약 정보 입력으로 이동
@@ -703,4 +672,3 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
 };
 
 export default PlaceFocusSelectPage;
-

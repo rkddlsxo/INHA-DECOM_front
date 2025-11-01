@@ -4,6 +4,7 @@ import './ReservationDetailsPage.css';
 
 // 💡 상수: 이전 페이지 경로를 저장하는 Local Storage 키
 const LAST_PAGE_KEY = 'lastReservationSelectPage';
+const API_BASE_URL = 'http://localhost:5050/api';
 
 const ReservationDetailsPage = ({ onNavigate }) => {
     // 1. 상태 관리
@@ -116,27 +117,44 @@ const ReservationDetailsPage = ({ onNavigate }) => {
 
         if (!bookingData) return;
 
+        // 백엔드(create_booking) API가 기대하는 키(key)에 맞춰 데이터를 구성합니다.
         const newBooking = {
+            // 1. tempBookingData에서 가져온 정보
             date: bookingData.date,
             startTime: bookingData.startTime,
             endTime: bookingData.endTime,
-            room: bookingData.roomName,
-            location: bookingData.roomLocation,
-            applicant: formData.organizationName,
+            
+            // (수정) 'room', 'location' -> 'roomName', 'roomLocation'
+            roomName: bookingData.roomName,      
+            roomLocation: bookingData.roomLocation,
+            
+            // 2. 폼(formData)에서 가져온 정보
+            // (수정) 'applicant' 키로 organizationName 전송
+            applicant: formData.organizationName, 
             phone: formData.phone,
             email: formData.email,
             eventName: formData.eventName,
-            numPeople: formData.numPeople,
+            numPeople: parseInt(formData.numPeople) || 1, // 숫자로 변환
             acUse: formData.acUse,
             organizationType: formData.organizationType,
-            status: '확정대기' // 초기 상태 (서버 DB에 저장될 상태)
+            status: '확정대기'
         };
 
         try {
+            // (추가) 1. localStorage에서 토큰(출입증) 가져오기
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                alert('오류: 로그인 정보(토큰)를 찾을 수 없습니다. 다시 로그인해주세요.');
+                onNavigate('loginPage');
+                return;
+            }
+
+            // (수정) 2. fetch의 'headers'에 'Authorization' 추가
             const response = await fetch(`${API_BASE_URL}/bookings`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // 토큰을 헤더에 추가
                 },
                 body: JSON.stringify(newBooking),
             });
@@ -146,7 +164,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                 throw new Error(`예약 제출 실패: ${errorData.message || response.statusText}`);
             }
 
-            // 💡 임시 데이터 및 이전 경로 삭제
+            // 임시 데이터 및 이전 경로 삭제
             localStorage.removeItem('tempBookingData');
             localStorage.removeItem(LAST_PAGE_KEY);
 
