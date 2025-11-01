@@ -1,63 +1,165 @@
-/* 이 파일은 ReservationMenuPage 컴포넌트 전용 스타일을 담고 있습니다. */
+/* ReservationFormSelectPage.css
+  - 기존 세로 버튼 형식을 세련된 2-카드 그리드로 변경
+*/
 
+/* 1. 전체 컨테이너 (페이지 여백 및 정렬) */
 .reservationFormSelect-container {
-    display: flex;
-    flex-direction: column;
-    /* 세로 방향으로 변경 */
-    height: 100%;
+    padding: 3rem 2rem;
+    min-height: 70vh;
     width: 100%;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    /* 버튼들 사이 간격 */
-}
-
-.reservationFormSelect-section {
-    /* flex-grow: 1; 제거 - 세로 배치에서는 불필요 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /* border-right: 1px solid #ddd; 제거 - 세로 배치에서는 불필요 */
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', Arial, sans-serif;
     position: relative;
-    width: 300px;
-    /* 고정 너비 설정 */
-    padding: 20px;
-    border-radius: 12px;
-}
-
-.reservationFormSelect-section:last-child {
-    /* border-right: none; 제거 */
-}
-
-.large-button {
-    padding: 30px 60px;
-    font-size: 28px;
-    font-weight: bold;
-    color: white;
-    border: none;
-    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 2. '뒤로가기' 버튼 (ReservationMenuPage와 동일) */
+  .back-button {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 10;
+    padding: 0.6rem 1.2rem;
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-decoration: none;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .back-button:hover {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* 3. 헤더 영역 */
+  .select-header {
     width: 100%;
-    /* 버튼이 섹션 너비에 맞춤 */
-}
-
-#btn-timeFocused {
-    background-color: #007bff;
-}
-
-#btn-timeFocused:hover {
-    background-color: #0056b3;
-}
-
-#btn-spaceFocused {
-    background-color: #28a745;
-}
-
-#btn-spaceFocused:hover {
-    background-color: #1e7e34;
-}
+    text-align: center;
+    margin-bottom: 4rem; /* 카드와의 간격 */
+    padding-top: 2rem; /* 뒤로가기 버튼과의 간격 */
+  }
+  
+  .select-title {
+    font-size: 2.25rem; /* 36px */
+    font-weight: 700;
+    color: #004B8D; /* ⭐️ 인하대 메인 색상 */
+    margin: 0;
+  }
+  
+  .select-subtitle {
+    font-size: 1.125rem; /* 18px */
+    color: #555;
+    margin-top: 0.5rem;
+  }
+  
+  /* 4. ⭐️ 카드들을 감싸는 그리드 (2열) */
+  .select-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem; /* 40px (카드 사이 간격) */
+    width: 100%;
+    max-width: 800px; /* 두 카드가 너무 벌어지지 않게 */
+    margin: auto;
+    flex-grow: 1;
+    flex-wrap: wrap; /* 화면 작아지면 줄바꿈 */
+  }
+  
+  /* 5. ⭐️ 선택 카드 (기존 .reservationFormSelect-section 대체) */
+  .select-card {
+    flex: 1; /* 1:1 비율 */
+    flex-basis: 300px; /* 카드의 최소 너비 */
+    min-height: 340px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    
+    padding: 2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  /* 6. ⭐️ 카드 호버 효과 (떠오르는 느낌) */
+  .select-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 75, 141, 0.1); /* 인하대 파란색 그림자 */
+  }
+  
+  /* 7. ⭐️ 아이콘 래퍼 */
+  .select-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+    color: #555; /* 기본 아이콘 색상 */
+    margin-bottom: 1.5rem; /* 24px */
+  }
+  
+  /* 8. ⭐️ 텍스트 (제목) */
+  .select-text {
+    font-size: 1.6rem; /* 26px */
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+    margin-bottom: 0.75rem; /* 12px */
+    transition: color 0.3s ease;
+  }
+  
+  /* 9. ⭐️ 설명 텍스트 (새로 추가) */
+  .select-description {
+    font-size: 0.95rem;
+    color: #666;
+    text-align: center;
+    line-height: 1.6;
+  }
+  
+  /* 10. ⭐️ 카드별 호버 시 색상 변경 */
+  
+  /* 시간 우선 (파랑) */
+  .select-card.section-time:hover .select-icon-wrapper {
+    background-color: #004B8D; /* ⭐️ 인하대 파랑 */
+    color: #ffffff;
+  }
+  .select-card.section-time:hover .select-text {
+    color: #004B8D;
+  }
+  
+  /* 공간 우선 (초록) */
+  .select-card.section-place:hover .select-icon-wrapper {
+    background-color: #15803d; /* 초록 */
+    color: #ffffff;
+  }
+  .select-card.section-place:hover .select-text {
+    color: #15803d;
+  }
+  
+  /* --- 기존 ID 스타일 제거 (새 디자인에 불필요) --- */
+  .large-button,
+  #btn-timeFocused,
+  #btn-timeFocused:hover,
+  #btn-spaceFocused,
+  #btn-spaceFocused:hover {
+    /* 모두 제거됨 */
+  }
+  

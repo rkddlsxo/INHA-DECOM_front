@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './TimeFocusSelectPage.css';
+// ⭐️ 아이콘 import
+import { BsArrowLeft, BsPencilSquare, BsClipboardCheck } from 'react-icons/bs';
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
@@ -15,9 +17,6 @@ const CATEGORIES = {
     '농구장': ['농구장'],
     '풋살파크': ['풋살파크'],
 };
-
-// 💡 DUMMY_SPACES 제거됨
-
 
 /** 규칙에 맞는 시간 옵션 목록을 생성합니다. (시작: XX:X0, 종료: XX:X9) */
 const generateTimeOptions = (type) => {
@@ -122,7 +121,6 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
             setError(null);
 
         } catch (err) {
-            // 💡 더미 데이터 로직 제거, 에러 메시지 설정
             console.error(err);
             setError('⚠️ 오류: 장소 목록을 불러오는 중 오류가 발생했습니다.');
             setAllAvailableSpaces([]); // 데이터 비우기
@@ -144,7 +142,6 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
             return;
         }
 
-        // 최종적으로 분의 1의 자리가 0 또는 9인지 확인 (규칙 확인)
         if (selectedTimeRange.start.slice(-1) !== '0' || selectedTimeRange.end.slice(-1) !== '9') {
             alert('시간 선택 규칙을 다시 확인해주세요. (시작: XX:X0, 종료: XX:X9)');
             return;
@@ -166,22 +163,22 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
         };
 
         localStorage.setItem('tempBookingData', JSON.stringify(bookingDataToStore));
-        // 💡 현재 페이지 경로를 Local Storage에 저장
         localStorage.setItem('lastReservationSelectPage', 'timeFocusSelectPage');
 
         onNavigate('reservationDetailsPage');
     };
 
-    // 다음 단계로 이동하는 버튼 활성화 여부
     const isSearchReady = selectedDate && selectedTimeRange.start && selectedTimeRange.end;
 
     return (
         <div className="time-focus-main-container">
+            {/* ⭐️ '뒤로가기' 버튼 스타일 및 아이콘 적용 */}
             <button
                 onClick={() => onNavigate('reservationFormSelectPage')}
-                className="back-btn"
+                className="back-button"
             >
-                ← 뒤로
+                <BsArrowLeft size={16} />
+                뒤로
             </button>
             <h1 className="page-title">🕑 시간 우선 예약</h1>
             <p className="page-description">원하는 날짜/시간대와 장소 범주를 선택하여 사용 가능한 장소를 조회하세요.</p>
@@ -190,8 +187,13 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
 
                 {/* 1. 날짜 및 시간 선택 영역 */}
                 <div className="selection-box time-focus-box">
-                    <h2 className="box-title">예약 조건 선택</h2>
+                    {/* ⭐️ 제목에 아이콘 추가 */}
+                    <h2 className="box-title">
+                        <BsPencilSquare size={24} />
+                        예약 조건 선택
+                    </h2>
 
+                    {/* ⭐️ 라벨 클래스 적용 */}
                     <label className="input-label" htmlFor="date-picker">예약 날짜:</label>
                     <input
                         type="date"
@@ -204,7 +206,6 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
 
                     <label className="input-label time-label">예약 시간대 (XX:X0 ~ XX:X9):</label>
                     <div className="time-inputs-wrapper">
-                        {/* 시작 시간 SELECT */}
                         <select
                             value={selectedTimeRange.start}
                             onChange={(e) => handleTimeInputChange('start', e)}
@@ -215,7 +216,6 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
 
                         <span className="time-separator">~</span>
 
-                        {/* 종료 시간 SELECT */}
                         <select
                             value={selectedTimeRange.end}
                             onChange={(e) => handleTimeInputChange('end', e)}
@@ -225,9 +225,9 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
                         </select>
                     </div>
 
-                    {/* 카테고리 필터 영역 (조회 전에도 선택 가능) */}
+                    {/* 카테고리 필터 영역 */}
                     <div className="category-filter-box">
-                        <label className="input-label" htmlFor="category-select">장소 범주 선택 (필터):</label>
+                        <label className="input-label" htmlFor="category-select" style={{ marginTop: 0, marginBottom: '0.75rem' }}>장소 범주 선택 (필터):</label>
                         <select
                             id="category-select"
                             value={selectedCategory}
@@ -240,9 +240,10 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
                         </select>
                     </div>
 
+                    {/* ⭐️ 버튼 클래스 변경 */}
                     <button
                         onClick={handleSearch}
-                        className="search-button next-button-style"
+                        className="search-button"
                         disabled={!isSearchReady || loading}
                     >
                         {loading ? '장소 조회 중...' : '사용 가능한 장소 조회하기'}
@@ -253,7 +254,11 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
 
                 {/* 2. 장소 목록 결과 영역 */}
                 <div className="results-area-box place-focus-box">
-                    <h2 className="box-title">조회 결과</h2>
+                    {/* ⭐️ 제목에 아이콘 추가 */}
+                    <h2 className="box-title">
+                        <BsClipboardCheck size={24} />
+                        조회 결과
+                    </h2>
 
                     <div className="results-list-box">
                         {loading ? (
@@ -268,13 +273,14 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
                                     <li key={space.id} className="space-item">
                                         <div className="space-details">
                                             <h3 className="space-name">{space.name}</h3>
+                                            {/* ⭐️ <strong> 태그로 수정 */}
                                             <p className="space-info">
-                                                **범주:** {space.subCategory || space.category} |
-                                                **인원:** {space.capacity}명 |
-                                                **위치:** {space.location}
+                                                <strong>범주:</strong> {space.subCategory || space.category} |
+                                                <strong> 인원:</strong> {space.capacity}명 |
+                                                <strong> 위치:</strong> {space.location}
                                             </p>
                                             <p className="space-time-info">
-                                                **예약 시간대:** {selectedTimeRange.start} ~ {selectedTimeRange.end}
+                                                <strong>예약 시간대:</strong> {selectedTimeRange.start} ~ {selectedTimeRange.end}
                                             </p>
                                         </div>
                                         <button

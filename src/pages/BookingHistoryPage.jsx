@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './BookingHistoryPage.css';
+// ⭐️ 아이콘 추가
+import { BsArrowLeft } from 'react-icons/bs';
 
 const API_BASE_URL = 'http://localhost:8080/api';
-
-// DUMMY_BOOKINGS 제거됨
 
 const BookingHistory = ({ onNavigate }) => {
     const [bookings, setBookings] = useState([]);
@@ -22,53 +22,79 @@ const BookingHistory = ({ onNavigate }) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`${API_BASE_URL}/bookings`);
+            // ⭐️ 토큰을 함께 전송 (로그인 된 사용자의 예약만 가져오기)
+            const token = localStorage.getItem('authToken'); 
+            if (!token) {
+                throw new Error('로그인이 필요합니다.');
+            }
+
+            const response = await fetch(`${API_BASE_URL}/bookings/my`, { // ⭐️ 엔드포인트 /bookings/my (예시)
+                headers: {
+                    'Authorization': `Bearer ${token}` // ⭐️ 헤더에 토큰 추가
+                }
+            });
+            
+            if (response.status === 401 || response.status === 403) {
+                 throw new Error('인증에 실패했습니다. 다시 로그인해주세요.');
+            }
             if (!response.ok) throw new Error('서버 응답 오류');
+
             const data = await response.json();
             const updatedBookings = data.map(booking => ({
                 ...booking,
                 displayStatus: getBookingStatus(booking)
             }));
-            // dateKey를 기반으로 예약 목록 정렬
-            updatedBookings.sort((a, b) => a.dateKey - b.dateKey);
+            
+            // ⭐️ 날짜(date)와 시작 시간(startTime)으로 정렬 (최신순)
+            updatedBookings.sort((a, b) => {
+                const dateA = new Date(`${a.date} ${a.startTime}`);
+                const dateB = new Date(`${b.date} ${b.startTime}`);
+                return dateB - dateA; // 내림차순 (최신순)
+            });
             setBookings(updatedBookings);
         } catch (err) {
-            // 서버 통신 실패 시 에러 메시지 설정
-            setError('예약 목록을 불러오는 데 실패했습니다.');
+            setError(err.message || '예약 목록을 불러오는 데 실패했습니다.');
         }
         setLoading(false);
     };
 
     const getBookingStatus = (booking) => {
-        // 1. 서버에서 이미 결정된 상태 (확정대기, 취소) 우선 처리
         if (booking.status === '확정대기') return '확정대기';
         if (booking.status === '취소') return '취소';
 
         const now = new Date();
+        
+        // ⭐️ 날짜 형식이 'YYYY-MM-DD'라고 가정 (서버 응답 기준)
+        const startDateTime = new Date(`${booking.date}T${booking.startTime}`);
+        const endDateTime = new Date(`${booking.date}T${booking.endTime}`);
 
-        // 날짜 파싱 및 DateTime 객체 생성
-        const dateParts = booking.date.match(/(\d{4})년 (\d{2})월 (\d{2})일/);
-        if (!dateParts) return booking.status || '확정';
+        if (isNaN(startDateTime) || isNaN(endDateTime)) {
+             // ⭐️ booking.date가 "YYYY년 MM월 DD일" 형식일 때의 폴백
+            const dateParts = booking.date.match(/(\d{4})년 (\d{2})월 (\d{2})일/);
+            if (!dateParts) return booking.status || '확정';
 
-        const dateString = `${dateParts[1]}/${dateParts[2]}/${dateParts[3]}`;
-        const startDateTime = new Date(`${dateString} ${booking.startTime}`);
-        const endDateTime = new Date(`${dateString} ${booking.endTime}`);
+            const dateString = `${dateParts[1]}-${dateParts[2]}-${dateParts[3]}`;
+            const parsedStart = new Date(`${dateString}T${booking.startTime}`);
+            const parsedEnd = new Date(`${dateString}T${booking.endTime}`);
+            
+            if (isNaN(parsedStart) || isNaN(parsedEnd)) return booking.status || '확정';
 
-        // 2. 시간 기준 상태 판별
+            const nowTime = now.getTime();
+            const startTime = parsedStart.getTime();
+            const endTime = parsedEnd.getTime();
+
+            if (endTime < nowTime) return '지난예약';
+            if (startTime <= nowTime && nowTime < endTime) return '사용중';
+            return '확정';
+        }
+
         const nowTime = now.getTime();
         const startTime = startDateTime.getTime();
         const endTime = endDateTime.getTime();
 
-        if (endTime < nowTime) {
-            // 종료 시간이 현재보다 과거이면
-            return '지난예약';
-        } else if (startTime <= nowTime && nowTime < endTime) {
-            // 현재 시간이 예약 시작 시간 이후이고 종료 시간 이전이면
-            return '사용중';
-        } else {
-            // (startTime > nowTime) 예약 시작 시간이 현재보다 미래이면
-            return '확정';
-        }
+        if (endTime < nowTime) return '지난예약';
+        if (startTime <= nowTime && nowTime < endTime) return '사용중';
+        return '확정';
     };
 
     const handleRowClick = (booking) => {
@@ -88,39 +114,40 @@ const BookingHistory = ({ onNavigate }) => {
         if (!selectedBooking) return;
         const bookingId = selectedBooking.id;
 
-        if (window.confirm('예약을 취소하시겠습니까?')) {
-            try {
-                // 🚨 서버 통신: PATCH 요청으로 상태 변경 (취소)
-                const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}/cancel`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+        // ⭐️ window.confirm 대신 alert 사용 (프로젝트 표준)
+        // (추후엔 이 부분도 모달로 바꾸는 것이 좋습니다)
+        if (!window.confirm('예약을 취소하시겠습니까?')) {
+            return;
+        }
+            
+        try {
+            const token = localStorage.getItem('authToken');
+            const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}/cancel`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // ⭐️ 토큰 추가
+                },
+            });
 
-                if (!response.ok) throw new Error('예약 취소에 실패했습니다.');
+            if (!response.ok) throw new Error('예약 취소에 실패했습니다.');
 
-                // 클라이언트 상태 업데이트 (임시 취소 사유 반영)
-                const updatedBookings = bookings.map(booking =>
-                    booking.id === bookingId
-                        ? { ...booking, status: '취소', displayStatus: '취소', cancelReason: '사용자 요청 취소 (API)' }
-                        : booking
-                );
-                setBookings(updatedBookings);
-                const updatedSelected = { ...selectedBooking, status: '취소', displayStatus: '취소', cancelReason: '사용자 요청 취소 (API)' };
-                setSelectedBooking(updatedSelected);
-                alert('예약이 취소되었습니다.');
-                closeModal();
+            const updatedBookings = bookings.map(booking =>
+                booking.id === bookingId
+                    ? { ...booking, status: '취소', displayStatus: '취소', cancelReason: '사용자 요청 취소 (API)' }
+                    : booking
+            );
+            setBookings(updatedBookings);
+            alert('예약이 취소되었습니다.');
+            closeModal();
 
-            } catch (err) {
-                alert(`예약 취소 중 오류가 발생했습니다: ${err.message}`);
-            }
+        } catch (err) {
+            alert(`예약 취소 중 오류가 발생했습니다: ${err.message}`);
         }
     };
 
     const handleEditMode = () => {
         setEditData({
-            // 수정 모드 진입 시 상태를 '확정대기'로 강제 설정하여 서버에 전달
             status: '확정대기',
             applicant: selectedBooking.applicant,
             phone: selectedBooking.phone,
@@ -144,11 +171,12 @@ const BookingHistory = ({ onNavigate }) => {
         const bookingId = selectedBooking.id;
 
         try {
-            // 🚨 서버 통신: PATCH 요청으로 데이터 수정
+            const token = localStorage.getItem('authToken');
             const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // ⭐️ 토큰 추가
                 },
                 body: JSON.stringify(editData),
             });
@@ -184,7 +212,6 @@ const BookingHistory = ({ onNavigate }) => {
         setEditData({});
     };
 
-    // 💡 에러 및 로딩 상태 처리 JSX 함수
     const renderContent = () => {
         if (loading) {
             return (
@@ -244,12 +271,15 @@ const BookingHistory = ({ onNavigate }) => {
     };
 
     return (
-        <div className="login-container">
+        // ⭐️ 루트 클래스 변경
+        <div className="history-page-container">
+            {/* ⭐️ 뒤로가기 버튼 스타일 변경 */}
             <button
-                className="back-button fixed-left"
-                onClick={() => onNavigate('ReservationMenuPage')}
+                className="back-button" // ⭐️ 'fixed-left' 제거, 아이콘 추가
+                onClick={() => onNavigate('reservation')} // ⭐️ ReservationMenuPage로 이동
             >
-                뒤로가기
+                <BsArrowLeft size={16} />
+                뒤로
             </button>
             <div className="top-title">
                 <h1 className="page-title">📝 나의 예약 내역</h1>
@@ -259,16 +289,15 @@ const BookingHistory = ({ onNavigate }) => {
                     {renderContent()}
                 </div>
             </div>
+            
+            {/* ⭐️ 모달 인라인 스타일 제거, CSS 클래스 적용 */}
             {isModalOpen && selectedBooking && (
-                <div id="detail-modal" style={{
-                    display: 'block', position: 'fixed', zIndex: 1000, left: 0, top: 0,
-                    width: '100%', height: '100%', overflow: 'auto', backgroundColor: 'rgba(0,0,0,0.4)'
-                }} onClick={closeModal}>
+                <div id="detail-modal" className="modal-overlay" onClick={closeModal}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <span className="close-btn" onClick={closeModal}>&times;</span>
                         <h2 className="modal-title">{isEditMode ? '예약 정보 수정' : '예약 상세 정보'}</h2>
                         <div id="modal-details">
-                            {/* 💡 1. 상태가 취소일 경우 */}
+                            
                             {selectedBooking.status === '취소' ? (
                                 <>
                                     <div className="detail-item"><strong>상태:</strong> <span className={`status-badge status-취소`}>취소</span></div>
@@ -278,14 +307,10 @@ const BookingHistory = ({ onNavigate }) => {
                                     <div className="detail-item" style={{ marginTop: '15px' }}><strong>신청자:</strong> {selectedBooking.applicant}</div>
                                     <div className="detail-item"><strong>연락처:</strong> {selectedBooking.phone}</div>
 
-                                    {/* 🚨 취소 사유 표시 칸 */}
-                                    <div className="detail-item cancel-reason-box" style={{
-                                        flexDirection: 'column', alignItems: 'flex-start', borderTop: '1px solid #ddd', paddingTop: '10px', marginTop: '15px'
-                                    }}>
-                                        <strong style={{ color: '#dc3545', width: '100%', marginBottom: '5px' }}>취소 사유</strong>
-                                        <p style={{ margin: 0, padding: '8px 10px', border: '1px solid #eee', width: '100%', borderRadius: '5px', backgroundColor: '#f8f8f8', whiteSpace: 'pre-wrap' }}>
-                                            {selectedBooking.cancelReason || '사유 정보 없음'}
-                                        </p>
+                                    {/* ⭐️ CSS 클래스 적용 */}
+                                    <div className="detail-item cancel-reason-box">
+                                        <strong>취소 사유</strong>
+                                        <p>{selectedBooking.cancelReason || '사유 정보 없음'}</p>
                                     </div>
 
                                     <div className="modal-buttons" style={{ marginTop: '15px' }}>
@@ -294,13 +319,13 @@ const BookingHistory = ({ onNavigate }) => {
                                         </button>
                                     </div>
                                 </>
-                                // 💡 2. 수정 모드일 경우 (상태가 취소가 아닐 때만 가능)
                             ) : isEditMode ? (
                                 <>
                                     <div className="detail-item"><strong>상태:</strong> <span className={`status-badge status-확정대기`}>확정대기</span></div>
                                     <div className="detail-item"><strong>장소:</strong> {selectedBooking.room} ({selectedBooking.location}) <span className="readonly-text">(수정 불가)</span></div>
                                     <div className="detail-item"><strong>날짜:</strong> {selectedBooking.date} <span className="readonly-text">(수정 불가)</span></div>
                                     <div className="detail-item"><strong>시간:</strong> {`${selectedBooking.startTime} ~ ${selectedBooking.endTime}`} <span className="readonly-text">(수정 불가)</span></div>
+                                    
                                     <div className="edit-item">
                                         <strong>신청자:</strong>
                                         <input
@@ -342,7 +367,7 @@ const BookingHistory = ({ onNavigate }) => {
                                         <input
                                             type="number"
                                             value={editData.numPeople}
-                                            onChange={(e) => handleEditChange('numPeople', parseInt(e.target.value))}
+                                            onChange={(e) => handleEditChange('numPeople', parseInt(e.target.value) || 1)}
                                             className="edit-input"
                                             min="1"
                                         />
@@ -367,7 +392,6 @@ const BookingHistory = ({ onNavigate }) => {
                                         </button>
                                     </div>
                                 </>
-                                // 💡 3. 기본 상세 정보/버튼 표시 (취소 상태도 아니고 수정 모드도 아닐 때)
                             ) : (
                                 <>
                                     <div className="detail-item"><strong>상태:</strong> <span className={`status-badge status-${selectedBooking.displayStatus}`}>{selectedBooking.displayStatus}</span></div>
@@ -380,11 +404,21 @@ const BookingHistory = ({ onNavigate }) => {
                                     <div className="detail-item"><strong>행사명:</strong> {selectedBooking.eventName}</div>
                                     <div className="detail-item"><strong>행사인원:</strong> {selectedBooking.numPeople}명</div>
                                     <div className="detail-item"><strong>냉난방:</strong> {selectedBooking.acUse === 'yes' ? '사용함' : '사용 안 함'}</div>
+                                    
+                                    {/* ⭐️ 지난예약/사용중일 때 버튼 비활성화 */}
                                     <div className="modal-buttons">
-                                        <button className="cancel-btn" onClick={handleCancel} disabled={selectedBooking.status === '취소'}>
+                                        <button 
+                                            className="cancel-btn" 
+                                            onClick={handleCancel} 
+                                            disabled={selectedBooking.displayStatus === '지난예약' || selectedBooking.displayStatus === '사용중'}
+                                        >
                                             예약 취소
                                         </button>
-                                        <button className="edit-btn" onClick={handleEditMode} disabled={selectedBooking.status === '취소'}>
+                                        <button 
+                                            className="edit-btn" 
+                                            onClick={handleEditMode} 
+                                            disabled={selectedBooking.displayStatus === '지난예약' || selectedBooking.displayStatus === '사용중'}
+                                        >
                                             정보 수정
                                         </button>
                                     </div>
@@ -399,3 +433,4 @@ const BookingHistory = ({ onNavigate }) => {
 };
 
 export default BookingHistory;
+

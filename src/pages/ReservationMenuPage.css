@@ -1,44 +1,156 @@
-/* 이 파일은 ReservationMenuPage 컴포넌트 전용 스타일을 담고 있습니다. */
+/* ReservationMenuPage.css
+  - 꽉 찬 3단 레이아웃을 세련된 카드형 그리드로 변경
+*/
 
+/* 1. 전체 컨테이너 (페이지 여백 및 정렬) */
 .reservation-container {
-    display: flex;
-    height: 100%;
+    /* display: flex, height: 100% 제거 */
+    padding: 3rem 2rem; /* 넉넉한 내부 여백 */
+    min-height: 70vh; /* 최소 높이 설정 (꽉 차지 않도록) */
     width: 100%;
-}
-
-.reservation-section {
-    flex-grow: 1;
+    box-sizing: border-box; /* padding이 너비/높이에 포함되도록 */
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    position: relative; /* '메인으로' 버튼의 기준점 */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 2. '메인으로' (뒤로가기) 버튼 (위치/디자인 미세 조정) */
+  .back-button {
+    position: absolute;
+    top: 1.5rem; /* 24px */
+    left: 1.5rem; /* 24px */
+    z-index: 10;
+    
+    padding: 0.6rem 1.2rem;
+    background-color: #f8f9fa; /* 옅은 회색 배경 */
+    color: #333; /* 기본 텍스트 색상 */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .back-button:hover {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* 3. ⭐️ 카드들을 감싸는 그리드 (새로 추가) */
+  .reservation-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem; /* 40px (카드 사이 간격) */
+    width: 100%;
+    margin: auto; /* 수직/수평 중앙 정렬 (flex-grow: 1과 함께) */
+    flex-grow: 1; /* 남은 공간을 채워 중앙 정렬 */
+    flex-wrap: wrap; /* 화면 작아지면 줄바꿈 */
+  }
+  
+  /* 4. ⭐️ 3단 분할 섹션 -> '카드' 스타일로 변경 */
+  .reservation-section {
+    /* 기존 flex-grow: 1, border-right 등 제거 */
+    flex-basis: 280px; /* 카드의 기본 너비 */
+    min-height: 320px; /* 카드의 최소 높이 */
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-right: 1px solid #ddd;
-    position: relative;
-}
-
-.reservation-section:last-child {
-    border-right: none;
-}
-
-.large-button {
-    padding: 30px 60px;
-    font-size: 28px;
-    font-weight: bold;
-    color: white;
-    border: none;
-    border-radius: 12px;
+    
+    background-color: #ffffff; /* ⭐️ 흰색 배경 */
+    border: 1px solid #e9ecef; /* ⭐️ 옅은 테두리 */
+    border-radius: 16px; /* ⭐️ 둥근 모서리 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* ⭐️ 은은한 그림자 */
+    
+    padding: 2rem;
+    transition: all 0.3s ease;
     cursor: pointer;
-    transition: background-color 0.3s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-decoration: none;
+  }
+  
+  /* 5. ⭐️ 카드 호버 효과 (떠오르는 느낌) */
+  .reservation-section:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 75, 141, 0.1); /* ⭐️ 인하대 파란색 그림자 */
+  }
+  
+  /* 6. ⭐️ 메뉴 버튼 (카드 내의 컨텐츠) */
+  .menu-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem; /* 24px */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 1rem 0; /* 내부 여백 */
+    transition: transform 0.3s ease;
+    width: 100%; /* 너비 꽉 채우기 */
+  }
+  
+  /* 7. ⭐️ 아이콘 래퍼 (디자인 변경) */
+  .menu-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90px; /* 크기 살짝 줄임 */
+    height: 90px;
+    border-radius: 50%;
+    background-color: #f8f9fa; /* ⭐️ 기본 옅은 회색 배경 */
+    box-shadow: none; /* 그림자 제거 */
+    transition: all 0.3s ease;
+  }
+  
+  /* 8. ⭐️ 텍스트 (크기/색상 조정) */
+  .menu-text {
+    font-size: 1.5rem; /* 24px (너무 크지 않게) */
+    font-weight: 700;
     text-align: center;
-}
-
-#btn-reserve { background-color: #007bff; }
-#btn-reserve:hover { background-color: #0056b3; }
-
-#btn-history { background-color: #28a745; }
-#btn-history:hover { background-color: #1e7e34; }
-
-#btn-complaint { background-color: #dc3545; }
-#btn-complaint:hover { background-color: #bd2130; }
+    color: #333; /* ⭐️ 기본 검은색 */
+    transition: color 0.3s ease;
+  }
+  
+  /* 9. ⭐️ 섹션별 호버 시 색상 변경 (더 세련되게) */
+  
+  /* 예약 */
+  .reservation-section.section-reserve:hover .menu-icon-wrapper {
+    background-color: #004B8D; /* ⭐️ 인하대 파랑 */
+    color: #ffffff;
+  }
+  .reservation-section.section-reserve:hover .menu-text {
+    color: #004B8D;
+  }
+  /* 억지로 .section-reserve .menu-icon-wrapper에 color를 줄 필요 없이,
+     아이콘 자체의 색을 부모 .menu-icon-wrapper의 color로 받게 합니다. */
+  .menu-icon-wrapper {
+    color: #555; /* 기본 아이콘 색상 */
+  }
+  
+  
+  /* 내역/수정 */
+  .reservation-section.section-history:hover .menu-icon-wrapper {
+    background-color: #15803d; /* 초록 */
+    color: #ffffff;
+  }
+  .reservation-section.section-history:hover .menu-text {
+    color: #15803d;
+  }
+  
+  /* 불편 사항 */
+  .reservation-section.section-complaint:hover .menu-icon-wrapper {
+    background-color: #dc3545; /* 빨강 */
+    color: #ffffff;
+  }
+  .reservation-section.section-complaint:hover .menu-text {
+    color: #dc3545;
+  }
+  
+  

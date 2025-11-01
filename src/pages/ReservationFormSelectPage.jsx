@@ -1,37 +1,67 @@
 import React from 'react';
+// 1. ⭐️ CSS 파일 import
 import './ReservationFormSelectPage.css';
+// 2. ⭐️ 아이콘 import
+import { BsArrowLeft, BsClock, BsBuilding } from 'react-icons/bs';
 
-const reservationFormSelectPage = ({ onNavigate }) => {
+// 3. ⭐️ 컴포넌트 이름은 대문자로 시작 (ReservationFormSelectPage)
+const ReservationFormSelectPage = ({ onNavigate }) => {
     return (
+        // 4. ⭐️ 전체 컨테이너 (CSS 적용)
         <div className="reservationFormSelect-container">
-            <header>
-                <h1 className="text-4xl font-bold mb-2">학교 시설물 관리 시스템</h1>
-                <h2 className="reservationFormSelect-heading">예약 방식 선택</h2>
-                <p className="reservationFormSelect-subheading">원하는 예약 방식을 선택하세요.</p>
+            
+            {/* 5. ⭐️ '뒤로가기' 버튼 (디자인 통일) */}
+            <button
+                onClick={() => onNavigate('reservation')}
+                className="back-button"
+            >
+                <BsArrowLeft size={16} />
+                뒤로
+            </button>
+            
+            {/* 6. ⭐️ 헤더 (디자인 적용) */}
+            <header className="select-header">
+                <h1 className="select-title">예약 방식 선택</h1>
+                <p className="select-subtitle">원하는 예약 방식을 선택하세요.</p>
             </header>
 
-            <div className="absolute top-4 left-4">
-                <button
-                    onClick={() => onNavigate('reservation')}
-                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition z-10"
+            {/* 7. ⭐️ 카드 그리드 */}
+            <div className="select-grid">
+
+                {/* 8. ⭐️ '시간 먼저 선택' 카드 */}
+                <div 
+                  className="select-card section-time"
+                  onClick={() => onNavigate('timeFocusSelectPage')}
                 >
-                    ← 뒤로
-                </button>
-            </div>
+                    <div className="select-icon-wrapper">
+                        <BsClock size={44} />
+                    </div>
+                    <span className="select-text">시간 우선 예약</span>
+                    <p className="select-description">
+                        원하는 날짜와 시간을 먼저 선택하고
+                        해당 시간에 사용 가능한 공간을 조회합니다.
+                    </p>
+                </div>
 
-            <div className="reservationFormSelect-section" style={{ backgroundColor: '#e9f7ff' }}>
-                <button onClick={() => onNavigate('timeFocusSelectPage')} id="btn-timeFocused" className="large-button">
-                    시간 먼저 선택
-                </button>
-            </div>
+                {/* 9. ⭐️ '공간 먼저 선택' 카드 */}
+                <div 
+                  className="select-card section-place"
+                  onClick={() => onNavigate('placeFocusSelectPage')}
+                >
+                    <div className="select-icon-wrapper">
+                        <BsBuilding size={44} />
+                    </div>
+                    <span className="select-text">공간 우선 예약</span>
+                    <p className="select-description">
+                        원하는 공간을 먼저 선택하고
+                        해당 공간의 월별/일별 예약 현황을 조회합니다.
+                    </p>
+                </div>
 
-            <div className="reservationFormSelect-section" style={{ backgroundColor: '#e9fff1' }}>
-                <button onClick={() => onNavigate('placeFocusSelectPage')} id="btn-spaceFocused" className="large-button">
-                    공간 먼저 선택
-                </button>
             </div>
         </div>
     );
 };
 
-export default reservationFormSelectPage;
+// 10. ⭐️ export default 이름 변경
+export default ReservationFormSelectPage;

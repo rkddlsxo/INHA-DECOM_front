@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import './PlaceFocusSelectPage.css';
+import { BsArrowLeft, BsBuilding, BsCalendarCheck } from 'react-icons/bs';
 
-// 💡 Local Storage 키 상수 정의 (ReservationDetailsPage와 연동)
 const LAST_PAGE_KEY = 'lastReservationSelectPage';
 
 // --- 상수 및 유틸리티 ---
@@ -37,10 +37,18 @@ const generateMinuteOptions = (type) => {
         if (type === 'start') {
             minutes.push(String(m).padStart(2, '0'));
         } else { // type === 'end'
-            minutes.push(String(m + 9).padStart(2, '0'));
+            if (m === 50) {
+                minutes.push('59');
+            } else {
+                minutes.push(String(m + 9).padStart(2, '0'));
+            }
         }
     }
-    return minutes;
+    const options = Array.from(new Set(minutes)).sort();
+    if (type === 'end' && !options.includes('59')) {
+        options.push('59');
+    }
+    return options;
 };
 // --- (생략된 getReservationStatus, getMasterBookedTimes 로직은 이 코드가 동작하려면 필요합니다) ---
 // ------------------------------------
@@ -49,16 +57,14 @@ const generateMinuteOptions = (type) => {
 // --- 메인 컴포넌트 ---
 
 const PlaceFocusSelectPage = ({ onNavigate }) => {
-    // 💡 서버에서 받아온 전체 장소 마스터 데이터
     const [allMasterSpaces, setAllMasterSpaces] = useState([]);
-
     const [selectedRooms, setSelectedRooms] = useState([]);
     const [displayDate, setDisplayDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
     const [selectedDate, setSelectedDate] = useState(null); // YYYY-MM-DD
 
     const [selectedHour, setSelectedHour] = useState({ start: '09', end: '10' });
-    const [selectedMinute, setSelectedMinute] = useState({ start: '00', end: '09' });
-    const [selectedTimeRange, setSelectedTimeRange] = useState({ start: '09:00', end: '10:09' });
+    const [selectedMinute, setSelectedMinute] = useState({ start: '00', end: '59' });
+    const [selectedTimeRange, setSelectedTimeRange] = useState({ start: '09:00', end: '10:59' });
 
     const [selectedFinalRoomId, setSelectedFinalRoomId] = useState(null);
     const [expandedCategories, setExpandedCategories] = useState({});
@@ -68,9 +74,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
     const [error, setError] = useState(null);
     const [timeLoading, setTimeLoading] = useState(false);
 
-    // 캘린더 날짜 배열 생성
     const { calendarCells, displayYear, displayMonth } = useMemo(() => {
-        // ... (캘린더 로직 유지)
         const year = displayDate.getFullYear();
         const month = displayDate.getMonth();
         const daysInMonth = getDaysInMonth(year, month);
@@ -83,7 +87,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         return { calendarCells: cells, displayYear: year, displayMonth: month };
     }, [displayDate]);
 
-    // 💡 장소 데이터를 그룹화하는 useMemo (allMasterSpaces에 의존)
     const groupedSpaces = useMemo(() => {
         return allMasterSpaces.reduce((groups, space) => {
             const category = space.category;
@@ -95,38 +98,36 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         }, {});
     }, [allMasterSpaces]);
 
-    // 💡 시간 옵션 목록
     const hourOptions = useMemo(() => generateHourOptions(), []);
 
-
-    // 🚨 0. 장소 마스터 데이터를 서버에서 로드
     useEffect(() => {
         const fetchMasterSpaces = async () => {
             setLoading(true);
             try {
-                // 💡 마스터 데이터 로드 API 엔드포인트 가정
                 const response = await fetch(`${API_BASE_URL}/masters/spaces`);
                 if (!response.ok) throw new Error('마스터 장소 목록 로드 실패');
                 const data = await response.json();
 
                 setAllMasterSpaces(data);
 
-                // 장소 목록 로드 후 초기 확장 상태 설정
-                const initialExpandedState = Object.keys(groupSpaces(data)).reduce((acc, category) => { acc[category] = true; return acc; }, {});
+                const initialExpandedState = data.reduce((acc, space) => {
+                    if (space.category && !acc[space.category]) {
+                        acc[space.category] = true;
+                    }
+                    return acc;
+                }, {});
                 setExpandedCategories(initialExpandedState);
 
             } catch (err) {
                 setError(`장소 목록 로드 실패: ${err.message}`);
-                setAllMasterSpaces([]); // 실패 시 목록 비우기
+                setAllMasterSpaces([]);
             } finally {
                 setLoading(false);
             }
         };
         fetchMasterSpaces();
-    }, []); // 컴포넌트 마운트 시 1회 실행
+    }, []);
 
-
-    // 💡 EFFECT 2: 선택된 룸이 변경되거나 월이 변경되면 월별 가용성 로드
     useEffect(() => {
         if (selectedRooms.length === 0) return;
 
@@ -148,24 +149,22 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
 
         fetchAllMonthData();
 
-    }, [selectedRooms.length, displayDate]);
+    }, [selectedRooms, displayDate]);
 
 
-    // 🚨 서버 통신: 특정 장소의 월별 예약 현황 조회 (달력 표시용)
     const fetchMonthAvailability = async (roomId, year, month) => {
-
+        const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
         try {
-            // 🚨 실제 서버 통신: GET /api/availability/monthly?roomId={id}&year={y}&month={m}
-            const response = await fetch(`${API_BASE_URL}/availability/monthly?roomId=${roomId}&year=${year}&month=${month}`);
+            const response = await fetch(`${API_BASE_URL}/availability/monthly?roomId=${roomId}&year=${year}&month=${month + 1}`);
             if (!response.ok) throw new Error('서버 응답 오류: ' + response.statusText);
-            const data = await response.json();
-
-            const currentMonthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
-            const monthData = { [currentMonthKey]: true, ...data };
+            const data = await response.json(); 
 
             setRoomAvailabilityCache(prev => ({
                 ...prev,
-                [roomId]: { ...(prev[roomId] || {}), ...monthData }
+                [roomId]: { 
+                    ...(prev[roomId] || {}), 
+                    [monthKey]: data
+                }
             }));
 
         } catch (err) {
@@ -173,22 +172,23 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         }
     };
 
-    // 🚨 서버 통신: 특정 장소/날짜의 시간별 예약 현황 조회 (시간표 표시용)
     const fetchDayTimeAvailability = async (roomId, dateKey) => {
-
         try {
-            // 🚨 실제 서버 통신: GET /api/availability/daily?roomId={id}&date={d}
             const response = await fetch(`${API_BASE_URL}/availability/daily?roomId=${roomId}&date=${dateKey}`);
             if (!response.ok) throw new Error('서버 응답 오류: ' + response.statusText);
-            const dayAvailability = await response.json();
+            const dayAvailability = await response.json(); 
 
+            const monthKey = dateKey.substring(0, 7);
             setRoomAvailabilityCache(prev => ({
                 ...prev,
                 [roomId]: {
                     ...(prev[roomId] || {}),
-                    [dateKey]: {
-                        ...(prev[roomId]?.[dateKey] || {}),
-                        ...dayAvailability
+                    [monthKey]: {
+                        ...(prev[roomId]?.[monthKey] || {}),
+                        [dateKey]: { 
+                            ...(prev[roomId]?.[monthKey]?.[dateKey] || {}),
+                            ...dayAvailability
+                        }
                     }
                 }
             }));
@@ -197,29 +197,23 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         }
     };
 
-    // 장소 선택 핸들러 (다중 선택 토글)
     const handleRoomSelect = (room) => {
         setSelectedDate(null);
-        setSelectedTimeRange({ start: '09:00', end: '10:09' });
+        setSelectedTimeRange({ start: '09:00', end: '10:59' });
         setSelectedHour({ start: '09', end: '10' });
-        setSelectedMinute({ start: '00', end: '09' });
+        setSelectedMinute({ start: '00', end: '59' });
         setError(null);
 
         setSelectedRooms(prev => {
             const isSelected = prev.some(r => r.id === room.id);
-            let newRooms;
-
             if (isSelected) {
-                newRooms = prev.filter(r => r.id !== room.id);
+                return [];
             } else {
-                newRooms = [...prev, room];
+                return [room];
             }
-
-            return newRooms;
         });
     };
 
-    // 💡 카테고리 펼침/접기 핸들러
     const toggleCategory = (categoryName) => {
         setExpandedCategories(prev => ({
             ...prev,
@@ -227,7 +221,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         }));
     };
 
-    // 날짜 클릭 핸들러
     const handleDateClick = (year, month, day) => {
         if (selectedRooms.length === 0) return;
 
@@ -238,7 +231,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
 
         setSelectedDate(formattedDate);
         setError(null);
-
         setTimeLoading(true);
 
         const fetchPromises = selectedRooms.map(room => fetchDayTimeAvailability(room.id, formattedDate));
@@ -248,7 +240,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
             .catch(() => setTimeLoading(false));
     };
 
-    // 시간대 입력 변경 핸들러
     const handleTimeInputComponentChange = (field, part, e) => {
         const value = e.target.value;
         let newStartHour = selectedHour.start;
@@ -258,42 +249,33 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
 
         if (part === 'hour') {
             if (field === 'start') {
-                setSelectedHour(prev => ({ ...prev, start: value }));
                 newStartHour = value;
             } else {
-                setSelectedHour(prev => ({ ...prev, end: value }));
                 newEndHour = value;
             }
-        } else { // part === 'minute'
+        } else {
             if (field === 'start') {
-                setSelectedMinute(prev => ({ ...prev, start: value }));
                 newStartMinute = value;
             } else {
-                setSelectedMinute(prev => ({ ...prev, end: value }));
                 newEndMinute = value;
             }
         }
 
+        setSelectedHour({ start: newStartHour, end: newEndHour });
+        setSelectedMinute({ start: newStartMinute, end: newEndMinute });
         setSelectedTimeRange({
             start: `${newStartHour}:${newStartMinute}`,
             end: `${newEndHour}:${newEndMinute}`,
         });
     };
 
-    // 💡 최종 대표 장소 선택 핸들러
     const handleFinalRoomSelect = (e) => {
         setSelectedFinalRoomId(Number(e.target.value));
     };
 
-
-    // 예약 버튼 클릭 (다음 페이지 이동)
     const handleNext = () => {
         if (selectedRooms.length === 0 || !selectedDate || !selectedTimeRange.start || !selectedTimeRange.end) {
             alert('장소, 날짜, 시작/종료 시간을 모두 선택해야 합니다.');
-            return;
-        }
-        if (selectedRooms.length > 1 && !selectedFinalRoomId) {
-            alert('복수 장소를 선택하셨습니다. 예약 상세 정보에 사용할 대표 장소를 선택해주세요.');
             return;
         }
         if (selectedTimeRange.start >= selectedTimeRange.end) {
@@ -301,7 +283,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
             return;
         }
 
-        // 🚨 최종 유효성 검사: 선택된 시간 범위 내에 예약 불가능한 슬롯이 있는지 확인
         const checkRangeAvailability = () => {
             const currentStartTime = selectedTimeRange.start;
             const currentEndTime = selectedTimeRange.end;
@@ -309,19 +290,14 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
             let timePointer = currentStartTime;
 
             while (timePointer < currentEndTime) {
-                const isBooked = selectedRooms.some(room => {
-                    const dayData = roomAvailabilityCache[room.id]?.[selectedDate];
+                const room = selectedRooms[0];
+                const monthKey = selectedDate.substring(0, 7);
+                const dayData = roomAvailabilityCache[room.id]?.[monthKey]?.[selectedDate];
 
-                    // 데이터가 없으면 (로딩 실패/미로드) 예약 불가능으로 간주
-                    if (!dayData || dayData[timePointer] === undefined) return true;
-                    return dayData[timePointer] === false;
-                });
-
-                if (isBooked) {
-                    return { isOverlap: true, overlapTime: timePointer };
+                if (!dayData || dayData[timePointer] === false) {
+                     return { isOverlap: true, overlapTime: timePointer };
                 }
 
-                // 10분 증가
                 const [h, m] = timePointer.split(':').map(Number);
                 const nextTime = new Date(0, 0, 0, h, m + 10);
                 timePointer = `${String(nextTime.getHours()).padStart(2, '0')}:${String(nextTime.getMinutes()).padStart(2, '0')}`;
@@ -336,12 +312,8 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
             alert(`선택한 시간대 (${overlapResult.overlapTime} 근처)에 예약이 불가능한 장소가 포함되어 있습니다. 예약 불가 시간대 목록을 확인해주세요.`);
             return;
         }
-        // -----------------------------------------------------
 
-        // 💡 최종 예약 데이터 추출
-        const finalRoom = selectedRooms.length === 1
-            ? selectedRooms[0]
-            : MASTER_SPACES_ALL.find(r => r.id === selectedFinalRoomId);
+        const finalRoom = selectedRooms[0];
 
         if (!finalRoom) {
             alert('예약 정보를 확정할 장소를 찾을 수 없습니다.');
@@ -359,17 +331,16 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         localStorage.setItem('tempBookingData', JSON.stringify(tempBookingData));
         localStorage.setItem(LAST_PAGE_KEY, 'placeFocusSelectPage');
 
-        onNavigate('ReservationDetailsPage');
+        onNavigate('reservationDetailsPage');
     };
 
-    // 캘린더 월 이동 함수
     const navigateMonth = (direction) => {
         if (selectedRooms.length === 0) return;
 
         const newDate = new Date(displayDate);
         const todayMonth = today.getMonth();
         const todayYear = today.getFullYear();
-        const limitDate = new Date(todayYear, todayMonth + 2, 0);
+        const limitDate = new Date(todayYear, todayMonth + 2, 0); 
 
         newDate.setMonth(displayDate.getMonth() + (direction === 'next' ? 1 : -1));
 
@@ -388,45 +359,36 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         setError(null);
     };
 
-    // 캘린더 셀 상태 결정 로직
     const getDayStatus = (year, month, day) => {
         const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const monthKey = dateKey.substring(0, 7);
 
         if (selectedRooms.length === 0) return 'no-room';
 
-        const isAnyAvailable = selectedRooms.some(room => {
-            const roomCache = roomAvailabilityCache[room.id];
-
-            const currentMonthKey = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}`;
-
-            if (!roomCache || roomCache[currentMonthKey] === undefined) {
-                return false;
-            }
-
-            if (roomCache[dateKey] && roomCache[dateKey].hasBooking !== undefined) {
-                return !roomCache[dateKey].hasBooking;
-            }
-
-            return false;
-        });
-
-        const currentMonthKey = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}`;
-        const isCacheLoadedForMonth = selectedRooms.every(room => roomAvailabilityCache[room.id] && roomAvailabilityCache[room.id][currentMonthKey] !== undefined);
-        if (!isCacheLoadedForMonth && loading) {
+        const room = selectedRooms[0];
+        const roomCache = roomAvailabilityCache[room.id];
+        
+        if (!roomCache || !roomCache[monthKey]) {
             return 'loading';
         }
 
-        return isAnyAvailable ? 'available' : 'booked';
+        const dayData = roomCache[monthKey][dateKey];
+
+        if (dayData && dayData.hasBooking !== undefined) {
+             return dayData.hasBooking ? 'booked' : 'available';
+        }
+
+        return 'loading';
     };
 
-    // 💡 예약 불가 시간대 목록 계산 및 범위로 변환
     const getCombinedBookedTimeRanges = () => {
         if (!selectedDate || selectedRooms.length === 0 || loading || timeLoading) return [];
 
         const bookedRangesByRoom = [];
 
         selectedRooms.forEach(room => {
-            const dayData = roomAvailabilityCache[room.id]?.[selectedDate];
+            const monthKey = selectedDate.substring(0, 7);
+            const dayData = roomAvailabilityCache[room.id]?.[monthKey]?.[selectedDate];
 
             if (!dayData || typeof dayData !== 'object' || Object.keys(dayData).length === 0) {
                 return;
@@ -439,7 +401,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                 return acc;
             }, {});
 
-            const roomBookedSlots = allTimeSlots.filter(time => timeSlotsData[time] === false);
+            const roomBookedSlots = allTimeSlots.filter(time => timeSlotsData[time] === false); 
 
             if (roomBookedSlots.length > 0) {
                 let currentRangeStart = null;
@@ -478,33 +440,32 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         return bookedRangesByRoom;
     };
 
-    // 💡 시간 선택 드롭다운에 표시될 가용 시간 옵션 목록 생성
     const getAvailableTimeOptions = (type) => {
+        const timeOptions = (type === 'start' ? startTimeOptions : endTimeOptions);
+
         if (!selectedDate || selectedRooms.length === 0 || loading || timeLoading) {
-            // 로딩 중이거나 선택이 안 됐을 때 전체 옵션 반환
-            return (type === 'start' ? startTimeOptions : endTimeOptions);
+            return timeOptions;
         }
 
-        const timeOptions = (type === 'start' ? startTimeOptions : endTimeOptions);
         const availableOptions = [];
+        
+        const room = selectedRooms[0];
+        const monthKey = selectedDate.substring(0, 7);
+        const dayData = roomAvailabilityCache[room.id]?.[monthKey]?.[selectedDate];
 
-        const isBookedAcrossAllRooms = (time) => {
-            return selectedRooms.some(room => {
-                const dayData = roomAvailabilityCache[room.id]?.[selectedDate];
-                if (!dayData || dayData[time] === undefined) return true;
-                return dayData[time] === false;
-            });
+        const isBooked = (time) => {
+            if (!dayData || dayData[time] === undefined) return true;
+            return dayData[time] === false;
         };
 
         timeOptions.forEach(time => {
-            const isValidRule = (type === 'start' && time.slice(-1) === '0') || (type === 'end' && time.slice(-1) === '9');
-
-            if (isValidRule && !isBookedAcrossAllRooms(time)) {
+            const isValidRule = (type === 'start' && time.slice(-1) === '0') || (type === 'end' && (time.slice(-1) === '9'));
+            
+            if (isValidRule && !isBooked(time)) {
                 availableOptions.push(time);
             }
         });
 
-        // 유효성: 선택된 시작/종료 시간에 따라 목록 필터링
         const currentStartTime = `${selectedHour.start}:${selectedMinute.start}`;
         const currentEndTime = `${selectedHour.end}:${selectedMinute.end}`;
 
@@ -516,6 +477,9 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
 
         return availableOptions;
     };
+    
+    const startTimeMinuteOptions = useMemo(() => generateMinuteOptions('start'), []);
+    const endTimeMinuteOptions = useMemo(() => generateMinuteOptions('end'), []);
 
     const bookedTimeRanges = getCombinedBookedTimeRanges();
 
@@ -526,30 +490,34 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                 onClick={() => onNavigate('reservationFormSelectPage')}
                 className="back-btn"
             >
-                ← 뒤로
+                <BsArrowLeft size={16} /> 
+                뒤로
             </button>
             <h1 className="page-title">📌 공간 우선 예약</h1>
             {error && <p className="error-text" style={{ position: 'relative', top: '10px' }}>{error}</p>}
 
             <div className="selection-area-wrapper">
 
-                {/* 1. 장소 목록 (트리 구조) */}
+                
                 <div className="room-list-box">
-                    <h2 className="box-title">장소 목록 ({MASTER_SPACES_ALL.length}개)</h2>
-                    <p className="instruction-text-small">다중 선택 가능</p>
+                    <h2 className="box-title">
+                        <BsBuilding size={24} /> 
+                        장소 목록 ({allMasterSpaces.length}개)
+                    </h2>
+                    <p className="instruction-text-small">하나의 장소를 선택해주세요.</p>
 
                     {Object.keys(groupedSpaces).map(category => (
                         <div key={category} className="category-group-wrapper">
-                            {/* 주 카테고리 (헤더) */}
+                            
                             <div
                                 className={`category-header ${expandedCategories[category] ? 'expanded' : ''}`}
                                 onClick={() => toggleCategory(category)}
                             >
                                 <strong>{category}</strong>
-                                <span className="toggle-icon">{expandedCategories[category] ? '▲' : '▼'}</span>
+                                <span className="toggle-icon">▼</span> 
                             </div>
 
-                            {/* 서브/아이템 목록 (접기/펴기) */}
+                            
                             {expandedCategories[category] && (
                                 <div className="sub-category-content">
                                     {Object.keys(groupedSpaces[category]).map(subCategory => {
@@ -560,7 +528,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                                                     {subCategory}
                                                 </div>
                                                 <div className="room-item-list">
-                                                    {/* 최종 예약 항목 */}
+                                                    
                                                     {roomsInSub.map(room => (
                                                         <div
                                                             key={room.id}
@@ -580,13 +548,14 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                     ))}
                 </div>
 
-                {/* 2. 달력, 시간 선택, 예약 버튼 영역 */}
+                
                 <div className="schedule-area-box">
                     <h2 className="box-title">
-                        {selectedRooms.length > 0 ? `선택 장소 (${selectedRooms.length}개)` : '장소를 선택해주세요'}
+                        <BsCalendarCheck size={24} /> 
+                        {selectedRooms.length > 0 ? `선택 장소: ${selectedRooms[0].name}` : '장소를 선택해주세요'}
                     </h2>
 
-                    {/* 달력 섹션 */}
+                    
                     {selectedRooms.length > 0 ? (
                         <>
                             <div className="calendar-header">
@@ -610,7 +579,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
 
                                     const status = getDayStatus(year, month, day);
                                     const isClickable = !isPast;
-                                    const statusText = status === 'booked' ? '예약 있음' : status === 'available' ? '사용 가능' : status === 'loading' ? '로딩 중' : '확인 필요';
+                                    const statusText = status === 'booked' ? '예약 불가' : status === 'available' ? '사용 가능' : status === 'loading' ? '로딩 중' : '...';
 
                                     return (
                                         <div
@@ -632,7 +601,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                         <p className="instruction-text">왼쪽에서 장소를 선택해주세요.</p>
                     )}
 
-                    {/* 💡 예약 불가 시간대 목록 */}
+                    
                     {selectedDate && bookedTimeRanges.length > 0 && !timeLoading && (
                         <div className="booked-times-summary">
                             <h4>선택 장소의 예약 불가 시간대 ({selectedDate})</h4>
@@ -647,7 +616,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                         </div>
                     )}
 
-                    {/* 💡 시간표 로딩 중 표시 */}
+                    
                     {selectedDate && selectedRooms.length > 0 && timeLoading && (
                         <p className="loading-text" style={{ marginTop: '20px' }}>
                             시간표를 불러오는 중입니다...
@@ -655,32 +624,16 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                     )}
 
 
-                    {/* 💡 시간 선택 드롭다운 섹션 */}
+                    
                     {selectedDate && selectedRooms.length > 0 && !timeLoading && (
                         <div className="time-selection-container">
                             <h3>예약 시간대 선택 (10분 단위)</h3>
 
-                            {/* 💡 복수 장소 선택 시 최종 장소 선택 드롭다운 */}
-                            {selectedRooms.length > 1 && (
-                                <div className="final-room-select-box">
-                                    <label>예약에 사용할 **대표 장소** 선택:</label>
-                                    <select
-                                        value={selectedFinalRoomId || ''}
-                                        onChange={handleFinalRoomSelect}
-                                        className="time-select"
-                                    >
-                                        <option value="">-- 대표 장소를 선택하세요 --</option>
-                                        {selectedRooms.map(room => (
-                                            <option key={room.id} value={room.id}>
-                                                {room.name} ({room.location})
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            )}
+                            
+                            
 
                             <div className="time-inputs-wrapper">
-                                {/* 시작 시간 H SELECT */}
+                                
                                 <select
                                     value={selectedHour.start}
                                     onChange={(e) => handleTimeInputComponentChange('start', 'hour', e)}
@@ -691,20 +644,21 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                                     ))}
                                 </select>
                                 <span className="time-separator">:</span>
-                                {/* 시작 시간 M SELECT */}
+                                
                                 <select
                                     value={selectedMinute.start}
                                     onChange={(e) => handleTimeInputComponentChange('start', 'minute', e)}
                                     className="time-select"
                                 >
-                                    {generateMinuteOptions('start').map(m => (
+                                    
+                                    {startTimeMinuteOptions.map(m => (
                                         <option key={`sm-${m}`} value={m}>{m}</option>
                                     ))}
                                 </select>
 
                                 <span className="time-separator">~</span>
 
-                                {/* 종료 시간 H SELECT */}
+                                
                                 <select
                                     value={selectedHour.end}
                                     onChange={(e) => handleTimeInputComponentChange('end', 'hour', e)}
@@ -715,13 +669,14 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                                     ))}
                                 </select>
                                 <span className="time-separator">:</span>
-                                {/* 종료 시간 M SELECT */}
+                                
                                 <select
                                     value={selectedMinute.end}
                                     onChange={(e) => handleTimeInputComponentChange('end', 'minute', e)}
                                     className="time-select"
                                 >
-                                    {generateMinuteOptions('end').map(m => (
+                                    
+                                    {endTimeMinuteOptions.map(m => (
                                         <option key={`em-${m}`} value={m}>{m}</option>
                                     ))}
                                 </select>
@@ -734,7 +689,8 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                             <button
                                 onClick={handleNext}
                                 className="next-button"
-                                disabled={!selectedTimeRange.start || !selectedTimeRange.end || selectedTimeRange.start >= selectedTimeRange.end || (selectedRooms.length > 1 && !selectedFinalRoomId)}
+                                
+                                disabled={!selectedTimeRange.start || !selectedTimeRange.end || selectedTimeRange.start >= selectedTimeRange.end}
                             >
                                 예약 정보 입력으로 이동
                             </button>
@@ -747,3 +703,4 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
 };
 
 export default PlaceFocusSelectPage;
+

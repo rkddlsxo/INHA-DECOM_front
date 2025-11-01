@@ -1,25 +1,54 @@
 import React from 'react';
+import { BsCalendarCheck, BsExclamationCircle } from 'react-icons/bs';
+
+// 1. ⭐️⭐️⭐️ 1단계에서 만든 CSS 파일을 import 합니다! ⭐️⭐️⭐️
+import './MainPage.css'; 
 
 const MainPage = ({ onNavigate }) => {
+  const userName = "김인하"; // (임시) 사용자 이름
+
   return (
-    <div className="p-8">
-      <header className="mb-12 text-center">
-        <h1 className="text-4xl font-bold mb-2">학교 시설물 관리 시스템</h1>
-        <p className="text-lg text-gray-600">원하는 서비스를 선택하세요.</p>
+    // 2. <div>에 className 대신 1단계에서 만든 CSS 클래스 적용
+    <div className="main-page-container">
+      
+      <header className="main-page-header">
+        <h1 className="main-page-title">
+          학교 시설물 관리 시스템
+        </h1>
+        <p className="main-page-welcome">
+          {userName}님, 환영합니다. 원하는 서비스를 선택하세요.
+        </p>
       </header>
-      <main className="flex justify-center gap-8">
+      
+      <main className="main-page-grid">
+        
+        {/* 3. '시설 예약' 카드 */}
         <button
           onClick={() => onNavigate('reservation')}
-          className="w-48 h-32 bg-blue-500 text-white text-xl font-semibold rounded-lg shadow-md hover:bg-blue-600 transition-transform transform hover:-translate-y-1"
+          // 4. 공통 카드 스타일 + 예약 카드 전용 색상
+          className="menu-card card-reservation" 
         >
-          1. 시설 예약
+          {/* 5. 아이콘에는 크기만 지정 (색상은 CSS에서 white로 자동 적용됨) */}
+          <BsCalendarCheck size={52} className="card-icon" />
+          <h2 className="card-title">시설 예약</h2>
+          <p className="card-description">
+            강의실, 스터디룸, 체육관 등<br />교내 시설을 예약합니다.
+          </p>
         </button>
+
+        {/* 6. '시설 제보' 카드 */}
         <button
           onClick={() => alert('아직 준비 중인 기능입니다.')}
-          className="w-48 h-32 bg-green-500 text-white text-xl font-semibold rounded-lg shadow-md hover:bg-green-600 transition-transform transform hover:-translate-y-1"
+          // 7. 공통 카드 스타일 + 제보 카드 전용 색상
+          className="menu-card card-report"
         >
-          2. 시설 제보
+          <BsExclamationCircle size={52} className="card-icon" />
+          <h2 className="card-title">시설 제보</h2>
+          <p className="card-description">
+            파손되거나 고장난 시설을<br />사진과 함께 제보합니다.
+          </p>
         </button>
+
       </main>
     </div>
   );

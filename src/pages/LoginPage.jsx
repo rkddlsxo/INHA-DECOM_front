@@ -1,21 +1,16 @@
 import React, { useState } from 'react';
-import './LoginPage.css'; // 스타일 파일은 그대로 사용합니다.
+import './LoginPage.css'; // 1단계에서 수정한 CSS 파일을 import 합니다.
 
 // 백엔드 API 주소를 설정합니다. 실제 서버 주소로 변경해주세요.
-const API_URL = 'http://localhost:5000/api/login';
+const API_URL = 'http://localhost:5050/api/login';
 
-// 1. 컴포넌트 이름은 대문자 'LoginPage'로 시작
-// 2. Props는 하나의 객체 인자로 받습니다.
 const LoginPage = ({ onNavigate, handleLogin }) => {
 
-    // 1. 상태 설정
-    // 백엔드 명세에 맞춰 사용자 입력은 'id' (학번)와 'password'로 변경
-    const [id, setId] = useState(''); // 학번 (id)
-    const [password, setPassword] = useState(''); // 비밀번호
-    const [error, setError] = useState(''); // 에러 메시지
-    const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+    const [id, setId] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    // 2. 로그인 정보 입력 핸들러
     const handleIdChange = (e) => {
         setId(e.target.value);
         setError('');
@@ -25,16 +20,17 @@ const LoginPage = ({ onNavigate, handleLogin }) => {
         setError('');
     };
 
-    // 3. 폼 제출 및 API 통신 처리
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // //테스트용 바로 넘어가게 만들기
+        /* // //테스트용 바로 넘어가게 만들기 (⭐️ 백엔드 통신을 위해 주석 처리)
         if (id && password) {
-            handleLogin(true);
-            onNavigate('main');
-            return;
+             handleLogin(true);
+             onNavigate('main');
+             return;
         }
+        */
+        
         // 3-1. 클라이언트 측 유효성 검사 (필수 입력 확인)
         if (!id || !password) {
             setError('학번과 비밀번호를 모두 입력해주세요.');
@@ -71,8 +67,9 @@ const LoginPage = ({ onNavigate, handleLogin }) => {
                 // 토큰과 사용자 정보를 localStorage에 저장
                 localStorage.setItem('authToken', token);
                 localStorage.setItem('username', username);
-
-                alert(message || `${username}님, 환영합니다!`);
+                
+                // alert() 대신 콘솔 로그 사용을 권장합니다.
+                console.log(message || `${username}님, 환영합니다!`);
 
                 // 부모 컴포넌트(App.js 등)의 로그인 상태 및 페이지 전환
                 if (handleLogin) {
@@ -103,35 +100,67 @@ const LoginPage = ({ onNavigate, handleLogin }) => {
         }
     };
 
-    // 4. JSX (UI) 구성
+    // 1. ⭐️ CSS에서 만든 전체 배경을 적용하기 위해 래퍼(wrapper)를 추가합니다.
     return (
-        <div className="login-container">
-            <h2 className="login-heading">로그인</h2>
-            <form onSubmit={handleSubmit}>
+        <div className="login-page-wrapper">
+            <div className="login-container">
+                {/* TODO: 여기에 인하대학교 로고 이미지를 추가하면 훨씬 좋습니다.
+                  <img src="/inha_logo.png" alt="Inha Logo" style={{width: "150px", margin: "0 auto 1.5rem", display: "block"}} /> 
+                */}
+                
+                {/* 2. ⭐️ 제목을 "로그인" 대신 시스템 이름으로 변경 */}
+                <h2 className="login-heading">시설물 관리 시스템</h2>
+                <form onSubmit={handleSubmit}>
 
-                <div className="form-group">
-                    <label htmlFor="id" className="form-label">학번 (ID):</label>
-                    {/* id 상태와 handleIdChange 함수를 연결 */}
-                    <input type="text" id="id" value={id} onChange={handleIdChange} required className="form-input" placeholder="학번 8자리를 입력하세요" disabled={isLoading} maxLength={8} />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="id" className="form-label">학번 (ID)</label>
+                        <input 
+                            type="text" 
+                            id="id" 
+                            value={id} 
+                            onChange={handleIdChange} 
+                            required 
+                            className="form-input" 
+                            placeholder="학번 8자리를 입력하세요" 
+                            disabled={isLoading} 
+                            maxLength={8} 
+                        />
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="password" className="form-label">비밀번호:</label>
-                    <input type="password" id="password" value={password} onChange={handlePasswordChange} required className="form-input" placeholder="비밀번호를 입력하세요" disabled={isLoading} />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="password" className="form-label">비밀번호</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            value={password} 
+                            onChange={handlePasswordChange} 
+                            required 
+                            className="form-input" 
+                            placeholder="비밀번호를 입력하세요" 
+                            disabled={isLoading} 
+                        />
+                    </div>
 
-                {error && <p className="error-message">{error}</p>}
+                    {error && <p className="error-message">{error}</p>}
 
-                {/* 로딩 중일 때 버튼 비활성화 */}
-                <button type="submit" className="login-button" disabled={isLoading}>
-                    {isLoading ? '로그인 중...' : '로그인'}
-                </button>
+                    <button type="submit" className="login-button" disabled={isLoading}>
+                        {isLoading ? '로그인 중...' : '로그인'}
+                    </button>
 
-
-                <button type="button" onClick={() => onNavigate('registerPage')} className="register-button">회원가입</button>
-            </form>
+                    {/* 3. ⭐️ 회원가입 버튼에도 disabled={isLoading}을 추가합니다. */}
+                    <button 
+                        type="button" 
+                        onClick={() => onNavigate('registerPage')} 
+                        className="register-button"
+                        disabled={isLoading} 
+                    >
+                        회원가입
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };
 
 export default LoginPage;
+

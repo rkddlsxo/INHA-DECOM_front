@@ -1,0 +1,95 @@
+/* 1. 전체 페이지 배경 설정 */
+.main-page-container {
+    min-height: 100vh;
+    background-color: #f9fafb; /* 옅은 회색 (Tailwind의 bg-gray-50) */
+    padding: 3rem; /* p-12 */
+  }
+  
+  /* 2. 헤더 (제목, 환영 메시지) */
+  .main-page-header {
+    margin-bottom: 4rem; /* mb-16 */
+    max-width: 56rem; /* max-w-4xl */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+  
+  .main-page-title {
+    font-size: 3rem; /* text-5xl */
+    font-weight: 700;
+    color: #004B8D; /* ⭐️ 인하대 메인 색상 */
+    margin-bottom: 1rem; /* mb-4 */
+  }
+  
+  .main-page-welcome {
+    font-size: 1.25rem; /* text-xl */
+    color: #4b5563; /* text-gray-600 */
+  }
+  
+  /* 3. 카드 메뉴 영역 (Grid) */
+  .main-page-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr)); /* 모바일: 1줄 */
+    gap: 2.5rem; /* gap-10 */
+    max-width: 56rem; /* max-w-4xl */
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* 데스크탑에서는 2줄로 */
+  @media (min-width: 768px) {
+    .main-page-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  
+  /* 4. 공통 카드 스타일 */
+  .menu-card {
+    border: none;
+    border-radius: 1.5rem; /* rounded-2xl */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    color: white;
+    padding: 2.5rem; /* p-10 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    
+    /* 5. 부드러운 호버 효과 */
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .menu-card:hover {
+    transform: scale(1.05); /* hover:scale-105 */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* hover:shadow-2xl */
+  }
+  
+  /* 6. 카드별 색상 (그라데이션) */
+  .card-reservation {
+    background-image: linear-gradient(to bottom right, #004B8D, #005aa7); /* ⭐️ 인하대 파란색 -> 파란색 */
+  }
+  
+  .card-report {
+    background-image: linear-gradient(to bottom right, #16a34a, #15803d); /* 초록색 */
+  }
+  
+  /* 7. 카드 내부 요소 (아이콘, 제목, 설명) */
+  .card-icon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 1.25rem; /* mb-5 */
+  }
+  
+  .card-title {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 700;
+    margin-bottom: 0.5rem; /* mb-2 */
+  }
+  
+  .card-description {
+    font-size: 1rem; /* text-base */
+    line-height: 1.6;
+    opacity: 0.95;
+  }
