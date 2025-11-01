@@ -6,7 +6,7 @@ const LAST_PAGE_KEY = 'lastReservationSelectPage';
 
 // --- 상수 및 유틸리티 ---
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'http://localhost:5050/api';
 const today = new Date();
 
 function getDaysInMonth(year, month) { return new Date(year, month + 1, 0).getDate(); }
