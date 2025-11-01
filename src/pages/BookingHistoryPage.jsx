@@ -3,7 +3,7 @@ import './BookingHistoryPage.css';
 // ⭐️ 아이콘 추가
 import { BsArrowLeft } from 'react-icons/bs';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'http://localhost:5050/api';
 
 const BookingHistory = ({ onNavigate }) => {
     const [bookings, setBookings] = useState([]);
