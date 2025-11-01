@@ -4,7 +4,7 @@ import './LoginPage.css';
 // 만약 회원가입 전용 스타일을 RegisterPage.css에 따로 만들었다면,
 // import './RegisterPage.css'; 도 추가합니다.
 
-const API_URL = 'http://localhost:5000/api/register';
+const API_URL = 'http://localhost:5050/api/register';
 
 const RegisterPage = ({ onNavigate }) => {
     // 백엔드 명세: id (학번), username (이름), password (비밀번호)
