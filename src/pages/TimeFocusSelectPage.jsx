@@ -3,7 +3,7 @@ import './TimeFocusSelectPage.css';
 // ⭐️ 아이콘 import
 import { BsArrowLeft, BsPencilSquare, BsClipboardCheck } from 'react-icons/bs';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'http://localhost:5050/api';
 
 // --- 상수 및 유틸리티 ---
 
