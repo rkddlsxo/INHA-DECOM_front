@@ -143,6 +143,30 @@ h1 {
     width: 100%;
 }
 
+/* 🚀 추가된 버튼 스타일 (.placeholder-button) */
+.placeholder-button {
+    padding: 15px 40px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    background-color: #ffc107;
+    /* 주황색 계열 */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+    /* 최종 제출 버튼과의 간격 조정 */
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.placeholder-button:hover {
+    background-color: #e0a800;
+}
+
+/* ------------------------------------ */
+
 
 /* ==================================== */
 /* 4. 모달 공통 스타일 */

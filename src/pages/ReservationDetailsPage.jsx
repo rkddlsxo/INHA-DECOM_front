@@ -7,205 +7,205 @@ const API_BASE_URL = 'http://localhost:5050/api';
 
 // 💡 장소별 예약안내 HTML 내용 (HTML 구조 및 내용만 유지, 스타일 제거)
 const PlaceUsageGuideHTML = `
-    <div>
-        <p style="font-size: 14pt; font-weight: bold;">시설물 예약 및 사용 안내</p>
-        <p style="font-weight: bold;">■ 학생 주관 행사 시설물 사용 안내</p>
-        <p style="font-weight: bold;">◎장소별 기안 방식</p>
-        
-        <table class="guide-table">
-            <thead>
-                <tr>
-                    <td class="bg-yellow bold">구분</td>
-                    <td class="bg-pink">오프라인 장소 기안</td>
-                    <td class="bg-pink">온라인 장소 기안</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="bg-yellow">장소</td>
-                    <td>강의실, 강당(본관 대/중/소, 5남소), 후문, 광장, 음악감상실, 60주년기념관1,2층 로비</td>
-                    <td>스터디룸(인문,해동,학생라운지), 가무연습실, 운동장(축구장, 다목적구장, 테니스장, 농구장, 풋살파크A, D)</td>
-                </tr>
-                <tr>
-                    <td class="bg-yellow">기안 방법</td>
-                    <td>학생지원팀 방문</td>
-                    <td>학사행정-온라인시설예약 (학생 개별 신청)</td>
-                </tr>
-                <tr>
-                    <td class="bg-yellow" rowspan="2">사용 가능 시간</td>
-                    <td>09~22시</td>
-                    <td>학기중 및 방학중, 체육시설별로 상이함</td>
-                </tr>
-                <tr>
-                    <td>최대 8시간, 주 3회까지</td>
-                    <td>최대 2시간, 주 2회까지</td>
-                </tr>
-                <tr>
-                    <td class="bg-yellow">사용 가능 기간</td>
-                    <td colspan="2">
-                        <p>● 시설물 사용은 한 단체당 연속된 동일 장소는 2주까지, 1일 1장소 1회만 신청 가능</p>
-                        <p>● 사용일 기준 - 최소 3일 전(주말, 공휴일 제외) / 최대 30일 전(주말, 공휴일 포함)</p>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div>
+        <p style="font-size: 14pt; font-weight: bold;">시설물 예약 및 사용 안내</p>
+        <p style="font-weight: bold;">■ 학생 주관 행사 시설물 사용 안내</p>
+        <p style="font-weight: bold;">◎장소별 기안 방식</p>
+        
+        <table class="guide-table">
+            <thead>
+                <tr>
+                    <td class="bg-yellow bold">구분</td>
+                    <td class="bg-pink">오프라인 장소 기안</td>
+                    <td class="bg-pink">온라인 장소 기안</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bg-yellow">장소</td>
+                    <td>강의실, 강당(본관 대/중/소, 5남소), 후문, 광장, 음악감상실, 60주년기념관1,2층 로비</td>
+                    <td>스터디룸(인문,해동,학생라운지), 가무연습실, 운동장(축구장, 다목적구장, 테니스장, 농구장, 풋살파크A, D)</td>
+                </tr>
+                <tr>
+                    <td class="bg-yellow">기안 방법</td>
+                    <td>학생지원팀 방문</td>
+                    <td>학사행정-온라인시설예약 (학생 개별 신청)</td>
+                </tr>
+                <tr>
+                    <td class="bg-yellow" rowspan="2">사용 가능 시간</td>
+                    <td>09~22시</td>
+                    <td>학기중 및 방학중, 체육시설별로 상이함</td>
+                </tr>
+                <tr>
+                    <td>최대 8시간, 주 3회까지</td>
+                    <td>최대 2시간, 주 2회까지</td>
+                </tr>
+                <tr>
+                    <td class="bg-yellow">사용 가능 기간</td>
+                    <td colspan="2">
+                        <p>● 시설물 사용은 한 단체당 연속된 동일 장소는 2주까지, 1일 1장소 1회만 신청 가능</p>
+                        <p>● 사용일 기준 - 최소 3일 전(주말, 공휴일 제외) / 최대 30일 전(주말, 공휴일 포함)</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-        <p class="guide-note">※ 학교 주요행사, 시설물 유지보수공사, 천재지변 등으로 학생 안전이 우려되는 경우 시설물 사용 예약이 취소 또는 제한될 수 있음.</p>
-        <p class="guide-note">※ 위 규칙은 학생단체 사용 시 적용됨.</p>
-        <p>&nbsp;</p>
+        <p class="guide-note">※ 학교 주요행사, 시설물 유지보수공사, 천재지변 등으로 학생 안전이 우려되는 경우 시설물 사용 예약이 취소 또는 제한될 수 있음.</p>
+        <p class="guide-note">※ 위 규칙은 학생단체 사용 시 적용됨.</p>
+        <p>&nbsp;</p>
 
-        <p style="font-weight: bold;">◎체육 시설</p>
-        <table class="guide-table">
-            <thead>
-                <tr>
-                    <td class="bg-yellow bold" rowspan="5">체육 시설</td>
-                    <td colspan="2" class="bg-yellow bold">장소</td>
-                    <td colspan="2" class="bg-yellow bold">대운동장 <span class="small-text">(조명on(자동) 19~22시)</span></td>
-                    <td colspan="2" class="bg-yellow bold">다목적구장 [5남쪽,학군단쪽]</td>
-                    <td colspan="2" class="bg-yellow bold">농구장[1,4면]</td>
-                    <td colspan="2" class="bg-yellow bold">농구장[2,3]면</td>
-                    <td colspan="2" class="bg-yellow bold">풋살장[A,D면]</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td rowspan="2" class="bg-gray bold">학기중</td>
-                    <td class="bg-gray bold">평일</td>
-                    <td>2시간</td><td>~22시</td>
-                    <td>2시간</td><td>~22시</td>
-                    <td>2시간</td><td>~20시</td>
-                    <td>2시간</td><td>~22시</td>
-                    <td>2시간</td><td>~17시</td>
-                </tr>
-                <tr>
-                    <td class="bg-gray bold">주말</td>
-                    <td>2시간</td><td>~20시</td>
-                    <td>2시간</td><td>~22시</td>
-                    <td class="red-text bold">3시간</td><td>~20시</td>
-                    <td class="blue-text bold">3시간</td><td>~22시</td>
-                    <td colspan="2" class="red-text bold">주말 사용불가</td>
-                </tr>
-                <tr>
-                    <td rowspan="2" class="bg-gray bold">방학중</td>
-                    <td class="bg-gray bold">평일</td>
-                    <td>2시간</td><td>~17시</td>
-                    <td>2시간</td><td>~17시</td>
-                    <td>2시간</td><td>~17시</td>
-                    <td>2시간</td><td>~17시</td>
-                    <td>2시간</td><td>~17시</td>
-                    <td>2시간</td><td>~17시</td>
-                </tr>
-                <tr>
-                    <td class="bg-gray bold">주말</td>
-                    <td>2시간</td><td>~17시</td>
-                    <td>2시간</td><td>~17시</td>
-                    <td>2시간</td><td>~17시</td>
-                    <td>2시간</td><td>~17시</td>
-                    <td colspan="2" class="red-text bold">주말 사용불가</td>
-                </tr>
-            </tbody>
-        </table>
-        <p>&nbsp;</p>
+        <p style="font-weight: bold;">◎체육 시설</p>
+        <table class="guide-table">
+            <thead>
+                <tr>
+                    <td class="bg-yellow bold" rowspan="5">체육 시설</td>
+                    <td colspan="2" class="bg-yellow bold">장소</td>
+                    <td colspan="2" class="bg-yellow bold">대운동장 <span class="small-text">(조명on(자동) 19~22시)</span></td>
+                    <td colspan="2" class="bg-yellow bold">다목적구장 [5남쪽,학군단쪽]</td>
+                    <td colspan="2" class="bg-yellow bold">농구장[1,4면]</td>
+                    <td colspan="2" class="bg-yellow bold">농구장[2,3]면</td>
+                    <td colspan="2" class="bg-yellow bold">풋살장[A,D면]</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2" class="bg-gray bold">학기중</td>
+                    <td class="bg-gray bold">평일</td>
+                    <td>2시간</td><td>~22시</td>
+                    <td>2시간</td><td>~22시</td>
+                    <td>2시간</td><td>~20시</td>
+                    <td>2시간</td><td>~22시</td>
+                    <td>2시간</td><td>~17시</td>
+                </tr>
+                <tr>
+                    <td class="bg-gray bold">주말</td>
+                    <td>2시간</td><td>~20시</td>
+                    <td>2시간</td><td>~22시</td>
+                    <td class="red-text bold">3시간</td><td>~20시</td>
+                    <td class="blue-text bold">3시간</td><td>~22시</td>
+                    <td colspan="2" class="red-text bold">주말 사용불가</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="bg-gray bold">방학중</td>
+                    <td class="bg-gray bold">평일</td>
+                    <td>2시간</td><td>~17시</td>
+                    <td>2시간</td><td>~17시</td>
+                    <td>2시간</td><td>~17시</td>
+                    <td>2시간</td><td>~17시</td>
+                    <td>2시간</td><td>~17시</td>
+                    <td>2시간</td><td>~17시</td>
+                </tr>
+                <tr>
+                    <td class="bg-gray bold">주말</td>
+                    <td>2시간</td><td>~17시</td>
+                    <td>2시간</td><td>~17시</td>
+                    <td>2시간</td><td>~17시</td>
+                    <td>2시간</td><td>~17시</td>
+                    <td colspan="2" class="red-text bold">주말 사용불가</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&nbsp;</p>
 
-        <p style="font-weight: bold;">■ 시설물 예약신청 <span class="red-text">(1인/1단체 1일 1회 가능)</span></p>
-        <p>1. 예약은 반드시 사용예정일의 30일 전부터 최소 3일 전(주말제외)까지 해야 합니다. 기간 외 신청시 미확인으로 인한 ‘사용불가’의 책임은 신청자에게 있습니다.</p>
-        <p>2. 한 단체에서 강당, 학생공간, 체육시설 사용에 대해 각각 주 3일을 초과할 수 없으며, 동시에 두 시설의 사용은 불가합니다. 특별한 사유시 소속기관장의 협조문을 작성하여 학생지원팀으로 제출하십시오.</p>
-        <p>3. 강당은 한 단체에서 1일 최대 8시간까지 가능하며, 학기중 평일 음향사용은 18시 이후로만 가능하고 사전 무대설치는 불가합니다. </p>
-        <p>4. 냉난방을 원하는 경우 예약시 함께 신청해야 하며, 예약 완료 후 별도로 확인해야 합니다.</p>
-        <p>* 학생회관 회의실의 음향시설은 방송기재실에서 지원하지 않습니다.</p>
-        <p>5. 예약 후 수정은 불가하며 변경사항 발생시 취소 후 재신청해야 합니다. </p>
-        <p>6. 부득이한 사유로 예약한 시설물이 수업 또는 학교주요행사와 중복되었을 경우 사용중이더라도 반드시 양보해야 합니다.</p>
-        <p>7. 강당 및 체육시설은 수업에 사용되는 시설이므로 방학 중에는 다음 학기 강의시간표 확정시까지 개강이후 시설 사용에 대한 예약이 불가합니다. <span class="red-text">(개강 한 달 전, 운동장 온라인 예약 불가)</span></p>
-        <p>&nbsp;</p>
+        <p style="font-weight: bold;">■ 시설물 예약신청 <span class="red-text">(1인/1단체 1일 1회 가능)</span></p>
+        <p>1. 예약은 반드시 사용예정일의 30일 전부터 최소 3일 전(주말제외)까지 해야 합니다. 기간 외 신청시 미확인으로 인한 ‘사용불가’의 책임은 신청자에게 있습니다.</p>
+        <p>2. 한 단체에서 강당, 학생공간, 체육시설 사용에 대해 각각 주 3일을 초과할 수 없으며, 동시에 두 시설의 사용은 불가합니다. 특별한 사유시 소속기관장의 협조문을 작성하여 학생지원팀으로 제출하십시오.</p>
+        <p>3. 강당은 한 단체에서 1일 최대 8시간까지 가능하며, 학기중 평일 음향사용은 18시 이후로만 가능하고 사전 무대설치는 불가합니다. </p>
+        <p>4. 냉난방을 원하는 경우 예약시 함께 신청해야 하며, 예약 완료 후 별도로 확인해야 합니다.</p>
+        <p>* 학생회관 회의실의 음향시설은 방송기재실에서 지원하지 않습니다.</p>
+        <p>5. 예약 후 수정은 불가하며 변경사항 발생시 취소 후 재신청해야 합니다. </p>
+        <p>6. 부득이한 사유로 예약한 시설물이 수업 또는 학교주요행사와 중복되었을 경우 사용중이더라도 반드시 양보해야 합니다.</p>
+        <p>7. 강당 및 체육시설은 수업에 사용되는 시설이므로 방학 중에는 다음 학기 강의시간표 확정시까지 개강이후 시설 사용에 대한 예약이 불가합니다. <span class="red-text">(개강 한 달 전, 운동장 온라인 예약 불가)</span></p>
+        <p>&nbsp;</p>
 
-        <p style="font-weight: bold;">■ 시설물 예약이 불가한 경우 <span class="red-text">(적발시 사용금지 및 시설예약 불가등 패널티 적용)</span></p>
-        <ul>
-            <li>수업에 지장을 초래하는 경우</li>
-            <li>시설물 훼손가능성이 크거나 화재 및 사고의 위험이 큰 경우</li>
-            <li>정치적 종교적 성향이 과도한 경우</li>
-            <li>외부인 및 외부단체가 대다수 참여하는 경우</li>
-            <li>요청내용과 실제 사용내용이 다른 경우(예)행사내용, 사용단체 등)</li>
-            <li>그 외 학생신분으로서 부적절한 경우</li>
-        </ul>
-        <p>&nbsp;</p>
+        <p style="font-weight: bold;">■ 시설물 예약이 불가한 경우 <span class="red-text">(적발시 사용금지 및 시설예약 불가등 패널티 적용)</span></p>
+        <ul>
+            <li>수업에 지장을 초래하는 경우</li>
+            <li>시설물 훼손가능성이 크거나 화재 및 사고의 위험이 큰 경우</li>
+            <li>정치적 종교적 성향이 과도한 경우</li>
+            <li>외부인 및 외부단체가 대다수 참여하는 경우</li>
+            <li>요청내용과 실제 사용내용이 다른 경우(예)행사내용, 사용단체 등)</li>
+            <li>그 외 학생신분으로서 부적절한 경우</li>
+        </ul>
+        <p>&nbsp;</p>
 
-        <p style="font-weight: bold;">■ 장소별 유의사항</p>
-        <p style="font-weight: bold;">◎실내공간</p>
-        <table class="guide-table">
-            <thead>
-                <tr>
-                    <td class="bg-yellow bold">구분</td>
-                    <td class="bg-pink bold">특이사항</td>
-                    <td class="bg-pink bold">예약가능시간</td>
-                    <td class="bg-pink bold">출입문 개폐</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="bg-yellow">본관(대/중/소)강당</td>
-                    <td rowspan="2">※ 강당/회의실 내 설치된 빔프로젝터 사용불가<br>※ 빔/스크린, 음향, 조명장비 대여 → 학생복지위원회 방문 후 직접 대여</td>
-                    <td rowspan="4">08:00 ~ 22:00</td>
-                    <td rowspan="4">※ 종합상황실 전화 후 원격으로 개폐<br>※ 공간 사용 후 종합상황실로 전화하여 출입문을 잠가 주시기 바랍니다.</td>
-                </tr>
-                <tr>
-                    <td class="bg-yellow">5남 소강당</td>
-                </tr>
-                <tr>
-                    <td class="bg-yellow">가무연습실</td>
-                    <td>※ 학생회관 403호, 404호, 406호, 513호</td>
-                </tr>
-                <tr>
-                    <td class="bg-yellow">음악감상실</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        <p>&nbsp;</p>
+        <p style="font-weight: bold;">■ 장소별 유의사항</p>
+        <p style="font-weight: bold;">◎실내공간</p>
+        <table class="guide-table">
+            <thead>
+                <tr>
+                    <td class="bg-yellow bold">구분</td>
+                    <td class="bg-pink bold">특이사항</td>
+                    <td class="bg-pink bold">예약가능시간</td>
+                    <td class="bg-pink bold">출입문 개폐</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bg-yellow">본관(대/중/소)강당</td>
+                    <td rowspan="2">※ 강당/회의실 내 설치된 빔프로젝터 사용불가<br>※ 빔/스크린, 음향, 조명장비 대여 → 학생복지위원회 방문 후 직접 대여</td>
+                    <td rowspan="4">08:00 ~ 22:00</td>
+                    <td rowspan="4">※ 종합상황실 전화 후 원격으로 개폐<br>※ 공간 사용 후 종합상황실로 전화하여 출입문을 잠가 주시기 바랍니다.</td>
+                </tr>
+                <tr>
+                    <td class="bg-yellow">5남 소강당</td>
+                </tr>
+                <tr>
+                    <td class="bg-yellow">가무연습실</td>
+                    <td>※ 학생회관 403호, 404호, 406호, 513호</td>
+                </tr>
+                <tr>
+                    <td class="bg-yellow">음악감상실</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&nbsp;</p>
 
-        <p style="font-weight: bold;">■ 관련부서 안내</p>
-        <table class="guide-table">
-            <thead>
-                <tr>
-                    <td class="bg-yellow bold">부서명</td>
-                    <td class="bg-yellow bold">관련업무</td>
-                    <td class="bg-yellow bold">위치</td>
-                    <td class="bg-yellow bold">내선</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="bg-gray bold">기관실</td>
-                    <td>냉난방 문의</td>
-                    <td class="bg-gray">5남 지하</td>
-                    <td>8354</td>
-                </tr>
-                <tr>
-                    <td class="bg-gray bold">종합상황실</td>
-                    <td>교내 전체 시설물 개폐 및 안전관리</td>
-                    <td>본관 1층 로비</td>
-                    <td>9119</td>
-                </tr>
-                <tr>
-                    <td class="bg-gray bold">학생지원팀</td>
-                    <td>시설 예약 및 승인</td>
-                    <td class="bg-gray">학생회관 3층</td>
-                    <td>7066</td>
-                </tr>
-                <tr>
-                    <td class="bg-gray bold">학생복지위원회</td>
-                    <td>빔, 마이크, 엠프, 천막 등 대여</td>
-                    <td>학생회관 지하</td>
-                    <td>9135</td>
-                </tr>
-                <tr>
-                    <td class="bg-gray bold">예술체육대학행정실</td>
-                    <td>대강당 피아노사용 문의</td>
-                    <td>서호관 118</td>
-                    <td>8161</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <p style="font-weight: bold;">■ 관련부서 안내</p>
+        <table class="guide-table">
+            <thead>
+                <tr>
+                    <td class="bg-yellow bold">부서명</td>
+                    <td class="bg-yellow bold">관련업무</td>
+                    <td class="bg-yellow bold">위치</td>
+                    <td class="bg-yellow bold">내선</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bg-gray bold">기관실</td>
+                    <td>냉난방 문의</td>
+                    <td class="bg-gray">5남 지하</td>
+                    <td>8354</td>
+                </tr>
+                <tr>
+                    <td class="bg-gray bold">종합상황실</td>
+                    <td>교내 전체 시설물 개폐 및 안전관리</td>
+                    <td>본관 1층 로비</td>
+                    <td>9119</td>
+                </tr>
+                <tr>
+                    <td class="bg-gray bold">학생지원팀</td>
+                    <td>시설 예약 및 승인</td>
+                    <td class="bg-gray">학생회관 3층</td>
+                    <td>7066</td>
+                </tr>
+                <tr>
+                    <td class="bg-gray bold">학생복지위원회</td>
+                    <td>빔, 마이크, 엠프, 천막 등 대여</td>
+                    <td>학생회관 지하</td>
+                    <td>9135</td>
+                </tr>
+                <tr>
+                    <td class="bg-gray bold">예술체육대학행정실</td>
+                    <td>대강당 피아노사용 문의</td>
+                    <td>서호관 118</td>
+                    <td>8161</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 `;
 // ------------------------------------
 
@@ -568,6 +568,12 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                     </div>
                 </div>
 
+                <button
+                    type="button"
+                    className="placeholder-button" // 스타일링을 위해 클래스 추가 (CSS 파일에서 정의 필요)
+                >
+                    대여 물품 선택
+                </button>
                 <button type="submit" className="submit-button">
                     최종 예약 확정 및 제출
                 </button>
