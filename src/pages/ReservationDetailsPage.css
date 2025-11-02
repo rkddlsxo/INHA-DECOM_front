@@ -1,29 +1,54 @@
 /* src/pages/ReservationDetailsPage.css */
 
+/* ==================================== */
+/* 1. 기본 레이아웃 및 페이지 스타일 */
+/* ==================================== */
+.reservationDetails-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    position: relative;
+}
+
 body {
-    /* React 앱 내에서 컴포넌트가 전체 화면을 차지하므로 body 스타일은 조정이 필요할 수 있습니다. */
-    /* 현재 App.jsx의 부모 요소가 min-h-screen을 가지고 있으므로, 컨테이너에 맞춰 조정합니다. */
     font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 40px 20px;
     background-color: #f8f9fa;
-    /* App.jsx의 bg-gray-50 대신 페이지 배경색으로 사용 */
 }
 
 h1 {
     color: #007bff;
     margin-bottom: 30px;
     font-size: 2.2em;
+    text-align: center;
 }
 
-/* 1. 예약 확인 섹션 스타일 */
+/* 뒤로 가기 버튼 컨테이너 */
+.absolute {
+    position: absolute;
+}
+
+.top-4 {
+    top: 1rem;
+}
+
+.left-4 {
+    left: 1rem;
+}
+
+/* ------------------------------------ */
+/* 2. 예약 확인 섹션 (.summary-box) */
+/* ------------------------------------ */
 .summary-box {
     width: 80%;
     max-width: 800px;
     padding: 25px;
-    margin-bottom: 40px;
+    margin: 0 auto 40px;
     background-color: #e9f7ff;
     border: 1px solid #cce5ff;
     border-radius: 10px;
@@ -51,11 +76,15 @@ h1 {
     color: #333;
 }
 
-/* 2. 입력 폼 섹션 스타일 */
+
+/* ------------------------------------ */
+/* 3. 입력 폼 섹션 (.input-form) */
+/* ------------------------------------ */
 .input-form {
     width: 80%;
     max-width: 800px;
     padding: 30px;
+    margin: 0 auto;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -99,7 +128,7 @@ h1 {
     font-weight: normal;
 }
 
-/* 버튼 스타일 (공통) */
+/* 폼 제출 버튼 스타일 */
 .submit-button {
     padding: 15px 40px;
     font-size: 1.2em;
@@ -114,41 +143,55 @@ h1 {
     width: 100%;
 }
 
-.submit-button.rent {
-    background-color: #ffc107;
-    color: #333;
-    margin-bottom: 20px;
-}
 
-.submit-button.rent:hover {
-    background-color: #e0a800;
-}
-
-/* Modal Styles */
+/* ==================================== */
+/* 4. 모달 공통 스타일 */
+/* ==================================== */
 .modal {
     position: fixed;
-    z-index: 1000;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
+    background-color: white;
     padding: 30px;
-    border: 1px solid #888;
-    width: 90%;
-    max-width: 700px;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    overflow: hidden;
+    /* 내부 스크롤을 위해 컨테이너는 숨김 */
 }
+
+/* 모달 닫기 버튼 (모달 내) */
+.close-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1890ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s;
+    margin-top: 20px;
+}
+
+.close-button:hover {
+    background-color: #096dd9;
+}
+
+
+/* ==================================== */
+/* 5. 최종 확정 모달 스타일 */
+/* ==================================== */
 
 .modal-content h2 {
     color: #dc3545;
@@ -170,14 +213,42 @@ h1 {
 .rule-item label {
     display: flex;
     align-items: flex-start;
-    cursor: pointer;
     font-size: 1em;
 }
+
+/* 💡 문구 클릭 가능 스타일 (첫 번째 항목) */
+.rules-list .rule-item:first-child {
+    cursor: pointer;
+    /* 전체 영역에 포인터 커서 */
+    user-select: none;
+}
+
+.rules-list .rule-item:first-child label {
+    cursor: default;
+}
+
+.rules-list .rule-item:first-child label span {
+    cursor: pointer;
+    /* 텍스트 부분에 포인터 커서를 명시적으로 적용 */
+    text-decoration: underline;
+    /* 밑줄로 클릭 가능 강조 */
+    text-underline-offset: 3px;
+    text-decoration-color: #007bff;
+}
+
+.rules-list .rule-item:first-child label:hover span {
+    color: #0056b3;
+}
+
 
 .rule-item input[type="checkbox"] {
     margin-top: 5px;
     margin-right: 10px;
     transform: scale(1.5);
+}
+
+.rule-item input[type="checkbox"]:disabled {
+    cursor: not-allowed;
 }
 
 .rule-item ul {
@@ -226,4 +297,98 @@ h1 {
     color: #dc3545;
     text-align: center;
     margin-top: 10px;
+}
+
+
+/* ==================================== */
+/* 7. 장소별 이용 안내 모달 스타일 (.rules-modal) */
+/* ==================================== */
+.rules-modal .modal-content {
+    max-width: 90vw;
+    width: 800px;
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+.guide-modal-content h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.guide-content-body {
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid #ddd;
+    padding: 15px;
+    background-color: #f8f8f8;
+}
+
+/* HWP 스타일 제거 후 새로 정의된 테이블 스타일 */
+.guide-content-body table.guide-table {
+    width: 100% !important;
+    min-width: 760px;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 10pt;
+    table-layout: auto;
+}
+
+.guide-content-body td,
+.guide-content-body th {
+    border: 1px solid #000;
+    padding: 8px 10px;
+    vertical-align: top;
+    text-align: center;
+    line-height: 1.4;
+    word-break: keep-all;
+}
+
+/* 테이블 배경색 및 텍스트 강조 */
+.guide-content-body .bg-yellow {
+    background-color: #fcfcda;
+    font-weight: bold;
+}
+
+.guide-content-body .bg-pink {
+    background-color: #f0e6f2;
+}
+
+.guide-content-body .bg-gray {
+    background-color: #e0e0e0;
+}
+
+.guide-content-body .bold {
+    font-weight: bold;
+}
+
+.guide-content-body .red-text {
+    color: #d9534f;
+    font-weight: bold;
+}
+
+.guide-content-body .blue-text {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.guide-content-body .small-text {
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+.guide-content-body .guide-note {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 10px;
+}
+
+/* 리스트 스타일 */
+.guide-content-body ul {
+    margin-top: 5px;
+    padding-left: 20px;
+    list-style-type: disc;
 }
