@@ -8,6 +8,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import BookingHistoryPage from './pages/BookingHistoryPage';
 import TimeFocusSelectPage from './pages/TimeFocusSelectPage';
+import SimultaneousSelectPage from './pages/SimultaneousSelectPage';
+import ComplaintPage from './pages/ComplaintPage';
 function App() {
   const [page, setPage] = useState('loginPage');
   const [isLoggedIn, setIsLoggedIn] = useState(false);// 로그인 상태 관리
@@ -33,6 +35,10 @@ function App() {
         return <BookingHistoryPage onNavigate={setPage} />;
       case 'timeFocusSelectPage':
         return <TimeFocusSelectPage onNavigate={setPage} />;
+      case 'simultaneousSelectPage':
+        return <SimultaneousSelectPage onNavigate={setPage} />;
+      case 'complaintPage':
+        return <ComplaintPage onNavigate={setPage} />;
       default:
         return <MainPage onNavigate={setPage} />;
     }

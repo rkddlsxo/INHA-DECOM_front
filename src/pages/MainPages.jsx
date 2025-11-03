@@ -2,7 +2,7 @@ import React from 'react';
 import { BsCalendarCheck, BsExclamationCircle } from 'react-icons/bs';
 
 // 1. ⭐️⭐️⭐️ 1단계에서 만든 CSS 파일을 import 합니다! ⭐️⭐️⭐️
-import './MainPage.css'; 
+import './MainPage.css';
 
 const MainPage = ({ onNavigate }) => {
   const userName = "김인하"; // (임시) 사용자 이름
@@ -10,7 +10,7 @@ const MainPage = ({ onNavigate }) => {
   return (
     // 2. <div>에 className 대신 1단계에서 만든 CSS 클래스 적용
     <div className="main-page-container">
-      
+
       <header className="main-page-header">
         <h1 className="main-page-title">
           학교 시설물 관리 시스템
@@ -19,14 +19,14 @@ const MainPage = ({ onNavigate }) => {
           {userName}님, 환영합니다. 원하는 서비스를 선택하세요.
         </p>
       </header>
-      
+
       <main className="main-page-grid">
-        
+
         {/* 3. '시설 예약' 카드 */}
         <button
           onClick={() => onNavigate('reservation')}
           // 4. 공통 카드 스타일 + 예약 카드 전용 색상
-          className="menu-card card-reservation" 
+          className="menu-card card-reservation"
         >
           {/* 5. 아이콘에는 크기만 지정 (색상은 CSS에서 white로 자동 적용됨) */}
           <BsCalendarCheck size={52} className="card-icon" />
@@ -38,7 +38,7 @@ const MainPage = ({ onNavigate }) => {
 
         {/* 6. '시설 제보' 카드 */}
         <button
-          onClick={() => alert('아직 준비 중인 기능입니다.')}
+          onClick={() => onNavigate('complaintPage')}
           // 7. 공통 카드 스타일 + 제보 카드 전용 색상
           className="menu-card card-report"
         >
