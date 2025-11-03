@@ -2,7 +2,7 @@ import React from 'react';
 // 1. CSS 파일 import
 import './ReservationFormSelectPage.css';
 // 2. ⭐️ 아이콘 import: BsCalendarCheck가 정확히 포함되었는지 확인
-import { BsArrowLeft, BsClock, BsBuilding, BsCalendarCheck } from 'react-icons/bs'; // ✅ 이 라인을 확인하세요
+import { BsArrowLeft, BsClock, BsBuilding, BsCalendarCheck } from 'react-icons/bs';
 
 // 컴포넌트 정의
 const ReservationFormSelectPage = ({ onNavigate }) => {
@@ -11,7 +11,7 @@ const ReservationFormSelectPage = ({ onNavigate }) => {
 
             {/* 뒤로가기 버튼 */}
             <button
-                onClick={() => onNavigate('reservation')}
+                onClick={() => onNavigate('mainPages')}
                 className="back-button"
             >
                 <BsArrowLeft size={16} />
@@ -26,7 +26,21 @@ const ReservationFormSelectPage = ({ onNavigate }) => {
             {/* 카드 그리드 */}
             <div className="select-grid">
 
-                {/* 시간 우선 예약 카드 */}
+                {/* ⭐️ 1. 시간 + 공간 동시 선택 (가장 위로 이동) */}
+                <div
+                    className="select-card section-simultaneous"
+                    onClick={() => onNavigate('simultaneousSelectPage')}
+                >
+                    <div className="select-icon-wrapper">
+                        <BsCalendarCheck size={44} />
+                    </div>
+                    <span className="select-text">시간 + 공간 동시 선택</span>
+                    <p className="select-description">
+                        장소 범주와 시간대를 동시에 입력하여
+                        사용 가능한 모든 장소를 즉시 조회합니다.
+                    </p>
+                </div>
+                {/* ⭐️ 순서 변경: 시간 우선 예약 카드 (두 번째 위치) */}
                 <div
                     className="select-card section-time"
                     onClick={() => onNavigate('timeFocusSelectPage')}
@@ -41,7 +55,7 @@ const ReservationFormSelectPage = ({ onNavigate }) => {
                     </p>
                 </div>
 
-                {/* 공간 우선 예약 카드 */}
+                {/* ⭐️ 순서 변경: 공간 우선 예약 카드 (세 번째 위치) */}
                 <div
                     className="select-card section-place"
                     onClick={() => onNavigate('placeFocusSelectPage')}
@@ -55,23 +69,6 @@ const ReservationFormSelectPage = ({ onNavigate }) => {
                         해당 공간의 월별/일별 예약 현황을 조회합니다.
                     </p>
                 </div>
-
-                {/* ⭐️ 시간 + 공간 동시 선택 (신규 추가) */}
-                <div
-                    className="select-card section-simultaneous"
-                    onClick={() => onNavigate('simultaneousSelectPage')}
-                >
-                    <div className="select-icon-wrapper">
-                        {/* ⭐️ BsCalendarCheck 컴포넌트가 올바르게 사용되었는지 확인 */}
-                        <BsCalendarCheck size={44} />
-                    </div>
-                    <span className="select-text">시간 + 공간 동시 선택</span>
-                    <p className="select-description">
-                        장소 범주와 시간대를 동시에 입력하여
-                        사용 가능한 모든 장소를 즉시 조회합니다.
-                    </p>
-                </div>
-                {/* 신규 추가 끝 */}
 
             </div>
         </div>

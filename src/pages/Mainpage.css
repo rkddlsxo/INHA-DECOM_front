@@ -1,95 +1,206 @@
-/* 1. 전체 페이지 배경 설정 */
-.main-page-container {
-    min-height: 100vh;
-    background-color: #f9fafb; /* 옅은 회색 (Tailwind의 bg-gray-50) */
-    padding: 3rem; /* p-12 */
+/* Mainpage.css */
+
+/* 1. 전체 컨테이너 (페이지 여백 및 정렬) */
+/* ⭐️ 클래스 이름 변경: .reservation-container -> .facility-menu-wrapper */
+.facility-menu-wrapper {
+  padding: 3rem 2rem;
+  min-height: 80vh;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Noto Sans KR', Arial, sans-serif;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --- 메인 페이지 분위기 헤더 스타일 --- */
+.main-page-header {
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-top: 2rem;
+}
+
+.main-page-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #004B8D;
+  margin: 0;
+}
+
+.main-page-welcome {
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: #444;
+  margin-top: 0.75rem;
+}
+
+/* ------------------------------------------ */
+
+
+/* 2. '메인으로' (뒤로가기) 버튼 (사용되지 않지만 유지) */
+.back-button {
+  /* ... (스타일 유지) */
+}
+
+.back-button:hover {
+  /* ... (스타일 유지) */
+}
+
+
+/* 3. ⭐️ 카드들을 감싸는 그리드 (2열 레이아웃) */
+/* ⭐️ 클래스 이름 변경: .reservation-grid -> .menu-card-grid */
+.menu-card-grid {
+  display: grid;
+  /* ⭐️ 2열 설정: 2:1:1 비율 유지를 위한 핵심 */
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+/* 4. ⭐️ '카드' 스타일 */
+.reservation-section {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  padding: 2.5rem 1.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 200px;
+  /* 작은 카드들의 최소 높이 */
+}
+
+/* ⭐️⭐️⭐️ 신규 예약하기 카드 배치 (2:1:1의 핵심) ⭐️⭐️⭐️ */
+.reservation-section.section-reserve {
+  /* ⭐️ 테스트: !important 추가 */
+  grid-column: 1 / -1 !important;
+  /* 가로로 2칸 모두 차지 */
+  min-height: 250px;
+}
+
+/* 5. ⭐️ 카드 호버 효과 */
+.reservation-section:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 75, 141, 0.15);
+}
+
+/* 6. ⭐️ 메뉴 버튼 (카드 내의 컨텐츠) */
+.menu-button {
+  /* ... (스타일 유지) */
+}
+
+/* 7. ⭐️ 아이콘 래퍼 */
+.menu-icon-wrapper {
+  /* ... (스타일 유지) */
+}
+
+/* 8. ⭐️ 텍스트 (제목) */
+.menu-text {
+  /* ... (스타일 유지) */
+}
+
+/* ⭐️⭐️⭐️ 신규 예약하기 텍스트 크기 강조 (큰 카드에 적용) ⭐️⭐️⭐️ */
+.reservation-section.section-reserve .menu-text {
+  font-size: 1.8rem;
+  margin-top: 1rem;
+  white-space: normal;
+}
+
+
+/* ⭐️⭐️⭐️ 설명 텍스트 스타일 ⭐️⭐️⭐️ */
+.menu-description {
+  /* ... (스타일 유지) */
+}
+
+
+/* 9. ⭐️ 섹션별 호버 시 색상 변경 */
+.reservation-section.section-reserve:hover .menu-icon-wrapper {
+  background-color: #004B8D;
+  color: #ffffff;
+}
+
+.reservation-section.section-reserve:hover .menu-text {
+  color: #004B8D;
+}
+
+.reservation-section.section-history:hover .menu-icon-wrapper {
+  background-color: #15803d;
+  color: #ffffff;
+}
+
+.reservation-section.section-history:hover .menu-text {
+  color: #15803d;
+}
+
+.reservation-section.section-complaint:hover .menu-icon-wrapper {
+  background-color: #dc3545;
+  color: #ffffff;
+}
+
+.reservation-section.section-complaint:hover .menu-text {
+  color: #dc3545;
+}
+
+/* --- 메인으로 돌아가는 버튼 스타일 --- */
+.back-to-main-button {
+  /* ... (스타일 유지) */
+}
+
+.back-to-main-button:hover {
+  /* ... (스타일 유지) */
+}
+
+/* --- 반응형 디자인: 모바일 환경 --- */
+@media (max-width: 768px) {
+
+  /* ⭐️ 변경된 클래스 이름 적용 */
+  .facility-menu-wrapper {
+    padding: 2rem 1rem;
   }
-  
-  /* 2. 헤더 (제목, 환영 메시지) */
-  .main-page-header {
-    margin-bottom: 4rem; /* mb-16 */
-    max-width: 56rem; /* max-w-4xl */
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
-  
+
   .main-page-title {
-    font-size: 3rem; /* text-5xl */
-    font-weight: 700;
-    color: #004B8D; /* ⭐️ 인하대 메인 색상 */
-    margin-bottom: 1rem; /* mb-4 */
+    font-size: 2rem;
   }
-  
+
   .main-page-welcome {
-    font-size: 1.25rem; /* text-xl */
-    color: #4b5563; /* text-gray-600 */
+    font-size: 1rem;
   }
-  
-  /* 3. 카드 메뉴 영역 (Grid) */
-  .main-page-grid {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr)); /* 모바일: 1줄 */
-    gap: 2.5rem; /* gap-10 */
-    max-width: 56rem; /* max-w-4xl */
-    margin-left: auto;
-    margin-right: auto;
+
+  /* ⭐️ 변경된 클래스 이름 적용 */
+  .menu-card-grid {
+    /* 모바일에서는 1열로 변경 */
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 400px;
   }
-  
-  /* 데스크탑에서는 2줄로 */
-  @media (min-width: 768px) {
-    .main-page-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+
+  .reservation-section {
+    /* 모바일에서는 모든 카드가 동일 크기 */
+    grid-column: 1 / -1;
+    min-height: unset;
+    padding: 2rem 1.5rem;
   }
-  
-  /* 4. 공통 카드 스타일 */
-  .menu-card {
-    border: none;
-    border-radius: 1.5rem; /* rounded-2xl */
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
-    color: white;
-    padding: 2.5rem; /* p-10 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    cursor: pointer;
-    
-    /* 5. 부드러운 호버 효과 */
-    transition: all 0.3s ease-in-out;
+
+  /* 모바일에서는 큰 카드의 텍스트 크기도 일반 크기로 조정 */
+  .reservation-section.section-reserve .menu-text {
+    font-size: 1.3rem;
   }
-  
-  .menu-card:hover {
-    transform: scale(1.05); /* hover:scale-105 */
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* hover:shadow-2xl */
+
+  .menu-text {
+    font-size: 1.3rem;
   }
-  
-  /* 6. 카드별 색상 (그라데이션) */
-  .card-reservation {
-    background-image: linear-gradient(to bottom right, #004B8D, #005aa7); /* ⭐️ 인하대 파란색 -> 파란색 */
-  }
-  
-  .card-report {
-    background-image: linear-gradient(to bottom right, #16a34a, #15803d); /* 초록색 */
-  }
-  
-  /* 7. 카드 내부 요소 (아이콘, 제목, 설명) */
-  .card-icon {
-    width: 52px;
-    height: 52px;
-    margin-bottom: 1.25rem; /* mb-5 */
-  }
-  
-  .card-title {
-    font-size: 1.5rem; /* text-2xl */
-    font-weight: 700;
-    margin-bottom: 0.5rem; /* mb-2 */
-  }
-  
-  .card-description {
-    font-size: 1rem; /* text-base */
-    line-height: 1.6;
-    opacity: 0.95;
-  }
+}
