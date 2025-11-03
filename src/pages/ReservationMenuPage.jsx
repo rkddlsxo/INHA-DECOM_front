@@ -1,11 +1,11 @@
 import React from 'react';
 // 1. ⭐️ CSS 파일을 import 합니다.
-import './ReservationMenuPage.css'; 
+import './ReservationMenuPage.css';
 // 2. ⭐️ 아이콘을 import 합니다.
 import { BsArrowLeft, BsCalendarPlus, BsCheck2Square, BsExclamationTriangle } from 'react-icons/bs';
 
 const ReservationMenuPage = ({ onNavigate }) => {
-  
+
   // 3. ⭐️ 섹션을 클릭하면 버튼이 클릭되도록 래핑 함수를 만듭니다.
   const handleSectionClick = (page) => {
     onNavigate(page);
@@ -26,7 +26,7 @@ const ReservationMenuPage = ({ onNavigate }) => {
       <div className="reservation-grid">
 
         {/* 6. '신규 예약' 섹션 (카드) */}
-        <div 
+        <div
           className="reservation-section section-reserve"
           onClick={() => handleSectionClick('reservationFormSelectPage')}
         >
@@ -39,7 +39,7 @@ const ReservationMenuPage = ({ onNavigate }) => {
         </div>
 
         {/* 7. '예약 내역/수정' 섹션 (카드) */}
-        <div 
+        <div
           className="reservation-section section-history"
           onClick={() => handleSectionClick('bookingHistory')}
         >
@@ -52,20 +52,10 @@ const ReservationMenuPage = ({ onNavigate }) => {
         </div>
 
         {/* 8. '불편 사항 접수' 섹션 (카드) */}
-        <div 
-          className="reservation-section section-complaint"
-          onClick={() => handleSectionClick('complaint')}
-        >
-          <button className="menu-button">
-            <div className="menu-icon-wrapper">
-              <BsExclamationTriangle size={40} /> {/* 아이콘 크기 조정 */}
-            </div>
-            <span className="menu-text">불편 사항 접수</span>
-          </button>
-        </div>
+
 
       </div> {/* ⭐️ .reservation-grid 닫기 ⭐️ */}
-      
+
     </div>
   );
 };

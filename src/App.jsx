@@ -9,6 +9,8 @@ import RegisterPage from './pages/RegisterPage';
 import BookingHistoryPage from './pages/BookingHistoryPage';
 import TimeFocusSelectPage from './pages/TimeFocusSelectPage';
 import QrCheckInPage from './pages/QrCheckInPage';
+import SimultaneousSelectPage from './pages/SimultaneousSelectPage';
+import ComplaintPage from './pages/ComplaintPage';
 
 //url 분석 (무조건 main page로 가지 않게 하기 위함) & login이 매 새로고침마다 풀리는 문제 해결
 const getInitialState = () => {
@@ -36,6 +38,7 @@ const getInitialState = () => {
     return { initialPage: 'loginPage', initialSpaceId: null };
   }
 };
+
 
 function App() {
   const { initialPage, initialSpaceId } = getInitialState();
@@ -70,6 +73,10 @@ function App() {
         return <TimeFocusSelectPage onNavigate={setPage} />;
       case 'qrCheckIn':
         return <QrCheckInPage onNavigate={setPage} spaceId={currentSpaceId} />;
+      case 'simultaneousSelectPage':
+        return <SimultaneousSelectPage onNavigate={setPage} />;
+      case 'complaintPage':
+        return <ComplaintPage onNavigate={setPage} />;
       default:
         return <LoginPage onNavigate={setPage} />; //default를 login page로 수정
     }
