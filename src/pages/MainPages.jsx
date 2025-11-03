@@ -5,7 +5,7 @@ import { BsCalendarCheck, BsExclamationCircle } from 'react-icons/bs';
 import './MainPage.css'; 
 
 const MainPage = ({ onNavigate }) => {
-  const userName = "김인하"; // (임시) 사용자 이름
+  const userName = localStorage.getItem('username') || '방문자'; //사용자 이름 동적으로 반영하도록 수정
 
   return (
     // 2. <div>에 className 대신 1단계에서 만든 CSS 클래스 적용

@@ -8,12 +8,47 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import BookingHistoryPage from './pages/BookingHistoryPage';
 import TimeFocusSelectPage from './pages/TimeFocusSelectPage';
+import QrCheckInPage from './pages/QrCheckInPage';
+
+//url 분석 (무조건 main page로 가지 않게 하기 위함) & login이 매 새로고침마다 풀리는 문제 해결
+const getInitialState = () => {
+  const path = window.location.pathname;
+  // 1. 함수 안에서 토큰 존재 여부를 확인
+  const tokenExists = !!localStorage.getItem('authToken');
+
+  // 2. QR 스캔 경로 확인
+  if (path.startsWith('/qr-check-in/')) {
+    const spaceId = path.split('/')[2];
+    if (spaceId) {
+      return {
+        initialPage: 'qrCheckIn',
+        initialSpaceId: spaceId
+      };
+    }
+  }
+
+  // QR 스캔이 아닐 경우, 토큰 여부로 분기
+  if (tokenExists) {
+    // 토큰이 있으면 'main' 페이지로
+    return { initialPage: 'main', initialSpaceId: null };
+  } else {
+    // 토큰이 없으면 'loginPage'로
+    return { initialPage: 'loginPage', initialSpaceId: null };
+  }
+};
+
 function App() {
-  const [page, setPage] = useState('loginPage');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);// 로그인 상태 관리
+  const { initialPage, initialSpaceId } = getInitialState();
+  
+  const [page, setPage] = useState(initialPage);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('authToken')); //login이 매 새로고침마다 풀리는 문제 해결
+  const [currentSpaceId, setCurrentSpaceId] = useState(initialSpaceId);
 
 
   const renderPage = () => {
+    if (page === 'qrCheckIn' && !isLoggedIn) { //strict mode render 방지
+      return <LoginPage onNavigate={setPage} handleLogin={handleLoginSuccess} />;
+    }
     switch (page) {
       case 'main':
         return <MainPage onNavigate={setPage} />;
@@ -33,15 +68,21 @@ function App() {
         return <BookingHistoryPage onNavigate={setPage} />;
       case 'timeFocusSelectPage':
         return <TimeFocusSelectPage onNavigate={setPage} />;
+      case 'qrCheckIn':
+        return <QrCheckInPage onNavigate={setPage} spaceId={currentSpaceId} />;
       default:
-        return <MainPage onNavigate={setPage} />;
+        return <LoginPage onNavigate={setPage} />; //default를 login page로 수정
     }
 
 
   };
   const handleLoginSuccess = (status) => {
-    setIsLoggedIn(status); // 로그인 상태 업데이트
-    setPage('main');       // ★ 'navigate' 대신 'setPage'를 사용하여 페이지 전환
+    setIsLoggedIn(status);
+    if (initialPage === 'qrCheckIn' && initialSpaceId) {
+      setPage('qrCheckIn'); 
+    } else {
+      setPage('main');
+    }
   };
 
   return (

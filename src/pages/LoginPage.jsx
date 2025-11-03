@@ -75,9 +75,7 @@ const LoginPage = ({ onNavigate, handleLogin }) => {
                 if (handleLogin) {
                     handleLogin(true); // 로그인 상태 업데이트
                 }
-                if (onNavigate) {
-                    onNavigate('main'); // 메인 페이지로 이동
-                }
+                //onNavigate('main') 삭제: qr 로그인 화면에서도 main으로 강제 전환됨
 
             } else {
                 // 3-4. 로그인 실패 처리 (400 Bad Request, 401 Unauthorized)

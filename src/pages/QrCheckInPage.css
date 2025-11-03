@@ -1,0 +1,92 @@
+.qr-check-in-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  height: 100%; /* 부모(max-w-4xl)의 높이를 채움 */
+  text-align: center;
+}
+
+.status-message {
+  font-size: 2rem; /* 32px */
+  font-weight: 700;
+  margin-bottom: 2rem; /* 32px */
+}
+
+.status-message.loading {
+  color: #555; /* 어두운 회색 */
+}
+
+.status-message.success {
+  color: #16a34a; /* 진한 녹색 */
+}
+
+.status-message.error {
+  color: #dc2626; /* 진한 빨간색 */
+}
+
+.back-to-main-button {
+  margin-top: 1.5rem; /* 24px */
+  padding: 0.75rem 1.5rem; /* 12px 24px */
+  font-size: 1rem; /* 16px */
+  font-weight: 600;
+  color: white;
+  background-color: #2563eb; /* 파란색 */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.success-details-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem; /* 24px */
+}
+
+/* 예약 상세 정보 텍스트 */
+.check-in-details {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: #333; 
+    background-color: #f4f4f5; 
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    text-align: left;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box; 
+}
+
+.check-in-details p {
+    margin: 0.5rem 0;
+}
+
+/* 퇴실 버튼  */
+.checkout-button {
+    margin-top: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #ef4444;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.checkout-button:hover {
+    background-color: #dc2626; 
+}
+
+.back-to-main-button {
+    margin-top: 2rem; 
+}
+
+.back-to-main-button:hover {
+  background-color: #1d4ed8; 
+}
