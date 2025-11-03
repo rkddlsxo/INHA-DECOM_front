@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MainPage from './pages/MainPages';
-import ReservationMenuPage from './pages/ReservationMenuPage';
 import ReservationFormSelectPage from './pages/ReservationFormSelectPage';
 import PlaceFocusSelectPage from './pages/PlaceFocusSelectPage';
 import ReservationDetailsPage from './pages/ReservationDetailsPage';
@@ -42,7 +41,7 @@ const getInitialState = () => {
 
 function App() {
   const { initialPage, initialSpaceId } = getInitialState();
-  
+
   const [page, setPage] = useState(initialPage);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('authToken')); //login이 매 새로고침마다 풀리는 문제 해결
   const [currentSpaceId, setCurrentSpaceId] = useState(initialSpaceId);
@@ -86,7 +85,7 @@ function App() {
   const handleLoginSuccess = (status) => {
     setIsLoggedIn(status);
     if (initialPage === 'qrCheckIn' && initialSpaceId) {
-      setPage('qrCheckIn'); 
+      setPage('qrCheckIn');
     } else {
       setPage('main');
     }

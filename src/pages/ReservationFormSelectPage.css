@@ -65,28 +65,27 @@
   margin-top: 0.5rem;
 }
 
-/* 4. ⭐️ 카드들을 감싸는 그리드 (2열) */
+/* 4. ⭐️ 카드들을 감싸는 그리드 (2열) - FLEX에서 GRID로 변경 */
 .select-grid {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* 기존 Flex 속성 제거: justify-content: center, align-items: center */
+  display: grid;
+  /* 2개의 동일한 컬럼(열) 정의 */
+  grid-template-columns: 1fr 1fr;
   gap: 2.5rem;
-  /* 40px (카드 사이 간격) */
+  /* 카드 사이 간격 유지 */
   width: 100%;
   max-width: 800px;
-  /* 두 카드가 너무 벌어지지 않게 */
-  margin: auto;
+  margin: 0 auto;
+  /* 가운데 정렬 */
   flex-grow: 1;
-  flex-wrap: wrap;
-  /* 화면 작아지면 줄바꿈 */
+  /* flex-wrap: wrap; (Grid에서는 불필요) */
 }
 
 /* 5. ⭐️ 선택 카드 (기존 .reservationFormSelect-section 대체) */
 .select-card {
-  flex: 1;
-  /* 1:1 비율 */
-  flex-basis: 300px;
-  /* 카드의 최소 너비 */
+  /* Grid 환경에 맞게 flex-basis, flex 속성 제거 */
+  /* flex: 1; */
+  /* flex-basis: 300px; */
   min-height: 340px;
 
   display: flex;
@@ -102,6 +101,14 @@
   padding: 2rem;
   transition: all 0.3s ease;
   cursor: pointer;
+}
+
+/* ⭐️⭐️⭐️ 신규: 시간 + 공간 동시 선택 카드 (크게 만드는 핵심) ⭐️⭐️⭐️ */
+.select-card.section-simultaneous {
+  /* 2개의 컬럼을 모두 차지하도록 설정하여 큰 블록 생성 */
+  grid-column: 1 / -1;
+  /* 큰 카드는 상대적으로 높이를 키워 시각적 강조 */
+  min-height: 400px;
 }
 
 /* 6. ⭐️ 카드 호버 효과 (떠오르는 느낌) */
@@ -189,4 +196,25 @@
 #btn-spaceFocused,
 #btn-spaceFocused:hover {
   /* 모두 제거됨 */
+}
+
+/* ⭐ 모바일 대응: 화면이 작아지면 모든 카드를 한 줄에 하나씩 배치 */
+@media (max-width: 768px) {
+  .select-grid {
+    /* 한 컬럼으로 변경 */
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .select-card {
+    /* 모바일에서는 모두 한 줄이므로 grid-column을 다시 1칸으로 설정 */
+    grid-column: 1 / -1;
+    min-height: unset;
+    /* 높이 제한 해제 */
+  }
+
+  .select-card.section-simultaneous {
+    /* 모바일에서는 다른 카드와 같은 크기로 */
+    min-height: unset;
+  }
 }
