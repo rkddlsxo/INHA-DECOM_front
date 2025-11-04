@@ -1,18 +1,11 @@
-/* src/pages/SimultaneousSelectPage.css */
-
 /*
- * SimultaneousSelectPage 전용 스타일
+* SimultaneousSelectPage 전용 스타일
 */
 
 /* 1. 장소 목록 스크롤 영역 (스크롤 제거) */
 .room-list-scroll-area {
-    /* 💡 [수정] 스크롤이 생기지 않도록 설정 (내용 길이에 따라 높이 자동 조절) */
     max-height: unset;
-    /* 높이 제한 해제 */
     overflow-y: unset;
-    /* 스크롤바 숨김 */
-
-    /* 스크롤 관련 마진/패딩 제거 */
     padding-right: 0;
     margin-right: 0;
 }
@@ -52,11 +45,6 @@
     /* 인하대 블루 */
 }
 
-/* 4. 토글 아이콘 스타일 (제거됨) */
-.toggle-icon {
-    display: none;
-}
-
 /* --- ⭐️⭐️⭐️ 선택된 카테고리 강조 스타일 (통합) ⭐️⭐️⭐️ --- */
 
 /* 5. 선택된 상태의 Wrapper 스타일 */
@@ -83,8 +71,32 @@
     color: #ffffff;
 }
 
-/* 7. 세부 장소 목록 항목 스타일 (제거됨) */
-.room-item-display-only {
-    /* 이 항목은 이제 렌더링되지 않습니다. */
-    /* 기존 스타일 주석 또는 제거 */
+/* 🏆 [수정] 검색 버튼 스타일 (우선순위 강화) 🏆 */
+/* .selection-box를 사용하여 선택자 우선순위를 높임 */
+.selection-box .search-button {
+    width: 100%;
+    padding: 12px 20px;
+    margin-top: 20px;
+    background-color: #004B8D;
+    /* Inha Blue */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 75, 141, 0.3);
+}
+
+.selection-box .search-button:hover {
+    background-color: #003a6d;
+    /* Darker Blue on hover */
+}
+
+.selection-box .search-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
 }
