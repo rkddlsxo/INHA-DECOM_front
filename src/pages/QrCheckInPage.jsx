@@ -18,23 +18,33 @@ function QrCheckInPage({ spaceId, onNavigate }) {
             return;
         }
         
-        const attemptCheckIn = async (token) => {
+        // 1.[수정] attemptCheckIn이 lat, lng를 받도록 변경
+        const attemptCheckIn = async (token, latitude, longitude) => {
             setStatusMessage('서버로 체크인 요청 중...');
             try {
-                const response = await fetch(`${API_BASE_URL}/check-in?space_id=${spaceId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                // 2.[수정] fetch URL에 lat, lng 파라미터 추가
+                const response = await fetch(
+                    `${API_BASE_URL}/check-in?space_id=${spaceId}&lat=${latitude}&lng=${longitude}`, 
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
                     }
-                });
-
+                );
+                
                 const data = await response.json();
-
+                
                 if (response.ok) {
                     setStatusMessage(data.message);
                     setBookingInfo(data);
                 } else {
-                    setError(data.error || '체크인에 실패했습니다.');
+                    // 백엔드가 보낸 구체적인 GPS 에러 메시지(details)가 있다면 함께 표시
+                    let errorMsg = data.error || '체크인에 실패했습니다.';
+                    if (data.details) {
+                        errorMsg += ` (${data.details})`;
+                    }
+                    setError(errorMsg);
                 }
             } catch (err) {
                 setError('서버에 연결할 수 없습니다.');
@@ -56,8 +66,37 @@ function QrCheckInPage({ spaceId, onNavigate }) {
             setIsLoading(false);
             return;
         }
-
-        attemptCheckIn(token);
+        
+        // 3. [추가] GPS 권한 요청
+        setStatusMessage('GPS 위치 정보를 요청하는 중...');
+        
+        if (!navigator.geolocation) {
+            setError('오류: 이 브라우저에서는 GPS 위치 확인을 지원하지 않습니다.');
+            setIsLoading(false);
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                // 4. [성공] GPS 좌표 획득
+                const { latitude, longitude } = position.coords;
+                // 5. 획득한 좌표로 체크인 시도
+                attemptCheckIn(token, latitude, longitude);
+            },
+            (geoError) => {
+                // 6. [실패] GPS 권한 거부 또는 오류
+                let errorMsg = 'GPS 위치를 확인할 수 없습니다.';
+                if (geoError.code === 1) { // PERMISSION_DENIED
+                    errorMsg = 'GPS 권한을 허용해야 체크인이 가능합니다.';
+                }
+                setError(errorMsg);
+                setIsLoading(false);
+            },
+            { // GPS 옵션
+                enableHighAccuracy: true, // 높은 정확도
+                timeout: 10000,           // 10초 타임아웃
+                maximumAge: 0             // 캐시 사용 안 함
+            }
+        );
         
         return () => {
             effectRan.current = true;
