@@ -1,6 +1,6 @@
 import React from 'react';
 // 1. ⭐️ CSS 파일을 import 합니다.
-import './mainpage.css';
+import './Mainpage.css';
 // 2. ⭐️ 아이콘을 import 합니다.
 import { BsCalendarPlus, BsCheck2Square, BsExclamationTriangle } from 'react-icons/bs';
 

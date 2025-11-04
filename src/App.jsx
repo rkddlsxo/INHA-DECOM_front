@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MainPage from './pages/MainPages';
-import ReservationMenuPage from './pages/ReservationMenuPage';
 import ReservationFormSelectPage from './pages/ReservationFormSelectPage';
 import PlaceFocusSelectPage from './pages/PlaceFocusSelectPage';
 import ReservationDetailsPage from './pages/ReservationDetailsPage';
