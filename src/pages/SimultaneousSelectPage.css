@@ -1,105 +1,90 @@
 /* src/pages/SimultaneousSelectPage.css */
 
-/* TimeFocusSelectPage.css의 스타일을 상속받으면서, 
-   SimultaneousSelectPage에만 필요한 높이 및 레이아웃 재정의를 수행합니다. 
+/*
+ * SimultaneousSelectPage 전용 스타일
 */
 
-/* 1. 장소 목록 컨테이너의 기본 스크롤 제거 */
-/* TimeFocusSelectPage.css의 .room-list-box/selection-box에서 상속받은 
-   max-height: 85vh; 와 overflow-y: auto; 를 무시하고, 
-   내부의 .room-list-scroll-area에 스크롤을 위임하기 위함입니다. 
-   하지만, TimeFocusSelectPage.css에 직접 max-height가 정의되어 있으므로,
-   이 파일에서 직접 재정의하지 않고 내부 요소에 높이를 제한합니다.
-*/
-
-
-/* ⭐️⭐️⭐️ 장소 목록 스크롤 영역 (시간 선택 박스 높이에 맞춤) ⭐️⭐️⭐️ */
-/* 이 클래스를 SimultaneousSelectPage의 장소 목록 트리뷰를 감싸는 <div>에 적용합니다. */
+/* 1. 장소 목록 스크롤 영역 (스크롤 제거) */
 .room-list-scroll-area {
-    /* 왼쪽 시간 입력 박스(.selection-box)의 높이에 맞추기 위해 약 480px로 설정 */
-    max-height: 480px;
-    overflow-y: auto;
+    /* 💡 [수정] 스크롤이 생기지 않도록 설정 (내용 길이에 따라 높이 자동 조절) */
+    max-height: unset;
+    /* 높이 제한 해제 */
+    overflow-y: unset;
+    /* 스크롤바 숨김 */
 
-    /* 스크롤바가 콘텐츠를 침범하지 않도록 내부 여백을 조정합니다. */
-    padding-right: 15px;
-    margin-right: -15px;
+    /* 스크롤 관련 마진/패딩 제거 */
+    padding-right: 0;
+    margin-right: 0;
 }
 
-/* --- 장소 목록 트리뷰 스타일 유지 (선택적으로) --- */
+/* --- 카테고리 필터 UI 스타일 --- */
 
+/* 2. 카테고리 그룹 전체 Wrapper (클릭 영역) */
 .category-group-wrapper {
-    margin-bottom: 10px;
-    border: 1px solid #eee;
-    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
     overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
+/* 3. 카테고리 헤더 (내부 텍스트 영역) */
 .category-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 15px;
+    padding: 15px;
     background-color: #f8f9fa;
-    cursor: pointer;
     font-size: 1.1em;
     font-weight: 600;
     color: #343a40;
-    border-bottom: 1px solid #eee;
+    border: none;
     transition: background-color 0.2s;
+}
+
+.category-group-wrapper:hover .category-header {
+    background-color: #f1f1f1;
 }
 
 .category-header strong {
     color: #004B8D;
+    /* 인하대 블루 */
 }
 
+/* 4. 토글 아이콘 스타일 (제거됨) */
 .toggle-icon {
-    font-size: 0.8em;
-    font-weight: bold;
-    transition: transform 0.2s;
+    display: none;
 }
 
-.category-header:not(.expanded) .toggle-icon {
-    transform: rotate(-90deg);
+/* --- ⭐️⭐️⭐️ 선택된 카테고리 강조 스타일 (통합) ⭐️⭐️⭐️ --- */
+
+/* 5. 선택된 상태의 Wrapper 스타일 */
+.category-group-wrapper.selected-filter {
+    border: 2px solid #004B8D;
+    box-shadow: 0 4px 10px rgba(0, 75, 141, 0.15);
+    background-color: #e6f7ff;
 }
 
-.sub-category-content {
-    padding: 5px 0;
-    background-color: #ffffff;
+/* 6. 선택된 상태의 Header 스타일 (배경과 텍스트 색상 변경) */
+.category-group-wrapper.selected-filter .category-header {
+    background-color: #004B8D;
+    color: #ffffff;
+    font-weight: 700;
+    background-color: #004B8D;
 }
 
-.sub-category-title {
-    padding: 8px 15px;
-    font-weight: 600;
-    color: #555;
-    background-color: #fdfdfd;
-    border-bottom: 1px dotted #f0f0f0;
+.category-group-wrapper.selected-filter .category-header:hover {
+    background-color: #003a6d;
+    /* 선택된 상태에서 호버 시 약간 더 진한 색상 */
 }
 
-.room-item-list {
-    padding: 5px 0;
+.category-group-wrapper.selected-filter .category-header strong {
+    color: #ffffff;
 }
 
-/* 다중 선택을 위한 .room-item 스타일 재정의 */
-.room-item {
-    padding: 10px 15px 10px 25px;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s, border-left 0.2s;
-    font-size: 0.95em;
-    border-left: 4px solid transparent;
-}
-
-.room-item:hover {
-    background-color: #e6f0f8;
-}
-
-.room-item.selected {
-    background-color: #e6f0f8;
-    /* 배경을 연한 색으로 유지 */
-    color: #004B8D;
-    border-left: 4px solid #004B8D;
-    font-weight: 600;
-}
-
-.room-item.selected span {
-    color: #004B8D;
+/* 7. 세부 장소 목록 항목 스타일 (제거됨) */
+.room-item-display-only {
+    /* 이 항목은 이제 렌더링되지 않습니다. */
+    /* 기존 스타일 주석 또는 제거 */
 }

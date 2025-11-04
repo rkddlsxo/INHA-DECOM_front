@@ -5,14 +5,14 @@ import { BsArrowLeft, BsSearch, BsBuilding, BsListUl } from 'react-icons/bs';
 const API_BASE_URL = 'http://localhost:5050/api';
 const LAST_PAGE_KEY = 'simultaneousSelectPage';
 
-// 💡 장소 카테고리 정의
+// 💡 [수정] 스터디룸의 서브 카테고리 구분을 제거하고 하나의 '스터디룸'으로 통일
 const CATEGORIES = {
     '전체': ['전체'],
-    '스터디룸': ['인문 스터디룸', '해동 스터디룸', '학생라운지 스터디룸'],
+    '스터디룸': ['스터디룸'], // 💡 '스터디룸' 카테고리만 남김
     '가무연습실': ['가무연습실'],
     '운동장': ['운동장'],
-    '피클볼 코드': ['피클볼 코드'],
-    '테니스 코드': ['테니스 코드'],
+    '피클볼 코트': ['피클볼 코트'],
+    '테니스 코트': ['테니스 코트'],
     '농구장': ['농구장'],
     '풋살파크': ['풋살파크'],
 };
@@ -49,7 +49,9 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
     const [selectedHour, setSelectedHour] = useState({ start: '08', end: '12' });
     const [selectedMinute, setSelectedMinute] = useState({ start: '00', end: '59' });
 
-    const [selectedRoomIds, setSelectedRoomIds] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+
+    // ❌ 이제 메인 카테고리만 있으므로 ExpandedCategories 상태는 제거하거나 사용하지 않습니다.
     const [expandedCategories, setExpandedCategories] = useState({});
 
     const [allMasterSpaces, setAllMasterSpaces] = useState([]);
@@ -64,19 +66,22 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
     const startMinuteOptions = useMemo(() => generateMinuteOptions('start'), []);
     const endMinuteOptions = useMemo(() => generateMinuteOptions('end'), []);
 
+    // 💡 [수정] 장소 그룹화 로직: 모든 스터디룸을 메인 카테고리로 통합
     const groupedSpaces = useMemo(() => {
         return allMasterSpaces.reduce((groups, space) => {
-            const category = space.category;
-            const subCategory = space.subCategory || space.name;
-            if (!groups[category]) groups[category] = {};
-            if (!groups[category][subCategory]) groups[category][subCategory] = [];
-            groups[category][subCategory].push(space);
+            // 스터디룸의 경우, subCategory가 있어도 메인 카테고리로 통합
+            const category = space.category === '스터디룸' ? '스터디룸' : space.category;
+
+            // 💡 그룹화 키를 메인 카테고리로만 사용 (subCategory 무시)
+            if (!groups[category]) groups[category] = [];
+            groups[category].push(space);
+
             return groups;
         }, {});
     }, [allMasterSpaces]);
 
 
-    // ... (useEffect - fetchMasterSpaces 로직 유지)
+    // 마스터 장소 목록 로드
     useEffect(() => {
         const fetchMasterSpaces = async () => {
             try {
@@ -84,43 +89,57 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
                 if (!response.ok) throw new Error('마스터 장소 목록 로드 실패');
                 const data = await response.json();
 
-                setAllMasterSpaces(data);
+                // 💡 데이터 로드 후, 스터디룸의 카테고리 이름을 '스터디룸'으로 통일시켜 저장
+                const unifiedData = data.map(space => ({
+                    ...space,
+                    // subCategory가 있더라도, 스터디룸이면 메인 카테고리를 '스터디룸'으로 확정
+                    category: space.subCategory && space.category === '스터디룸' ? '스터디룸' : space.category
+                }));
 
-                const initialExpandedState = data.reduce((acc, space) => {
-                    if (space.category && !acc[space.category]) {
-                        acc[space.category] = true;
-                    }
-                    return acc;
-                }, {});
-                setExpandedCategories(initialExpandedState);
+                setAllMasterSpaces(unifiedData);
+
+                // ❌ expandedCategories 관련 로직 제거 (이제 불필요)
+                // const initialExpandedState = unifiedData.reduce(...);
+                // setExpandedCategories(initialExpandedState);
 
             } catch (err) {
                 console.error("Master Space Load Error:", err);
-                setAllMasterSpaces(SimultaneousSelectPage.DUMMY_SPACES_FOR_TEST.map(s => ({ ...s, id: s.id })));
+                // 더미 데이터에도 카테고리 통일 로직 적용
+                const unifiedDummy = SimultaneousSelectPage.DUMMY_SPACES_FOR_TEST.map(s => ({
+                    ...s,
+                    id: s.id,
+                    category: s.subCategory && s.category === '스터디룸' ? '스터디룸' : s.category
+                }));
+                setAllMasterSpaces(unifiedDummy);
             }
         };
         fetchMasterSpaces();
     }, []);
 
-    // ... (useEffect - 필터링 로직 유지)
+    // 💡 [수정] 장소 목록 필터링 로직: 이제 space.category만 사용
     useEffect(() => {
         if (!isSearchPerformed) return;
 
         let filtered = availableSpaces;
 
-        if (selectedRoomIds.length > 0) {
-            filtered = availableSpaces.filter(space => selectedRoomIds.includes(space.id));
+        if (selectedCategories.length > 0) {
+            filtered = availableSpaces.filter(space => {
+                // 💡 이제 space.category만 사용
+                const spaceCategory = space.category;
+                return selectedCategories.includes(spaceCategory);
+            });
         }
 
         setFilteredSpaces(filtered);
-    }, [selectedRoomIds, availableSpaces, isSearchPerformed]);
+    }, [selectedCategories, availableSpaces, isSearchPerformed]);
 
 
-    // ... (fetchAvailableSpaces, handleTimeInputComponentChange, toggleCategory, handleSearch, handleSelectSpace 로직 유지)
+    // 서버에서 사용 가능한 장소 목록을 불러오는 함수
     const fetchAvailableSpaces = async (date, timeRange) => {
         setLoading(true);
         setError(null);
         setAvailableSpaces([]);
+        setSelectedCategories([]);
         setIsSearchPerformed(true);
 
         const todayString = new Date().toISOString().split('T')[0];
@@ -142,12 +161,23 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
             if (!response.ok) throw new Error('조회 실패');
             const data = await response.json();
 
-            setAvailableSpaces(data);
+            // 💡 [추가] 조회된 데이터에도 카테고리 통일 로직 적용
+            const unifiedAvailableData = data.map(space => ({
+                ...space,
+                category: space.subCategory && space.category === '스터디룸' ? '스터디룸' : space.category
+            }));
+
+            setAvailableSpaces(unifiedAvailableData);
             setError(null);
 
         } catch (err) {
             setError('⚠️ 오류: 사용 가능한 장소를 불러오는 중 오류가 발생했습니다. 서버 연결을 확인해주세요.');
-            setAvailableSpaces(SimultaneousSelectPage.DUMMY_SPACES_FOR_TEST);
+            // 더미 데이터에도 카테고리 통일 로직 적용
+            const unifiedDummy = SimultaneousSelectPage.DUMMY_SPACES_FOR_TEST.map(s => ({
+                ...s,
+                category: s.subCategory && s.category === '스터디룸' ? '스터디룸' : s.category
+            }));
+            setAvailableSpaces(unifiedDummy);
         }
         setLoading(false);
     };
@@ -184,26 +214,26 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
         setIsSearchPerformed(false);
     };
 
-    const handleRoomSelect = (roomId) => {
-        setSelectedRoomIds(prevIds => {
-            if (prevIds.includes(roomId)) {
-                return prevIds.filter(id => id !== roomId);
+    const handleCategorySelect = (categoryName) => {
+        setSelectedCategories(prevCats => {
+            if (prevCats.includes(categoryName)) {
+                return prevCats.filter(cat => cat !== categoryName);
             } else {
-                return [...prevIds, roomId];
+                return [...prevCats, categoryName];
             }
         });
     };
 
-    const toggleCategory = (categoryName) => {
-        setExpandedCategories(prev => ({
-            ...prev,
-            [categoryName]: !prev[categoryName]
-        }));
-    };
+    // ❌ 이제 사용하지 않는 toggleCategory 함수 제거
+    // const toggleCategory = (categoryName) => {
+    //     setExpandedCategories(prev => ({
+    //         ...prev,
+    //         [categoryName]: !prev[categoryName]
+    //     }));
+    // };
 
-    // ⭐️ 장소 선택 초기화 핸들러 추가
     const handleResetRoomSelection = () => {
-        setSelectedRoomIds([]);
+        setSelectedCategories([]);
     };
 
 
@@ -250,7 +280,7 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
                 뒤로
             </button>
             <h1 className="page-title">🕑 시간 + 공간 동시 선택</h1>
-            <p className="page-description">조건을 입력하고 조회 후, 장소 목록을 클릭하여 **여러 개**의 필터를 적용하세요.</p>
+            <p className="page-description">조건을 입력하고 조회 후, 장소 목록에서 원하는 **카테고리**를 클릭하여 필터를 적용하세요.</p>
 
             <div className="selection-area-wrapper">
 
@@ -328,16 +358,15 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
                 <div className="results-area-box place-focus-box room-list-box">
                     <h2 className="box-title">
                         <BsBuilding size={24} />
-                        장소 목록 (필터)
+                        장소 목록 (카테고리 필터)
                     </h2>
 
                     {/* ⭐️ 장소 선택 현황 및 초기화 버튼 */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                        <p className="instruction-text-small" style={{ color: selectedRoomIds.length > 0 ? '#004B8D' : '#666' }}>
-                            현재 필터: {selectedRoomIds.length === 0 ? '전체 장소' : `${selectedRoomIds.length}개 장소 선택됨`}<br />
-
+                        <p className="instruction-text-small" style={{ color: selectedCategories.length > 0 ? '#004B8D' : '#666' }}>
+                            현재 필터: {selectedCategories.length === 0 ? '전체 장소' : `${selectedCategories.length}개 카테고리 선택됨`}<br />
                         </p>
-                        {selectedRoomIds.length > 0 && (
+                        {selectedCategories.length > 0 && (
                             <button
                                 onClick={handleResetRoomSelection}
                                 style={{
@@ -361,46 +390,27 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
                         <p className="loading-text">장소 목록 로딩 중...</p>
                     ) : (
                         <div className="room-list-scroll-area">
-                            {/* PlaceFocusSelectPage에서 가져온 그룹화된 UI 사용 */}
-                            {Object.keys(groupedSpaces).map(category => (
-                                <div key={category} className="category-group-wrapper">
-
+                            {/* 💡 [수정] 메인 카테고리만 렌더링하고, 클릭 시 필터링 적용 */}
+                            {Object.keys(groupedSpaces).map(category => {
+                                const roomsInCat = groupedSpaces[category]; // 해당 카테고리에 속한 모든 장소
+                                return (
                                     <div
-                                        className={`category-header ${expandedCategories[category] ? 'expanded' : ''}`}
-                                        onClick={() => toggleCategory(category)}
+                                        key={category}
+                                        className={`category-group-wrapper ${selectedCategories.includes(category) ? ' selected-filter' : ''}`}
+                                        onClick={() => handleCategorySelect(category)} // 💡 클릭 시 필터링 적용
                                     >
-                                        <strong>{category}</strong>
-                                        <span className="toggle-icon">▼</span>
-                                    </div>
-
-                                    {expandedCategories[category] && (
-                                        <div className="sub-category-content">
-                                            {Object.keys(groupedSpaces[category]).map(subCategory => {
-                                                const roomsInSub = groupedSpaces[category][subCategory];
-                                                return (
-                                                    <div key={subCategory} className="sub-category-group">
-                                                        <div className="sub-category-title">
-                                                            {subCategory}
-                                                        </div>
-                                                        <div className="room-item-list">
-
-                                                            {roomsInSub.map(room => (
-                                                                <div
-                                                                    key={room.id}
-                                                                    className={`room-item${selectedRoomIds.includes(room.id) ? ' selected' : ''}`}
-                                                                    onClick={() => handleRoomSelect(room.id)}
-                                                                >
-                                                                    <span className="room-name-display">{room.name} ({room.location})</span>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
+                                        {/* 💡 카테고리 헤더: 필터링 역할 수행 */}
+                                        <div
+                                            className={`category-header filter-only`}
+                                        >
+                                            <strong>{category}</strong> (총 {roomsInCat.length}개)
+                                            {/* 토글 아이콘 제거 (세부 목록이 없으므로) */}
                                         </div>
-                                    )}
-                                </div>
-                            ))}
+
+                                        {/* ❌ 세부 장소 목록 영역 완전히 제거 */}
+                                    </div>
+                                )
+                            })}
                         </div>
                     )}
                 </div>
@@ -410,9 +420,9 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
             <div className="results-area-box place-focus-box" style={{ marginTop: '2.5rem' }}>
                 <h2 className="box-title">
                     <BsListUl size={24} />
-                    {selectedRoomIds.length === 0
+                    {selectedCategories.length === 0
                         ? '선택 시간대에 사용 가능한 모든 장소'
-                        : `선택된 ${selectedRoomIds.length}개 장소의 예약 가능 조합 (${filteredSpaces.length}개 발견)`
+                        : `선택된 ${selectedCategories.length}개 카테고리 조합 (${filteredSpaces.length}개 발견)`
                     }
                 </h2>
 
@@ -430,7 +440,8 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
                                     <div className="space-details">
                                         <h3 className="space-name">{space.name}</h3>
                                         <p className="space-info">
-                                            <strong>범주:</strong> {space.subCategory || space.category} |
+                                            {/* 💡 통일된 카테고리 이름 사용 */}
+                                            <strong>범주:</strong> {space.category} |
                                             <strong> 인원:</strong> {space.capacity}명 |
                                             <strong> 위치:</strong> {space.location}
                                         </p>
@@ -457,6 +468,8 @@ const SimultaneousSelectPage = ({ onNavigate }) => {
 // 💡 테스트용 더미 데이터 (서버 미연동 시 사용)
 SimultaneousSelectPage.DUMMY_SPACES_FOR_TEST = [
     { id: 101, name: '인문 스터디룸 A', category: '스터디룸', subCategory: '인문 스터디룸', capacity: 6, location: '본관 301호' },
+    { id: 102, name: '인문 스터디룸 B', category: '스터디룸', subCategory: '인문 스터디룸', capacity: 6, location: '본관 302호' },
+    { id: 201, name: '해동 스터디룸 1', category: '스터디룸', subCategory: '해동 스터디룸', capacity: 4, location: '해동관 101호' },
     { id: 103, name: '가무연습실 1', category: '가무연습실', subCategory: '가무연습실', capacity: 20, location: '예술관 지하' },
     { id: 104, name: '풋살파크 전체', category: '풋살파크', subCategory: '풋살파크', capacity: 50, location: '대운동장 옆' },
 ];
