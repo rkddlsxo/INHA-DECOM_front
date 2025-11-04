@@ -568,12 +568,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                     </div>
                 </div>
 
-                <button
-                    type="button"
-                    className="placeholder-button" // 스타일링을 위해 클래스 추가 (CSS 파일에서 정의 필요)
-                >
-                    대여 물품 선택
-                </button>
+
                 <button type="submit" className="submit-button">
                     최종 예약 확정 및 제출
                 </button>

@@ -61,6 +61,8 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedTimeRange, setSelectedTimeRange] = useState({ start: '09:00', end: '10:59' });
     const [selectedCategory, setSelectedCategory] = useState('전체');
+    // 실제 필터링에 사용될 상태
+    const [currentFilterCategory, setCurrentFilterCategory] = useState('전체');
     const [allAvailableSpaces, setAllAvailableSpaces] = useState([]);
     const [filteredSpaces, setFilteredSpaces] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -70,7 +72,7 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
     const startTimeOptions = useMemo(() => generateTimeOptions('start'), []);
     const endTimeOptions = useMemo(() => generateTimeOptions('end'), []);
 
-    // 장소 목록 카테고리 필터링
+    // 장소 목록 카테고리 필터링 (currentFilterCategory에만 반응)
     useEffect(() => {
         if (!isSearchPerformed) {
             setFilteredSpaces([]);
@@ -79,21 +81,24 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
 
         let filtered = allAvailableSpaces;
 
-        if (selectedCategory === '전체') {
+        // currentFilterCategory를 기준으로 필터링
+        if (currentFilterCategory === '전체') {
             setFilteredSpaces(filtered);
             return;
         }
 
-        const isSubCategory = CATEGORIES['스터디룸'].includes(selectedCategory);
+        // currentFilterCategory를 기준으로 필터링
+        const isSubCategory = CATEGORIES['스터디룸'].includes(currentFilterCategory);
 
         if (isSubCategory) {
-            filtered = filtered.filter(space => space.subCategory === selectedCategory);
+            filtered = filtered.filter(space => space.subCategory === currentFilterCategory);
         } else {
-            filtered = filtered.filter(space => space.category === selectedCategory);
+            filtered = filtered.filter(space => space.category === currentFilterCategory);
         }
 
         setFilteredSpaces(filtered);
-    }, [selectedCategory, allAvailableSpaces, isSearchPerformed]);
+        // 의존성 배열을 currentFilterCategory로 변경
+    }, [currentFilterCategory, allAvailableSpaces, isSearchPerformed]);
 
 
     // 서버에서 사용 가능한 장소 목록을 불러오는 함수
@@ -117,13 +122,14 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
             const data = await response.json();
 
             setAllAvailableSpaces(data);
-            setSelectedCategory('전체');
+            // ⭐️ 수정: 조회 성공 후 필터링 상태를 초기화하는 코드를 제거했습니다.
+            //        이제 handleSearch에서 설정한 currentFilterCategory가 유지됩니다.
             setError(null);
 
         } catch (err) {
             console.error(err);
             setError('⚠️ 오류: 장소 목록을 불러오는 중 오류가 발생했습니다.');
-            setAllAvailableSpaces([]); // 데이터 비우기
+            setAllAvailableSpaces([]);
         }
         setLoading(false);
     };
@@ -135,7 +141,7 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
         setIsSearchPerformed(false);
     };
 
-    // '장소 조회하기' 버튼 클릭 핸들러
+    // '장소 조회하기' 버튼 클릭 핸들러 (const 오타 수정됨)
     const handleSearch = () => {
         if (!selectedDate) {
             alert('날짜를 먼저 선택해주세요.');
@@ -146,6 +152,9 @@ const TimeFocusSelectPage = ({ onNavigate }) => {
             alert('시간 선택 규칙을 다시 확인해주세요. (시작: XX:X0, 종료: XX:X9)');
             return;
         }
+
+        // 핵심: 버튼 클릭 시에만 현재 선택된 카테고리를 실제 필터링 기준으로 설정
+        setCurrentFilterCategory(selectedCategory);
 
         fetchAvailableSpaces(selectedDate, selectedTimeRange);
     };
