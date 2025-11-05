@@ -74,7 +74,6 @@ const MainPages = ({ onNavigate }) => {
 
         {/* 4. '불편 사항 접수' (하단 3/3) */}
         <div
-          // ⭐️ [수정] 고유 클래스(section-complaint)를 다시 추가합니다.
           className="reservation-section section-secondary section-complaint"
           onClick={() => handleSectionClick('complaintPage')}
         >

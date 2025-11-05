@@ -10,7 +10,8 @@ import TimeFocusSelectPage from './pages/TimeFocusSelectPage';
 import QrCheckInPage from './pages/QrCheckInPage';
 import SimultaneousSelectPage from './pages/SimultaneousSelectPage';
 import ComplaintPage from './pages/ComplaintPage';
-// ⭐️ 1. 신규 캘린더 페이지 import
+import ComplaintMenuPage from './pages/ComplaintMenuPage';
+import ComplaintHistoryPage from './pages/ComplaintHistoryPage';
 import MonthlyCalendarPage from './pages/MonthlyCalendarPage';
 
 //url 분석 (무조건 main page로 가지 않게 하기 위함) & login이 매 새로고침마다 풀리는 문제 해결
@@ -76,7 +77,10 @@ function App() {
         return <SimultaneousSelectPage onNavigate={setPage} />;
       case 'complaintPage':
         return <ComplaintPage onNavigate={setPage} />;
-      // ⭐️ 2. 신규 캘린더 페이지 case 추가
+      case 'complaintMenuPage':
+        return <ComplaintMenuPage onNavigate={setPage} />
+      case 'complaintHistoryPage':
+        return <ComplaintHistoryPage onNavigate={setPage} />
       case 'monthlyCalendarPage':
         return <MonthlyCalendarPage onNavigate={setPage} />;
       default:
