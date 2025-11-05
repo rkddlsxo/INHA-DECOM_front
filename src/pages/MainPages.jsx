@@ -63,7 +63,7 @@ const MainPages = ({ onNavigate }) => {
         {/* '불편 사항 접수' 섹션 (작은 카드 2) */}
         <div
           className="reservation-section section-complaint"
-          onClick={() => handleSectionClick('complaintPage')}
+          onClick={() => handleSectionClick('complaintMenuPage')}
         >
           <button className="menu-button">
             <div className="menu-icon-wrapper">

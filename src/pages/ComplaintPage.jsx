@@ -103,7 +103,7 @@ const ComplaintPage = ({ onNavigate }) => {
         <div className="complaint-page-container">
             {/* 뒤로가기 버튼 */}
             <button
-                onClick={() => onNavigate('main')}
+                onClick={() => onNavigate('complaintMenuPage')}
                 className="back-button"
                 disabled={loading}
             >

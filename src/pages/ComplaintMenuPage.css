@@ -1,0 +1,197 @@
+/* ComplaintMenuPage.css */
+
+/* 1. 전체 컨테이너 (페이지 여백 및 정렬) */
+.complaint-menu-wrapper {
+    padding: 3rem 2rem;
+    min-height: 80vh;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    /* ⭐️ back-button의 absolute 기준점 */
+}
+
+/* ⭐️ 2. 왼쪽 상단 '뒤로가기' 버튼 스타일 */
+.back-button {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 10;
+    padding: 0.6rem 1.2rem;
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+
+/* 3. 메인 페이지 헤더 스타일 */
+.main-page-header {
+    width: 100%;
+    max-width: 600px;
+    /* 메인 메뉴보다 약간 좁게 */
+    text-align: center;
+    margin-bottom: 4rem;
+    padding-top: 3rem;
+    /* ⭐️ 뒤로가기 버튼과 겹치지 않도록 조정 */
+}
+
+.main-page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #004B8D;
+    /* 인하대 메인 색상 */
+    margin: 0;
+}
+
+.main-page-welcome {
+    font-size: 1.25rem;
+    color: #555;
+    margin-top: 0.75rem;
+}
+
+/* 4. 카드 그리드 (1:1 레이아웃 구현) */
+.menu-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    flex-grow: 1;
+}
+
+/* 5. 카드 공통 스타일 */
+.menu-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+
+    padding: 2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    min-height: 280px;
+}
+
+/* 5.1 카드 호버 효과 */
+.menu-section:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 75, 141, 0.1);
+    /* 인하대 파란색 그림자 */
+}
+
+/* 6. 버튼/내부 요소 스타일 */
+.menu-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.menu-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+.menu-text {
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.menu-description {
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+    line-height: 1.6;
+}
+
+
+/* 7. 카드별 호버 시 색상 변경 테마 적용 */
+
+/* '불편 사항 접수' (주황 계열) */
+.menu-section.section-register:hover .menu-icon-wrapper {
+    background-color: #e67e22;
+    /* 주황색 */
+    color: #ffffff;
+}
+
+.menu-section.section-register:hover .menu-text {
+    color: #e67e22;
+}
+
+/* '불편 사항 내역' (보라 계열) */
+.menu-section.section-history:hover .menu-icon-wrapper {
+    background-color: #8e44ad;
+    /* 보라색 */
+    color: #ffffff;
+}
+
+.menu-section.section-history:hover .menu-text {
+    color: #8e44ad;
+}
+
+/* ⭐ 모바일 대응 */
+@media (max-width: 768px) {
+    .menu-card-grid {
+        /* 한 컬럼으로 변경 */
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        max-width: 90%;
+        /* 모바일에서 너비 확보 */
+    }
+
+    .menu-section {
+        min-height: unset;
+    }
+
+    .main-page-title {
+        font-size: 2rem;
+    }
+
+    .main-page-welcome {
+        font-size: 1rem;
+    }
+}

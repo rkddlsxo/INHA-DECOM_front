@@ -10,7 +10,8 @@ import TimeFocusSelectPage from './pages/TimeFocusSelectPage';
 import QrCheckInPage from './pages/QrCheckInPage';
 import SimultaneousSelectPage from './pages/SimultaneousSelectPage';
 import ComplaintPage from './pages/ComplaintPage';
-
+import ComplaintMenuPage from './pages/ComplaintMenuPage';
+import ComplaintHistoryPage from './pages/ComplaintHistoryPage';
 //url 분석 (무조건 main page로 가지 않게 하기 위함) & login이 매 새로고침마다 풀리는 문제 해결
 const getInitialState = () => {
   const path = window.location.pathname;
@@ -76,6 +77,10 @@ function App() {
         return <SimultaneousSelectPage onNavigate={setPage} />;
       case 'complaintPage':
         return <ComplaintPage onNavigate={setPage} />;
+      case 'complaintMenuPage':
+        return <ComplaintMenuPage onNavigate={setPage} />
+      case 'complaintHistoryPage':
+        return <ComplaintHistoryPage onNavigate={setPage} />
       default:
         return <LoginPage onNavigate={setPage} />; //default를 login page로 수정
     }

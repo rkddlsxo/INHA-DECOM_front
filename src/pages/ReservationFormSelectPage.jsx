@@ -11,7 +11,7 @@ const ReservationFormSelectPage = ({ onNavigate }) => {
 
             {/* 뒤로가기 버튼 */}
             <button
-                onClick={() => onNavigate('mainPages')}
+                onClick={() => onNavigate('main')}
                 className="back-button"
             >
                 <BsArrowLeft size={16} />
