@@ -136,15 +136,18 @@
   background-color: #004B8D;
   color: #ffffff;
 }
+
 .reservation-section.section-reserve-hero:hover .menu-text {
   color: #004B8D;
 }
 
 /* ⭐️ [수정] Secondary 버튼 - '월별 현황 보기' (청록 계열) */
 .reservation-section.section-calendar-toggle:hover .menu-icon-wrapper {
-  background-color: #0d9488; /* 청록색 */
+  background-color: #0d9488;
+  /* 청록색 */
   color: #ffffff;
 }
+
 .reservation-section.section-calendar-toggle:hover .menu-text {
   color: #0d9488;
 }
@@ -154,6 +157,7 @@
   background-color: #15803d;
   color: #ffffff;
 }
+
 .reservation-section.section-history:hover .menu-text {
   color: #15803d;
 }
@@ -163,6 +167,7 @@
   background-color: #e67e22;
   color: #ffffff;
 }
+
 .reservation-section.section-complaint:hover .menu-text {
   color: #e67e22;
 }
@@ -174,16 +179,18 @@
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .reservation-section.section-reserve-hero,
   .reservation-section.section-secondary {
     grid-column: 1 / -1;
-    min-height: unset; /* 모바일 높이 제한 해제 */
+    min-height: unset;
+    /* 모바일 높이 제한 해제 */
   }
 
   .main-page-title {
     font-size: 2rem;
   }
+
   .main-page-welcome {
     font-size: 1rem;
   }

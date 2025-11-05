@@ -37,7 +37,7 @@ const MainPages = ({ onNavigate }) => {
             </p>
           </button>
         </div>
-        
+
         {/* 2. '월별 현황 보기' (하단 1/3) */}
         <div
           // ⭐️ [수정] 고유 클래스(section-calendar-toggle)를 다시 추가합니다.
@@ -75,7 +75,7 @@ const MainPages = ({ onNavigate }) => {
         {/* 4. '불편 사항 접수' (하단 3/3) */}
         <div
           className="reservation-section section-secondary section-complaint"
-          onClick={() => handleSectionClick('complaintPage')}
+          onClick={() => handleSectionClick('complaintMenuPage')}
         >
           <button className="menu-button">
             <div className="menu-icon-wrapper">
