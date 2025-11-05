@@ -1,8 +1,6 @@
 import React from 'react';
-// 1. ⭐️ CSS 파일을 import 합니다.
 import './Mainpage.css';
-// 2. ⭐️ 아이콘을 import 합니다.
-import { BsCalendarPlus, BsCheck2Square, BsExclamationTriangle } from 'react-icons/bs';
+import { BsCalendarPlus, BsCalendarWeek, BsCheck2Square, BsExclamationTriangle } from 'react-icons/bs';
 
 const MainPages = ({ onNavigate }) => {
 
@@ -11,10 +9,8 @@ const MainPages = ({ onNavigate }) => {
   };
 
   return (
-    // ⭐️ 클래스 이름 변경: reservation-container -> facility-menu-wrapper
     <div className="facility-menu-wrapper">
 
-      {/* ⭐️ 2. 메인 페이지 분위기의 Header 추가 */}
       <header className="main-page-header">
         <h1 className="main-page-title">
           시설 예약 메뉴
@@ -24,13 +20,11 @@ const MainPages = ({ onNavigate }) => {
         </p>
       </header>
 
-      {/* ⭐️ 3. 카드를 감싸는 그리드 (2:1:1 레이아웃) */}
-      {/* ⭐️ 클래스 이름 변경: reservation-grid -> menu-card-grid */}
       <main className="menu-card-grid">
 
-        {/* '신규 예약' 섹션 (큰 카드) */}
+        {/* 1. '신규 예약하기' (최상단 Hero 버튼) */}
         <div
-          className="reservation-section section-reserve"
+          className="reservation-section section-reserve-hero"
           onClick={() => handleSectionClick('reservationFormSelectPage')}
         >
           <button className="menu-button">
@@ -39,14 +33,32 @@ const MainPages = ({ onNavigate }) => {
             </div>
             <span className="menu-text">신규 예약하기</span>
             <p className="menu-description">
-              시설 예약 방식을 선택하여 새로운 예약을 진행합니다.
+              가장 빠른 방법으로 새로운 예약을 진행합니다.
+            </p>
+          </button>
+        </div>
+        
+        {/* 2. '월별 현황 보기' (하단 1/3) */}
+        <div
+          // ⭐️ [수정] 고유 클래스(section-calendar-toggle)를 다시 추가합니다.
+          className="reservation-section section-secondary section-calendar-toggle"
+          onClick={() => handleSectionClick('monthlyCalendarPage')}
+        >
+          <button className="menu-button">
+            <div className="menu-icon-wrapper">
+              <BsCalendarWeek size={38} />
+            </div>
+            <span className="menu-text">월별 현황 보기</span>
+            <p className="menu-description">
+              장소별 예약 포화도를 확인합니다.
             </p>
           </button>
         </div>
 
-        {/* '예약 내역/수정' 섹션 (작은 카드 1) */}
+        {/* 3. '예약 내역/수정' (하단 2/3) */}
         <div
-          className="reservation-section section-history"
+          // ⭐️ [수정] 고유 클래스(section-history)를 다시 추가합니다.
+          className="reservation-section section-secondary section-history"
           onClick={() => handleSectionClick('bookingHistory')}
         >
           <button className="menu-button">
@@ -55,31 +67,28 @@ const MainPages = ({ onNavigate }) => {
             </div>
             <span className="menu-text">예약 내역 / 수정</span>
             <p className="menu-description">
-              나의 예약 현황을 조회하고 변경 또는 취소합니다.
+              나의 예약 현황을 조회 및 변경합니다.
             </p>
           </button>
         </div>
 
-        {/* '불편 사항 접수' 섹션 (작은 카드 2) */}
+        {/* 4. '불편 사항 접수' (하단 3/3) */}
         <div
-          className="reservation-section section-complaint"
-          onClick={() => handleSectionClick('complaintMenuPage')}
+          className="reservation-section section-secondary section-complaint"
+          onClick={() => handleSectionClick('complaintPage')}
         >
           <button className="menu-button">
             <div className="menu-icon-wrapper">
-              <BsExclamationTriangle size={40} />
+              <BsExclamationTriangle size={38} />
             </div>
             <span className="menu-text">불편 사항 접수</span>
             <p className="menu-description">
-              예약 시스템 또는 시설 이용 관련 불편 사항을 접수합니다.
+              시설 및 시스템 불편 사항을 접수합니다.
             </p>
           </button>
         </div>
 
       </main>
-
-      {/* 메인으로 돌아가는 버튼은 JSX에 없으므로 주석 처리된 상태로 유지합니다. */}
-
     </div>
   );
 };

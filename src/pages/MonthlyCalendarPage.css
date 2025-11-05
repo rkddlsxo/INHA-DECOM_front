@@ -1,0 +1,210 @@
+/*
+========================================
+ ⭐️ 1. 캘린더 페이지 레이아웃 (신규) ⭐️
+========================================
+*/
+.calendar-page-container {
+    padding: 3rem 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    background-color: #ffffff;
+    min-height: 100vh;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* 뒤로가기 버튼 (다른 페이지와 동일) */
+.back-button {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 10;
+    padding: 0.6rem 1.2rem;
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+
+/*
+========================================
+ ⭐️ 2. 메인 페이지 캘린더 (이전 CSS에서 이동) ⭐️
+========================================
+*/
+.main-page-calendar-wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 3rem; /* 뒤로가기 버튼과 간격 */
+    background: #ffffff;
+    position: relative; /* 로딩 오버레이 기준점 */
+}
+
+.main-calendar-title {
+    color: #004B8D;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 1rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem; /* 페이지 제목이므로 h1처럼 크게 */
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+    justify-content: center;
+}
+
+.main-calendar-controls {
+    margin-bottom: 1.5rem;
+}
+
+.main-calendar-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f8f9fa;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.calendar-error-text {
+    color: #dc3545;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.calendar-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    color: #004B8D;
+    border-radius: 16px;
+    font-size: 1.2rem;
+}
+
+
+/*
+========================================
+ ⭐️ 3. 캘린더 공용 스타일 (이전 CSS에서 이동) ⭐️
+========================================
+*/
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+}
+.calendar-header button {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+.calendar-header button:hover {
+    background-color: #e0e0e0;
+}
+.calendar-header button:disabled {
+    background-color: #f9f9f9;
+    color: #bbb;
+    cursor: not-allowed;
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    text-align: center;
+}
+.calendar-header-day {
+    font-weight: 600;
+    padding: 0.5rem 0;
+    color: #555;
+    font-size: 0.9rem;
+}
+.calendar-grid>.day-cell {
+    padding: 0.75rem 0.25rem;
+    border: 1px solid #f1f1f1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    min-height: 60px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    background-color: #f0f9f0; /* 기본: available */
+    color: #15803d;
+}
+.day-cell .date-number {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+.day-cell .availability-status {
+    font-size: 0.75rem;
+}
+.day-cell.available {
+    background-color: #f0f9f0; /* 연한 초록 */
+    color: #15803d; /* 진한 초록 */
+}
+.day-cell.partial {
+    background-color: #fefce8; /* 연한 노랑 */
+    color: #a16207; /* 진한 노랑/갈색 */
+}
+.day-cell.partial .availability-status {
+    font-weight: 600;
+}
+.day-cell.booked {
+    background-color: #fef2f2; /* 연한 빨강 */
+    color: #b91c1c; /* 진한 빨강 */
+    cursor: default;
+}
+.day-cell.past-date {
+    background-color: #f1f1f1; /* 회색 */
+    color: #aaa;
+    cursor: default;
+}
+/* 호버 효과 */
+.day-cell.available:not(.past-date):hover,
+.day-cell.partial:not(.past-date):hover {
+    background-color: #e6f0f8; /* 인하대 파란색 계열 */
+    border-color: #004B8D;
+    color: #004B8D;
+}
+.day-cell.available:not(.past-date):hover .availability-status,
+.day-cell.partial:not(.past-date):hover .availability-status {
+    color: #004B8D;
+}
