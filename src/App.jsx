@@ -10,6 +10,8 @@ import TimeFocusSelectPage from './pages/TimeFocusSelectPage';
 import QrCheckInPage from './pages/QrCheckInPage';
 import SimultaneousSelectPage from './pages/SimultaneousSelectPage';
 import ComplaintPage from './pages/ComplaintPage';
+// ⭐️ 1. 신규 캘린더 페이지 import
+import MonthlyCalendarPage from './pages/MonthlyCalendarPage';
 
 //url 분석 (무조건 main page로 가지 않게 하기 위함) & login이 매 새로고침마다 풀리는 문제 해결
 const getInitialState = () => {
@@ -54,8 +56,6 @@ function App() {
     switch (page) {
       case 'main':
         return <MainPage onNavigate={setPage} />;
-      case 'reservation':
-        return <ReservationMenuPage onNavigate={setPage} />;
       case 'reservationFormSelectPage':
         return <ReservationFormSelectPage onNavigate={setPage} />;
       case 'placeFocusSelectPage':
@@ -76,8 +76,11 @@ function App() {
         return <SimultaneousSelectPage onNavigate={setPage} />;
       case 'complaintPage':
         return <ComplaintPage onNavigate={setPage} />;
+      // ⭐️ 2. 신규 캘린더 페이지 case 추가
+      case 'monthlyCalendarPage':
+        return <MonthlyCalendarPage onNavigate={setPage} />;
       default:
-        return <LoginPage onNavigate={setPage} />; //default를 login page로 수정
+        return <LoginPage onNavigate={setPage} />;
     }
 
 

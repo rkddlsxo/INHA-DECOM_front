@@ -3,9 +3,6 @@ import './PlaceFocusSelectPage.css';
 import { BsArrowLeft, BsBuilding, BsCalendarCheck } from 'react-icons/bs';
 
 const LAST_PAGE_KEY = 'lastReservationSelectPage';
-
-// --- 상수 및 유틸리티 ---
-
 const API_BASE_URL = 'http://localhost:5050/api';
 const today = new Date();
 
@@ -50,11 +47,7 @@ const generateMinuteOptions = (type) => {
     }
     return options;
 };
-// --- (생략된 getReservationStatus, getMasterBookedTimes 로직은 이 코드가 동작하려면 필요합니다) ---
 // ------------------------------------
-
-
-// --- 메인 컴포넌트 ---
 
 const PlaceFocusSelectPage = ({ onNavigate }) => {
     const [allMasterSpaces, setAllMasterSpaces] = useState([]);
@@ -100,6 +93,33 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
 
     const hourOptions = useMemo(() => generateHourOptions(), []);
 
+    // ⭐️ API 호출 함수를 useEffect 밖으로 분리
+    const fetchDayTimeAvailability = async (roomId, dateKey) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/availability/daily?roomId=${roomId}&date=${dateKey}`);
+            if (!response.ok) throw new Error('서버 응답 오류: ' + response.statusText);
+            const dayAvailability = await response.json(); 
+
+            const monthKey = dateKey.substring(0, 7);
+            setRoomAvailabilityCache(prev => ({
+                ...prev,
+                [roomId]: {
+                    ...(prev[roomId] || {}),
+                    [monthKey]: {
+                        ...(prev[roomId]?.[monthKey] || {}),
+                        [dateKey]: { 
+                            ...(prev[roomId]?.[monthKey]?.[dateKey] || {}),
+                            ...dayAvailability
+                        }
+                    }
+                }
+            }));
+        } catch (err) {
+            setError(`일별 시간 정보를 불러오는 데 실패했습니다: ${err.message}`);
+        }
+    };
+
+    // 1. 마스터 장소 목록 로드
     useEffect(() => {
         const fetchMasterSpaces = async () => {
             setLoading(true);
@@ -128,6 +148,45 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         fetchMasterSpaces();
     }, []);
 
+    // ⭐️ 2. [신규] 캘린더 페이지에서 넘어온 정보(prefill) 처리
+    useEffect(() => {
+        // allMasterSpaces가 로드된 후에만 실행
+        if (allMasterSpaces.length === 0) return; 
+
+        const prefillDataJSON = localStorage.getItem('prefillPlaceFocus');
+        if (prefillDataJSON) {
+            try {
+                const data = JSON.parse(prefillDataJSON);
+                
+                // localStorage에서 가져온 room id로 실제 master list에서 room 객체 찾기
+                const roomToSelect = allMasterSpaces.find(s => s.id === data.room.id);
+                
+                if (roomToSelect) {
+                    const [year, month, day] = data.date.split('-').map(Number);
+
+                    // 1. 장소 선택
+                    setSelectedRooms([roomToSelect]);
+                    // 2. 날짜 선택
+                    setSelectedDate(data.date);
+                    // 3. 달력을 해당 월로 이동
+                    setDisplayDate(new Date(year, month - 1, 1)); 
+
+                    // 4. 해당 날짜의 시간표 API 수동 호출
+                    setTimeLoading(true);
+                    fetchDayTimeAvailability(roomToSelect.id, data.date)
+                        .finally(() => setTimeLoading(false));
+                }
+                
+                // 5. prefill 데이터 삭제
+                localStorage.removeItem('prefillPlaceFocus');
+            } catch (e) {
+                console.error("Failed to parse prefill data", e);
+                localStorage.removeItem('prefillPlaceFocus');
+            }
+        }
+    }, [allMasterSpaces]); // ⭐️ allMasterSpaces가 로드되면 이 useEffect 실행
+
+    // 3. 월별 데이터 로드 (기존 로직)
     useEffect(() => {
         if (selectedRooms.length === 0) return;
 
@@ -172,31 +231,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         }
     };
 
-    const fetchDayTimeAvailability = async (roomId, dateKey) => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/availability/daily?roomId=${roomId}&date=${dateKey}`);
-            if (!response.ok) throw new Error('서버 응답 오류: ' + response.statusText);
-            const dayAvailability = await response.json(); 
-
-            const monthKey = dateKey.substring(0, 7);
-            setRoomAvailabilityCache(prev => ({
-                ...prev,
-                [roomId]: {
-                    ...(prev[roomId] || {}),
-                    [monthKey]: {
-                        ...(prev[roomId]?.[monthKey] || {}),
-                        [dateKey]: { 
-                            ...(prev[roomId]?.[monthKey]?.[dateKey] || {}),
-                            ...dayAvailability
-                        }
-                    }
-                }
-            }));
-        } catch (err) {
-            setError(`일별 시간 정보를 불러오는 데 실패했습니다: ${err.message}`);
-        }
-    };
-
+    // ... (핸들러 함수들: handleRoomSelect, toggleCategory 등은 기존과 동일) ...
     const handleRoomSelect = (room) => {
         setSelectedDate(null);
         setSelectedTimeRange({ start: '09:00', end: '10:59' });
@@ -359,7 +394,6 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         setError(null);
     };
 
-    // 이 함수는 이제 {status, percentage} 객체를 반환합니다.
     const getDayStatus = (year, month, day) => {
         const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const monthKey = dateKey.substring(0, 7);
@@ -376,7 +410,7 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
         const dayData = roomCache[monthKey][dateKey];
 
         if (dayData && dayData.status) {
-             return dayData; // {status: 'partial', percentage: 0.3} 반환
+             return dayData;
         }
 
         return { status: 'loading' };
@@ -540,12 +574,11 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                                     const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                                     const isSelected = selectedDate === formattedDate;
 
-                                    // --- (수정) 텍스트 및 클릭 가능 여부 설정 ---
                                     const dayData = getDayStatus(year, month, day);
                                     const status = dayData.status || 'loading';
                                     const percentage = dayData.percentage || 0;
                                     
-                                    const isClickable = !isPast && status !== 'booked'; // 100% 찼으면 클릭 X
+                                    const isClickable = !isPast && status !== 'booked'; 
                                     
                                     let statusText = '...';
                                     if (isPast) {
@@ -553,19 +586,16 @@ const PlaceFocusSelectPage = ({ onNavigate }) => {
                                     } else if (status === 'booked') {
                                         statusText = '예약 불가';
                                     } else if (status === 'partial') {
-                                        // '부분 가능' 대신 %를 표시
                                         statusText = `${Math.round(percentage * 100)}% 예약됨`; 
                                     } else if (status === 'available') {
                                         statusText = '사용 가능';
                                     } else if (status === 'loading') {
                                         statusText = '로딩 중';
                                     }
-                                    // --- 수정 끝 ---
 
                                     return (
                                         <div
                                             key={idx}
-                                            // (수정) 인라인 스타일(cellStyle) 제거
                                             className={`day-cell ${isSelected ? 'selected-date' : ''} ${isPast ? 'past-date' : status}`}
                                             onClick={() => isClickable && handleDateClick(year, month, day)}
                                         >
