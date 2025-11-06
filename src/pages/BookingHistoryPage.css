@@ -1,322 +1,56 @@
-.login-container {
-    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 60px 10px 40px 10px;
-    background-color: #f8f9fa;
-    min-height: 100vh;
-}
-
-.top-title {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 32px;
-}
-
-.page-title {
-    color: #2877ff;
-    font-size: 2.5em;
-    margin-bottom: 0;
-    letter-spacing: 1px;
-    font-weight: bold;
-}
-
-.history-container {
-    width: 100%;
-    max-width: 900px;
-    background-color: #fff;
-    padding: 40px 32px 48px 32px;
-    border-radius: 22px;
-    box-shadow: 0 8px 36px 0 rgba(120, 130, 190, 0.08);
-    margin-bottom: 44px;
-    /* flex, align-items 등 제거 */
-}
-
-.table-center-box {
-    width: 100%;
-    /* flex 관련 제거 */
-}
-
-.history-table {
-    width: 100%;
-    margin: 0;
-    border-collapse: collapse;
-    background: none;
-    box-sizing: border-box;
-    table-layout: auto;
-}
-
-.history-table th,
-.history-table td {
-    border: none;
-    border-bottom: 1.2px solid #eaeaea;
-    padding: 18px 0;
-    text-align: center;
-    font-size: 1.08em;
-    min-width: 88px;
-    box-sizing: border-box;
-    background-color: #fff;
-    word-break: keep-all;
-}
-
-.history-table th {
-    background-color: #f7f8fa;
-    color: #14376e;
-    font-weight: bold;
-    font-size: 1.14em;
-    border-top: 1.5px solid #eee;
-    letter-spacing: 0.01em;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 4.5px 18px;
-    border-radius: 7px;
-    font-weight: bold;
-    font-size: 1em;
-    text-align: center;
-    color: #fff;
-}
-
-.status-대기,
-.status-확정대기 {
-    background-color: #ffc107;
-    color: #333;
-}
-
-.status-확정 {
-    background-color: #28a745;
-}
-
-.status-사용중 {
-    background-color: #007bff;
-}
-
-.status-지난예약 {
-    background-color: #6c757d;
-}
-
-.status-취소 {
-    background-color: #dc3545;
-}
-
-#no-history {
-    width: 100%;
-    text-align: center;
-    padding: 24px 0 10px 0;
-    color: #6c757d;
-    font-size: 1.18em;
-}
-
-.back-button.fixed-left {
-    position: fixed;
-    top: 28px;
-    left: 28px;
-    z-index: 2000;
-    margin-top: 0;
-    padding: 10px 25px;
-    font-size: 1em;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 7px;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 10px rgba(120, 130, 190, 0.09);
-    transition: background-color 0.3s;
-}
-
-.back-button.fixed-left:hover {
-    background-color: #5a6268;
-}
-
-.modal-content {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 28px 24px;
-    border-radius: 18px;
-    width: 96%;
-    max-width: 440px;
-    box-shadow: 0 5px 27px rgba(140, 160, 200, 0.15);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.modal-title {
-    color: #2877ff;
-    border-bottom: 2px solid #2877ff;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    font-size: 1.20em;
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
-}
-
-.close-btn {
-    color: #aaa;
-    align-self: flex-end;
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 6px;
-    cursor: pointer;
-    transition: color 0.19s;
-}
-
-.close-btn:hover,
-.close-btn:focus {
-    color: #007bff
-}
-
-#modal-details {
-    width: 100%;
-}
-
-.detail-item {
-    margin-bottom: 12px;
-    border-bottom: 1px dotted #ececec;
-    padding-bottom: 5px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.detail-item strong {
-    display: inline-block;
-    min-width: 96px;
-    color: #007bff;
-    font-size: 1em;
-}
-
-.edit-item {
-    margin-bottom: 15px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.edit-item strong {
-    min-width: 96px;
-    color: #007bff;
-}
-
-.edit-input,
-.edit-select {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    background: #fafbff;
-}
-
-.readonly-text {
-    color: #999;
-    font-size: 0.9em;
-    padding-left: 4px;
-}
-
-.modal-buttons {
-    margin-top: 24px;
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    width: 100%;
-}
-
-.cancel-btn,
-.edit-btn,
-.confirm-btn {
-    padding: 10px 20px;
-    border-radius: 7px;
-    font-size: 1em;
-    min-width: 98px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.cancel-btn {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.cancel-btn:hover:not(:disabled) {
-    background-color: #c82333;
-}
-
-.cancel-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-.edit-btn {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.edit-btn:hover:not(:disabled) {
-    background-color: #0056b3;
-}
-
-.edit-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-.confirm-btn {
-    background-color: #28a745;
-    color: #fff;
-}
-
-.confirm-btn:hover {
-    background-color: #218838;
-}
-
-/* BookingHistoryPage.css */
+/* -------------------------------------- */
+/* BookingHistoryPage.css (예약 내역 페이지) */
+/* -------------------------------------- */
 
 /* 1. 페이지 전체 레이아웃 */
 .history-page-container {
+    /* 기본 폰트 설정 (Noto Sans KR 사용) */
     font-family: 'Noto Sans KR', Arial, sans-serif;
-    /* 폰트 통일 */
+    /* 콘텐츠를 세로로 배열하고 중앙 정렬 */
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* 페이지 상하 좌우 여백 설정 */
     padding: 3rem 2rem;
-    /* 상하 여백 */
+    /* 배경색을 흰색으로 설정 */
     background-color: #ffffff;
-    /* 흰색 배경 */
+    /* 최소 높이를 뷰포트 높이 전체로 설정 */
     min-height: 100vh;
+    /* padding 포함 크기 계산 */
     box-sizing: border-box;
+    /* 뒤로가기 버튼의 위치 기준점 설정 */
     position: relative;
 }
 
-/* 2. '뒤로가기' 버튼 (디자인 통일) */
+/* 2. '뒤로가기' 버튼 */
 .back-button {
+    /* 페이지 왼쪽 상단에 고정 위치 */
     position: absolute;
     top: 1.5rem;
     left: 1.5rem;
+    /* 다른 요소 위에 표시 */
     z-index: 10;
+    /* 버튼 내부 여백, 배경, 테두리, 그림자 설정 */
     padding: 0.6rem 1.2rem;
     background-color: #f8f9fa;
     color: #333;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
+    /* 폰트 및 커서 스타일 */
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
+    /* 내부 콘텐츠(아이콘 등) 정렬 */
     display: flex;
     align-items: center;
     gap: 0.5rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    /* 호버 애니메이션 효과 */
     transition: all 0.3s ease;
 }
 
 .back-button:hover {
+    /* 마우스 오버 시 배경 및 그림자 변화 */
     background-color: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
@@ -324,31 +58,31 @@
 
 /* 3. 헤더 (페이지 제목) */
 .top-title {
+    /* 전체 너비 사용 및 중앙 정렬 */
     width: 100%;
     text-align: center;
+    /* 하단 여백 및 상단 패딩 (뒤로가기 버튼 고려) */
     margin-bottom: 3rem;
-    /* 48px */
     padding-top: 2.5rem;
-    /* 뒤로가기 버튼과 간격 */
 }
 
 .page-title {
+    /* 인하대 메인 색상 적용 */
     color: #004B8D;
-    /* ⭐️ 인하대 메인 색상 */
+    /* 폰트 크기 및 두께 설정 */
     font-size: 2.25rem;
-    /* 36px */
     margin-bottom: 0;
     font-weight: 700;
 }
 
 /* 4. 메인 콘텐츠 (테이블) 컨테이너 */
 .history-container {
+    /* 최대 너비 제한 및 중앙 정렬 */
     width: 100%;
     max-width: 1000px;
-    /* 테이블 최대 너비 */
+    /* 배경 및 스타일 설정 */
     background-color: #ffffff;
     padding: 2rem 2.5rem;
-    /* 32px 40px */
     border-radius: 16px;
     border: 1px solid #e9ecef;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
@@ -356,40 +90,40 @@
 }
 
 .table-center-box {
+    /* 테이블을 담는 컨테이너 */
     width: 100%;
+    /* 화면이 작을 경우 가로 스크롤 허용 */
     overflow-x: auto;
-    /* 화면이 작을 때 테이블 스크롤 */
 }
 
 /* 5. 예약 내역 테이블 */
 .history-table {
+    /* 테이블 전체 스타일: 너비 100%, 테두리 겹침 방지 */
     width: 100%;
     margin: 0;
     border-collapse: collapse;
     background: none;
     box-sizing: border-box;
+    /* 테이블이 너무 작아지는 것을 방지하는 최소 너비 */
     min-width: 700px;
-    /* 테이블 최소 너비 */
 }
 
 .history-table th,
 .history-table td {
+    /* 셀 기본 스타일: 옅은 밑줄, 중앙 정렬, 여백 설정 */
     border-bottom: 1px solid #f0f0f0;
-    /* 옅은 밑줄 */
     padding: 1rem;
-    /* 16px */
     text-align: center;
     font-size: 0.95rem;
-    /* 15.2px */
     box-sizing: border-box;
     background-color: #fff;
+    /* 셀 내용 줄바꿈 방지 */
     white-space: nowrap;
-    /* 줄바꿈 방지 */
 }
 
 .history-table th {
+    /* 테이블 헤더(<th>) 스타일 */
     background-color: #f8f9fa;
-    /* 헤더 배경색 */
     color: #333;
     font-weight: 600;
     font-size: 1rem;
@@ -397,31 +131,32 @@
 }
 
 .history-table tbody tr {
+    /* 테이블 행에 마우스 오버 시 커서 변경 및 애니메이션 */
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
 .history-table tbody tr:hover {
+    /* 행에 마우스 오버 시 배경색 변경 */
     background-color: #f7faff;
-    /* 옅은 파란색 호버 */
 }
 
 /* 6. 상태 배지 (Status Badge) */
 .status-badge {
+    /* 인라인 블록으로 설정하여 크기 제어 */
     display: inline-block;
+    /* 내부 여백 및 테두리 둥글기 (타원형) */
     padding: 0.3rem 0.8rem;
-    /* 5px 13px */
     border-radius: 1rem;
-    /* 타원형 */
+    /* 폰트 스타일 및 줄바꿈 방지 */
     font-weight: 600;
     font-size: 0.85rem;
-    /* 13.6px */
     text-align: center;
     color: #fff;
     white-space: nowrap;
 }
 
-/* 색상별 스타일 */
+/* 상태별 색상 스타일 */
 .status-확정대기 {
     background-color: #ffc107;
     color: #333;
@@ -432,8 +167,8 @@
 }
 
 .status-사용중 {
+    /* 인하대 메인 색상 */
     background-color: #004B8D;
-    /* ⭐️ 인하대 메인 색상 */
 }
 
 .status-지난예약 {
@@ -444,10 +179,11 @@
     background-color: #dc3545;
 }
 
-/* 7. 로딩 / 에러 / 데이터 없음 */
+/* 7. 로딩 / 에러 / 데이터 없음 메시지 */
 #no-history,
 .loading-message,
 .error-message {
+    /* 전체 너비 사용, 중앙 정렬 및 여백 설정 */
     width: 100%;
     text-align: center;
     padding: 4rem 1rem;
@@ -459,11 +195,13 @@
 }
 
 .error-message {
+    /* 에러 메시지 전용 색상 */
     color: #dc3545;
     background-color: #fef2f2;
 }
 
 .retry-button {
+    /* 재시도 버튼 스타일 */
     margin-top: 1rem;
     padding: 0.6rem 1.2rem;
     background-color: #004B8D;
@@ -479,14 +217,16 @@
     background-color: #003a6e;
 }
 
+/* -------------------------------------- */
+/* 8. 모달 (Modal) 스타일 */
+/* -------------------------------------- */
 
-/* --- 8. 모달 (Modal) 스타일 --- */
-
-/* ⭐️ 인라인 스타일 제거 -> CSS로 대체 */
 .modal-overlay {
+    /* 모달 배경: 전체 화면을 덮고 내용 중앙 정렬 */
     display: flex;
     justify-content: center;
     align-items: center;
+    /* 화면에 고정 */
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -494,19 +234,20 @@
     width: 100%;
     height: 100%;
     overflow: auto;
+    /* 반투명 검은색 배경 */
     background-color: rgba(0, 0, 0, 0.5);
-    /* 반투명 배경 */
 }
 
 .modal-content {
+    /* 모달 내용 컨테이너 */
     background-color: #fff;
     padding: 2rem;
-    /* 32px */
     border-radius: 16px;
+    /* 최대 너비 설정 및 그림자 */
     width: 90%;
     max-width: 500px;
-    /* 모달 너비 */
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    /* 내부 요소 정렬 및 스크롤 */
     position: relative;
     max-height: 90vh;
     overflow-y: auto;
@@ -515,26 +256,25 @@
 }
 
 .modal-title {
+    /* 모달 제목 스타일 */
     color: #004B8D;
-    /* ⭐️ 인하대 메인 색상 */
     border-bottom: 2px solid #f0f0f0;
     padding-bottom: 1rem;
     margin-top: 0;
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
-    /* 24px */
     font-weight: 700;
     text-align: center;
     width: 100%;
 }
 
 .close-btn {
+    /* 닫기 버튼 (X) 스타일: 모달 오른쪽 상단에 위치 */
     color: #aaa;
     position: absolute;
     top: 1rem;
     right: 1.5rem;
     font-size: 2rem;
-    /* 32px */
     font-weight: 700;
     cursor: pointer;
     transition: color 0.2s;
@@ -546,16 +286,18 @@
 }
 
 #modal-details {
+    /* 상세 정보 컨테이너 */
     width: 100%;
 }
 
 /* 9. 모달 내부 (상세정보 / 수정폼) */
 .detail-item {
+    /* 상세 정보 항목 스타일 */
     margin-bottom: 0.75rem;
-    /* 12px */
     border-bottom: 1px solid #f7f7f7;
     padding-bottom: 0.75rem;
     width: 100%;
+    /* 라벨과 값 가로 정렬 */
     display: flex;
     align-items: flex-start;
     gap: 8px;
@@ -564,6 +306,7 @@
 }
 
 .detail-item strong {
+    /* 라벨 (항목 이름) 스타일 */
     display: inline-block;
     min-width: 90px;
     color: #004B8D;
@@ -571,21 +314,24 @@
 }
 
 .edit-item {
+    /* 수정 폼 항목 스타일 */
     margin-bottom: 1rem;
     width: 100%;
+    /* 라벨과 입력 필드 세로 배치 */
     display: flex;
     flex-direction: column;
-    /* 세로 배치 */
     gap: 0.5rem;
 }
 
 .edit-item strong {
+    /* 수정 폼 라벨 스타일 */
     color: #004B8D;
     font-weight: 600;
 }
 
 .edit-input,
 .edit-select {
+    /* 입력 필드/선택 상자 공통 스타일 */
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #dee2e6;
@@ -598,6 +344,7 @@
 
 .edit-input:focus,
 .edit-select:focus {
+    /* 포커스 시 스타일 변화 */
     background-color: #ffffff;
     border-color: #004B8D;
     box-shadow: 0 0 0 3px rgba(0, 75, 141, 0.1);
@@ -605,6 +352,7 @@
 }
 
 .readonly-text {
+    /* 읽기 전용 텍스트 스타일 */
     color: #999;
     font-size: 0.9em;
     padding-left: 4px;
@@ -612,6 +360,7 @@
 
 /* 취소 사유 박스 */
 .cancel-reason-box {
+    /* 취소 사유 표시 영역 스타일 */
     flex-direction: column;
     align-items: flex-start;
     border-top: 1px solid #ddd;
@@ -620,37 +369,39 @@
 }
 
 .cancel-reason-box strong {
+    /* 취소 사유 라벨 색상 */
     color: #dc3545;
     width: 100%;
     margin-bottom: 0.5rem;
 }
 
 .cancel-reason-box p {
+    /* 취소 사유 내용 스타일 */
     margin: 0;
     padding: 0.75rem;
     border: 1px solid #eee;
     width: 100%;
     border-radius: 8px;
     background-color: #f8f8f8;
+    /* 줄바꿈 허용 */
     white-space: pre-wrap;
     box-sizing: border-box;
 }
 
-
 /* 10. 모달 버튼 */
 .modal-buttons {
+    /* 버튼 그룹 컨테이너: 오른쪽 정렬 */
     margin-top: 2rem;
     display: flex;
     gap: 0.75rem;
-    /* 12px */
     justify-content: flex-end;
-    /* 오른쪽 정렬 */
     width: 100%;
 }
 
 .cancel-btn,
 .edit-btn,
 .confirm-btn {
+    /* 버튼 공통 스타일 */
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
     font-size: 0.95rem;
@@ -673,6 +424,7 @@
 }
 
 .cancel-btn:disabled {
+    /* 비활성화 상태 스타일 */
     background-color: #ccc;
     color: #888;
     border-color: #ccc;
@@ -690,6 +442,7 @@
 }
 
 .edit-btn:disabled {
+    /* 비활성화 상태 스타일 */
     background-color: #ccc;
     cursor: not-allowed;
 }
@@ -704,22 +457,23 @@
     background-color: #218838;
 }
 
-/* BookingHistoryPage.css 에 추가 */
+/* -------------------------------------- */
+/* BookingHistoryPage.css 추가 항목 */
+/* -------------------------------------- */
 
-/* '사용중' 상태 배지 스타일 (선택 사항: 눈에 띄게) */
+/* '사용중' 상태 배지 스타일 (강조) */
 .status-badge.status-사용중 {
+    /* 눈에 띄는 주황색 및 애니메이션 적용 */
     background-color: #ff9800;
-    /* 주황색 */
     color: white;
     font-weight: bold;
     animation: pulse 1.5s infinite;
-    /* 애니메이션 추가 */
 }
 
 /* 퇴실 버튼 스타일 */
 .modal-buttons .checkout-btn {
+    /* 청록색 계열의 퇴실 버튼 스타일 */
     background-color: #00897b;
-    /* 청록색 계열 */
     color: white;
     border: none;
     padding: 10px 15px;
@@ -729,14 +483,13 @@
     font-weight: 600;
     transition: background-color 0.2s;
     margin-right: 10px;
-    /* 다른 버튼과 간격 */
 }
 
 .modal-buttons .checkout-btn:hover {
     background-color: #00695c;
 }
 
-/* pulse 애니메이션 (선택 사항) */
+/* pulse 애니메이션 (강조 효과) */
 @keyframes pulse {
     0% {
         box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.4);

@@ -1,23 +1,29 @@
-/* ReservationFormSelectPage.css */
+/* -------------------------------------- */
+/* ReservationFormSelectPage.css (예약 방식 선택 페이지 스타일) */
+/* -------------------------------------- */
 
 /* 1. 전체 컨테이너 (페이지 여백 및 정렬) */
 .reservationFormSelect-container {
+  /* 페이지 기본 여백 및 최소 높이 설정 */
   padding: 3rem 2rem;
   min-height: 70vh;
   width: 100%;
   box-sizing: border-box;
   font-family: 'Noto Sans KR', Arial, sans-serif;
   position: relative;
+  /* 내부 요소를 세로로 배열 */
   display: flex;
   flex-direction: column;
 }
 
-/* 2. '뒤로가기' 버튼 (ReservationMenuPage와 동일) */
+/* 2. '뒤로가기' 버튼 */
 .back-button {
+  /* 페이지 왼쪽 상단에 고정 위치 */
   position: absolute;
   top: 1.5rem;
   left: 1.5rem;
   z-index: 10;
+  /* 버튼 스타일 및 호버 애니메이션 */
   padding: 0.6rem 1.2rem;
   background-color: #f8f9fa;
   color: #333;
@@ -34,6 +40,7 @@
 }
 
 .back-button:hover {
+  /* 호버 효과 */
   background-color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
@@ -41,58 +48,55 @@
 
 /* 3. 헤더 영역 */
 .select-header {
+  /* 전체 너비 및 중앙 정렬 */
   width: 100%;
   text-align: center;
+  /* 카드와의 간격 및 상단 패딩 */
   margin-bottom: 4rem;
-  /* 카드와의 간격 */
   padding-top: 2rem;
-  /* 뒤로가기 버튼과의 간격 */
 }
 
 .select-title {
+  /* 메인 제목 스타일 */
   font-size: 2.25rem;
-  /* 36px */
   font-weight: 700;
+  /* 인하대 메인 색상 */
   color: #004B8D;
-  /* ⭐️ 인하대 메인 색상 */
   margin: 0;
 }
 
 .select-subtitle {
+  /* 서브 제목/설명 스타일 */
   font-size: 1.125rem;
-  /* 18px */
   color: #555;
   margin-top: 0.5rem;
 }
 
-/* 4. ⭐️ 카드들을 감싸는 그리드 (2열) - FLEX에서 GRID로 변경 */
+/* 4. 카드들을 감싸는 그리드 (2열) */
 .select-grid {
-  /* 기존 Flex 속성 제거: justify-content: center, align-items: center */
+  /* 2개의 동일한 너비 컬럼(열) 정의 */
   display: grid;
-  /* 2개의 동일한 컬럼(열) 정의 */
   grid-template-columns: 1fr 1fr;
+  /* 카드 사이 간격 */
   gap: 2.5rem;
-  /* 카드 사이 간격 유지 */
   width: 100%;
   max-width: 800px;
+  /* 중앙 정렬 */
   margin: 0 auto;
-  /* 가운데 정렬 */
+  /* 남은 공간을 채우도록 확장 */
   flex-grow: 1;
-  /* flex-wrap: wrap; (Grid에서는 불필요) */
 }
 
-/* 5. ⭐️ 선택 카드 (기존 .reservationFormSelect-section 대체) */
+/* 5. 선택 카드 공통 스타일 */
 .select-card {
-  /* Grid 환경에 맞게 flex-basis, flex 속성 제거 */
-  /* flex: 1; */
-  /* flex-basis: 300px; */
   min-height: 340px;
-
+  /* 내부 요소를 세로로 배열하고 중앙 정렬 */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
+  /* 배경, 테두리, 그림자 설정 */
   background-color: #ffffff;
   border: 1px solid #e9ecef;
   border-radius: 16px;
@@ -103,23 +107,24 @@
   cursor: pointer;
 }
 
-/* ⭐️⭐️⭐️ 신규: 시간 + 공간 동시 선택 카드 (크게 만드는 핵심) ⭐️⭐️⭐️ */
+/* 시간 + 공간 동시 선택 카드 (가로 전체 확장) */
 .select-card.section-simultaneous {
-  /* 2개의 컬럼을 모두 차지하도록 설정하여 큰 블록 생성 */
+  /* 2개의 컬럼을 모두 차지하도록 설정 */
   grid-column: 1 / -1;
-  /* 큰 카드는 상대적으로 높이를 키워 시각적 강조 */
+  /* 높이를 키워 시각적 강조 */
   min-height: 400px;
 }
 
-/* 6. ⭐️ 카드 호버 효과 (떠오르는 느낌) */
+/* 6. 카드 호버 효과 */
 .select-card:hover {
+  /* 호버 시 위로 살짝 올라오고 그림자 강조 (인하대 파란색) */
   transform: translateY(-8px);
   box-shadow: 0 12px 24px rgba(0, 75, 141, 0.1);
-  /* 인하대 파란색 그림자 */
 }
 
-/* 7. ⭐️ 아이콘 래퍼 */
+/* 7. 아이콘 래퍼 */
 .select-icon-wrapper {
+  /* 아이콘 배경 원형 스타일 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -129,37 +134,34 @@
   background-color: #f8f9fa;
   transition: all 0.3s ease;
   color: #555;
-  /* 기본 아이콘 색상 */
   margin-bottom: 1.5rem;
-  /* 24px */
 }
 
-/* 8. ⭐️ 텍스트 (제목) */
+/* 8. 텍스트 (제목) */
 .select-text {
+  /* 메뉴 제목 텍스트 스타일 */
   font-size: 1.6rem;
-  /* 26px */
   font-weight: 700;
   text-align: center;
   color: #333;
   margin-bottom: 0.75rem;
-  /* 12px */
   transition: color 0.3s ease;
 }
 
-/* 9. ⭐️ 설명 텍스트 (새로 추가) */
+/* 9. 설명 텍스트 */
 .select-description {
+  /* 메뉴 설명 텍스트 스타일 */
   font-size: 0.95rem;
   color: #666;
   text-align: center;
   line-height: 1.6;
 }
 
-/* 10. ⭐️ 카드별 호버 시 색상 변경 */
+/* 10. 카드별 호버 시 색상 변경 테마 적용 */
 
-/* 시간 우선 (파랑) */
+/* 시간 우선 (파랑 테마) */
 .select-card.section-time:hover .select-icon-wrapper {
   background-color: #004B8D;
-  /* ⭐️ 인하대 파랑 */
   color: #ffffff;
 }
 
@@ -167,10 +169,9 @@
   color: #004B8D;
 }
 
-/* 공간 우선 (초록) */
+/* 공간 우선 (초록 테마) */
 .select-card.section-place:hover .select-icon-wrapper {
   background-color: #15803d;
-  /* 초록 */
   color: #ffffff;
 }
 
@@ -178,10 +179,9 @@
   color: #15803d;
 }
 
-/* ⭐️⭐️⭐️ 신규: 시간 + 공간 동시 선택 (주황 계열) ⭐️⭐️⭐️ */
+/* 시간 + 공간 동시 선택 (주황 테마) */
 .select-card.section-simultaneous:hover .select-icon-wrapper {
   background-color: #e67e22;
-  /* 주황색 */
   color: #ffffff;
 }
 
@@ -189,32 +189,22 @@
   color: #e67e22;
 }
 
-/* --- 기존 ID 스타일 제거 (새 디자인에 불필요) --- */
-.large-button,
-#btn-timeFocused,
-#btn-timeFocused:hover,
-#btn-spaceFocused,
-#btn-spaceFocused:hover {
-  /* 모두 제거됨 */
-}
-
-/* ⭐ 모바일 대응: 화면이 작아지면 모든 카드를 한 줄에 하나씩 배치 */
+/* --- 모바일 대응 --- */
 @media (max-width: 768px) {
   .select-grid {
-    /* 한 컬럼으로 변경 */
+    /* 화면이 작아지면 한 컬럼으로 변경 */
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
   .select-card {
-    /* 모바일에서는 모두 한 줄이므로 grid-column을 다시 1칸으로 설정 */
+    /* 모바일에서는 높이 제한 해제 */
     grid-column: 1 / -1;
     min-height: unset;
-    /* 높이 제한 해제 */
   }
 
   .select-card.section-simultaneous {
-    /* 모바일에서는 다른 카드와 같은 크기로 */
+    /* 모바일에서는 다른 카드와 같은 높이로 조정 */
     min-height: unset;
   }
 }

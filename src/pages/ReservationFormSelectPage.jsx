@@ -1,15 +1,19 @@
 import React from 'react';
-// 1. CSS 파일 import
+// CSS 파일 임포트
 import './ReservationFormSelectPage.css';
-// 2. ⭐️ 아이콘 import: BsCalendarCheck가 정확히 포함되었는지 확인
+// 필요한 아이콘 임포트: 뒤로가기, 시계(시간), 건물(공간), 달력(동시 선택)
 import { BsArrowLeft, BsClock, BsBuilding, BsCalendarCheck } from 'react-icons/bs';
 
-// 컴포넌트 정의
+/**
+ * 사용자에게 세 가지 예약 방식 중 하나를 선택하도록 안내하는 페이지 컴포넌트입니다.
+ * @param {object} props - 컴포넌트 속성
+ * @param {function} props.onNavigate - 페이지 이동을 처리하는 함수
+ */
 const ReservationFormSelectPage = ({ onNavigate }) => {
     return (
         <div className="reservationFormSelect-container">
 
-            {/* 뒤로가기 버튼 */}
+            {/* 뒤로가기 버튼: 메인 페이지로 이동 */}
             <button
                 onClick={() => onNavigate('main')}
                 className="back-button"
@@ -18,18 +22,19 @@ const ReservationFormSelectPage = ({ onNavigate }) => {
                 뒤로
             </button>
 
+            {/* 페이지 헤더 */}
             <header className="select-header">
                 <h1 className="select-title">예약 방식 선택</h1>
                 <p className="select-subtitle">원하는 예약 방식을 선택하세요.</p>
             </header>
 
-            {/* 카드 그리드 */}
+            {/* 카드 메뉴 그리드 */}
             <div className="select-grid">
 
-                {/* ⭐️ 1. 시간 + 공간 동시 선택 (가장 위로 이동) */}
+                {/* 1. '시간 + 공간 동시 선택' 카드 (최상위 강조) */}
                 <div
                     className="select-card section-simultaneous"
-                    onClick={() => onNavigate('simultaneousSelectPage')}
+                    onClick={() => onNavigate('simultaneousSelectPage')} // 동시 선택 페이지로 이동
                 >
                     <div className="select-icon-wrapper">
                         <BsCalendarCheck size={44} />
@@ -40,10 +45,11 @@ const ReservationFormSelectPage = ({ onNavigate }) => {
                         사용 가능한 모든 장소를 즉시 조회합니다.
                     </p>
                 </div>
-                {/* ⭐️ 순서 변경: 시간 우선 예약 카드 (두 번째 위치) */}
+
+                {/* 2. '시간 우선 예약' 카드 */}
                 <div
                     className="select-card section-time"
-                    onClick={() => onNavigate('timeFocusSelectPage')}
+                    onClick={() => onNavigate('timeFocusSelectPage')} // 시간 우선 페이지로 이동
                 >
                     <div className="select-icon-wrapper">
                         <BsClock size={44} />
@@ -55,10 +61,10 @@ const ReservationFormSelectPage = ({ onNavigate }) => {
                     </p>
                 </div>
 
-                {/* ⭐️ 순서 변경: 공간 우선 예약 카드 (세 번째 위치) */}
+                {/* 3. '공간 우선 예약' 카드 */}
                 <div
                     className="select-card section-place"
-                    onClick={() => onNavigate('placeFocusSelectPage')}
+                    onClick={() => onNavigate('placeFocusSelectPage')} // 공간 우선 페이지로 이동
                 >
                     <div className="select-icon-wrapper">
                         <BsBuilding size={44} />

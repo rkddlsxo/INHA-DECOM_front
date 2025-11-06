@@ -1,12 +1,16 @@
-/* PlaceFocusSelectPage.css & TimeFocusSelectPage.css (통합 스타일) */
+/* -------------------------------------- */
+/* TimeFocusSelectPage.css (시간 우선 선택 페이지) */
+/* -------------------------------------- */
 
+/* 전체 페이지 컨테이너 */
 .reservation-combined-container,
 .time-focus-main-container {
-    padding: 3rem 2rem; /* 넉넉한 여백 */
+    /* 페이지 여백, 최대 너비, 폰트 설정 */
+    padding: 3rem 2rem;
     max-width: 1400px;
     margin: 0 auto;
-    font-family: 'Noto Sans KR', Arial, sans-serif; /* 폰트 변경 */
-    background-color: #ffffff; /* 흰색 배경 */
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    background-color: #ffffff;
     min-height: 100vh;
     position: relative;
     box-sizing: border-box;
@@ -14,7 +18,9 @@
 
 /* --- 1. 헤더 및 뒤로가기 --- */
 
-.back-button { /* ⭐️ '뒤로가기' 버튼 (디자인 통일) */
+/* '뒤로가기' 버튼 */
+.back-button {
+    /* 위치 및 스타일 설정 */
     position: absolute;
     top: 1.5rem;
     left: 1.5rem;
@@ -35,6 +41,7 @@
 }
 
 .back-button:hover {
+    /* 호버 효과 */
     background-color: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
@@ -42,45 +49,51 @@
 
 
 .page-title {
-    color: #004B8D; /* ⭐️ 인하대 메인 색상 */
+    /* 페이지 제목 스타일 (인하대 메인 색상) */
+    color: #004B8D;
     text-align: center;
     margin-bottom: 0.75rem;
-    font-size: 2.25rem; /* 36px */
+    font-size: 2.25rem;
     font-weight: 700;
-    padding-top: 2.5rem; /* 뒤로가기 버튼과 간격 */
+    /* 뒤로가기 버튼과 겹치지 않도록 상단 여백 설정 */
+    padding-top: 2.5rem;
 }
 
 .page-description {
+    /* 페이지 설명 텍스트 스타일 */
     text-align: center;
     color: #555;
-    font-size: 1.125rem; /* 18px */
+    font-size: 1.125rem;
     margin-bottom: 3rem;
 }
 
 /* --- 2. 메인 레이아웃 (2단) --- */
 
 .selection-area-wrapper {
+    /* 장소 목록/선택 박스와 스케줄/결과 박스를 가로로 배치 */
     display: flex;
-    gap: 2.5rem; /* 40px */
+    gap: 2.5rem;
     align-items: flex-start;
 }
 
-/* ⭐️ 공용 박스 (카드) 스타일 */
+/* 공용 박스 (카드) 스타일 */
 .room-list-box,
 .schedule-area-box,
 .selection-box,
 .results-area-box {
+    /* 배경, 여백, 모서리, 그림자 공통 스타일 */
     background: #ffffff;
-    padding: 2rem 2.5rem; /* 여백 조정 */
-    border-radius: 16px; /* 둥근 모서리 */
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
     border: 1px solid #e9ecef;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* 은은한 그림자 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 /* 왼쪽 박스 (장소 목록 / 시간 선택) */
 .room-list-box,
 .selection-box {
-    flex: 0 0 380px; /* 너비 고정 */
+    /* 너비 고정, 높이 제한 및 스크롤 */
+    flex: 0 0 380px;
     max-height: 85vh;
     overflow-y: auto;
 }
@@ -88,19 +101,21 @@
 /* 오른쪽 박스 (달력 / 결과) */
 .schedule-area-box,
 .results-area-box,
-.place-focus-box { /* .place-focus-box는 JSX에서 사용됨 */
+.place-focus-box {
+    /* 남은 공간을 채우도록 확장 */
     flex-grow: 1;
 }
 
 .box-title {
-    color: #004B8D; /* ⭐️ 인하대 메인 색상 */
-    border-bottom: 2px solid #f0f0f0; /* 옅은 밑줄 */
+    /* 박스 내부 제목 스타일 */
+    color: #004B8D;
+    border-bottom: 2px solid #f0f0f0;
     padding-bottom: 1rem;
     margin-top: 0;
     margin-bottom: 1.5rem;
-    font-size: 1.5rem; /* 24px */
+    font-size: 1.5rem;
     font-weight: 700;
-    /* ⭐️ 아이콘 정렬 */
+    /* 아이콘 포함 중앙 정렬 */
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -110,27 +125,31 @@
 /* --- 3. 입력 필드 (input, select, label) --- */
 
 .input-label {
+    /* 라벨 기본 스타일 */
     display: block;
     margin-bottom: 0.5rem;
-    margin-top: 1.5rem; /* 각 항목 간 간격 */
+    margin-top: 1.5rem;
     font-weight: 600;
     color: #333;
     font-size: 1rem;
 }
-.input-label.time-label { /* JSX의 .time-label 클래스 */
+
+.input-label.time-label {
     margin-top: 1.5rem;
 }
+
 /* 첫 번째 라벨은 위쪽 마진 제거 */
 .selection-box .input-label:first-of-type {
     margin-top: 0;
 }
 
-/* ⭐️ 공용 입력창 스타일 */
+/* 공용 입력창 스타일 */
 .date-picker-input,
 .time-select,
 .category-select {
+    /* 너비, 패딩, 테두리, 배경 공통 스타일 */
     width: 100%;
-    padding: 0.75rem; /* 12px */
+    padding: 0.75rem;
     border: 1px solid #dee2e6;
     border-radius: 8px;
     font-size: 1rem;
@@ -142,6 +161,7 @@
 .date-picker-input:focus,
 .time-select:focus,
 .category-select:focus {
+    /* 포커스 시 인하대 색상 강조 */
     background-color: #ffffff;
     border-color: #004B8D;
     box-shadow: 0 0 0 3px rgba(0, 75, 141, 0.1);
@@ -149,16 +169,19 @@
 }
 
 .time-inputs-wrapper {
+    /* 시간 드롭다운 가로 정렬 */
     display: flex;
-    gap: 0.75rem; /* 12px */
+    gap: 0.75rem;
     align-items: center;
 }
 
 .time-select {
+    /* 시간 드롭다운 너비 균등 분할 */
     flex: 1;
 }
 
 .time-separator {
+    /* 시간 구분선 텍스트 (예: ~) */
     font-weight: 700;
     color: #555;
     font-size: 1.2rem;
@@ -166,35 +189,39 @@
 
 /* --- 4. 버튼 --- */
 
-/* ⭐️ 공용 메인 버튼 (조회/다음) */
+/* 공용 메인 버튼 (조회/다음) */
 .search-button,
 .next-button {
+    /* 버튼 스타일 및 인하대 색상 적용 */
     width: 100%;
-    padding: 0.8rem 1.5rem; /* 13px 24px */
+    padding: 0.8rem 1.5rem;
     margin-top: 2rem;
-    background-color: #004B8D; /* ⭐️ 인하대 메인 색상 */
+    background-color: #004B8D;
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1.1rem; /* 17.6px */
+    font-size: 1.1rem;
     font-weight: 600;
     transition: background-color 0.2s;
 }
 
 .search-button:hover,
 .next-button:hover {
-    background-color: #003a6e; /* 더 진한 파랑 */
+    /* 호버 시 더 진한 파랑 */
+    background-color: #003a6e;
 }
 
 .search-button:disabled,
 .next-button:disabled {
+    /* 비활성화 상태 */
     background-color: #ccc;
     cursor: not-allowed;
 }
 
 /* 캘린더 월 이동 버튼 */
 .calendar-header button {
+    /* 월 이동 버튼 스타일 */
     padding: 0.4rem 0.8rem;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
@@ -203,10 +230,13 @@
     font-weight: 600;
     transition: background-color 0.2s;
 }
+
 .calendar-header button:hover {
     background-color: #e0e0e0;
 }
+
 .calendar-header button:disabled {
+    /* 비활성화 상태 */
     background-color: #f9f9f9;
     color: #bbb;
     cursor: not-allowed;
@@ -216,6 +246,7 @@
 /* --- 5. PlaceFocusSelectPage (장소 목록) --- */
 
 .room-item {
+    /* 개별 장소 항목 (목록에서 사용) */
     padding: 12px 15px;
     border: 1px solid #e9ecef;
     border-radius: 8px;
@@ -226,12 +257,14 @@
 }
 
 .room-item:hover {
-    background-color: #e6f0f8; /* 옅은 인하 블루 */
+    /* 호버 효과 */
+    background-color: #e6f0f8;
     border-color: #004B8D;
     transform: scale(1.02);
 }
 
 .room-item.selected {
+    /* 선택된 항목 강조 (파란색) */
     background-color: #004B8D;
     color: white;
     border-color: #004B8D;
@@ -240,12 +273,14 @@
 
 .room-item.selected strong,
 .room-item.selected span {
+    /* 선택 시 텍스트 색상을 흰색으로 */
     color: white;
 }
 
 /* --- 6. PlaceFocusSelectPage (달력) --- */
 
 .calendar-header {
+    /* 달력 헤더 (월 표시 및 이동 버튼) */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -256,6 +291,7 @@
 }
 
 .calendar-grid {
+    /* 달력 날짜 그리드 */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 8px;
@@ -263,6 +299,7 @@
 }
 
 .calendar-header-day {
+    /* 요일 헤더 */
     font-weight: 600;
     padding: 0.5rem 0;
     color: #555;
@@ -270,6 +307,7 @@
 }
 
 .calendar-grid>.day-cell {
+    /* 개별 날짜 셀 */
     padding: 0.75rem 0.25rem;
     border: 1px solid #f1f1f1;
     border-radius: 8px;
@@ -283,33 +321,40 @@
     transition: all 0.2s ease;
 }
 
-.day-cell .date-number { /* 날짜 숫자 */
+.day-cell .date-number {
+    /* 날짜 숫자 */
     font-weight: 600;
     font-size: 1rem;
     margin-bottom: 0.25rem;
 }
-.day-cell .availability-status { /* 상태 텍스트 */
+
+.day-cell .availability-status {
+    /* 상태 텍스트 */
     font-size: 0.75rem;
 }
 
 .day-cell.available {
-    background-color: #f0f9f0; /* 옅은 초록 */
+    /* 사용 가능 상태 */
+    background-color: #f0f9f0;
     color: #15803d;
 }
 
 .day-cell.booked {
-    background-color: #fef2f2; /* 옅은 빨강 */
+    /* 예약 불가 상태 */
+    background-color: #fef2f2;
     color: #b91c1c;
     cursor: default;
 }
 
 .day-cell.past-date {
+    /* 지난 날짜 상태 */
     background-color: #f1f1f1;
     color: #aaa;
     cursor: default;
 }
 
 .day-cell.selected-date {
+    /* 선택된 날짜 강조 */
     border: 2px solid #004B8D;
     background-color: #e6f0f8;
     color: #004B8D;
@@ -318,10 +363,12 @@
 
 .day-cell.selected-date .date-number,
 .day-cell.selected-date .availability-status {
+    /* 선택 시 텍스트 색상 */
     color: #004B8D;
 }
 
 .day-cell.available:not(.selected-date):hover {
+    /* 사용 가능 셀 호버 효과 */
     background-color: #e6f0f8;
     border-color: #004B8D;
 }
@@ -329,6 +376,7 @@
 /* --- 7. TimeFocusSelectPage (결과 목록) --- */
 
 .category-filter-box {
+    /* 카테고리 필터 박스 */
     padding: 1.5rem;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -337,17 +385,20 @@
 }
 
 .results-list-box {
+    /* 결과 리스트 컨테이너 */
     min-height: 150px;
     margin-top: 0;
 }
 
 .space-list {
+    /* 장소 목록 리스트 */
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
 .space-item {
+    /* 개별 장소 결과 항목 */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -361,17 +412,20 @@
 }
 
 .space-item:hover {
+    /* 호버 효과 */
     box-shadow: 0 4px 12px rgba(0, 75, 141, 0.1);
     transform: translateY(-2px);
 }
 
 .space-details {
+    /* 장소 정보 텍스트 영역 */
     flex-grow: 1;
     padding-right: 1.5rem;
 }
 
 .space-name {
-    color: #004B8D; /* ⭐️ 인하대 메인 색상 */
+    /* 장소 이름 */
+    color: #004B8D;
     margin: 0 0 8px 0;
     font-size: 1.2rem;
     font-weight: 700;
@@ -379,6 +433,7 @@
 
 .space-info,
 .space-time-info {
+    /* 상세 정보 텍스트 */
     color: #495057;
     font-size: 0.95rem;
     margin: 4px 0;
@@ -387,14 +442,16 @@
 
 .space-info strong,
 .space-time-info strong {
+    /* 정보 라벨 강조 */
     font-weight: 600;
     color: #343a40;
 }
 
-/* ⭐️ '예약하기' 버튼 (결과 목록) */
+/* '예약하기' 버튼 (결과 목록) */
 .select-space-button {
+    /* Call to Action 버튼 스타일 */
     padding: 0.6rem 1.2rem;
-    background-color: #28a745; /* 녹색 (Call to Action) */
+    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 8px;
@@ -411,6 +468,7 @@
 /* --- 8. 안내/에러 텍스트 --- */
 
 .error-text {
+    /* 오류 메시지 스타일 */
     color: #dc3545;
     margin-top: 1.5rem;
     text-align: center;
@@ -425,6 +483,7 @@
 .loading-text,
 .instruction-text,
 .no-results-text {
+    /* 로딩, 안내, 결과 없음 텍스트 공통 스타일 */
     text-align: center;
     color: #6c757d;
     padding: 3rem 1rem;

@@ -1,12 +1,18 @@
-/* mainpage.css */
+/* -------------------------------------- */
+/* mainpage.css (시설 예약 메인 메뉴 페이지) */
+/* -------------------------------------- */
 
 /* 1. 전체 컨테이너 (페이지 여백 및 정렬) */
 .facility-menu-wrapper {
+  /* 내부 여백 설정 */
   padding: 3rem 2rem;
+  /* 최소 높이 설정 */
   min-height: 80vh;
   width: 100%;
   box-sizing: border-box;
+  /* 폰트 설정 */
   font-family: 'Noto Sans KR', Arial, sans-serif;
+  /* 내부 요소를 세로로 배치하고 중앙 정렬 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,14 +20,17 @@
 
 /* 2. 메인 페이지 헤더 스타일 */
 .main-page-header {
+  /* 너비 제한 및 중앙 정렬 */
   width: 100%;
   max-width: 900px;
   text-align: center;
+  /* 하단 여백 및 상단 패딩 */
   margin-bottom: 4rem;
   padding-top: 1rem;
 }
 
 .main-page-title {
+  /* 메인 제목 스타일 (인하대 색상) */
   font-size: 2.5rem;
   font-weight: 700;
   color: #004B8D;
@@ -29,60 +38,70 @@
 }
 
 .main-page-welcome {
+  /* 환영/안내 메시지 스타일 */
   font-size: 1.25rem;
   color: #555;
   margin-top: 0.75rem;
 }
 
-/* 3. ⭐️ 카드 그리드 (1+3 레이아웃 구현) */
+/* 3. 카드 그리드 (1+3 레이아웃 구현) */
 .menu-card-grid {
+  /* 3개의 동일한 너비 컬럼으로 그리드 설정 */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  /* 카드 간격 */
   gap: 2rem;
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
+  /* 컨테이너의 남은 공간을 채우도록 설정 */
   flex-grow: 1;
 }
 
 /* 4. 카드 공통 스타일 */
 .reservation-section {
+  /* 내부 요소를 세로로 배치하고 중앙 정렬 */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
+  /* 카드 배경 및 테두리/그림자 설정 */
   background-color: #ffffff;
   border: 1px solid #e9ecef;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 
   padding: 2rem;
+  /* 애니메이션 및 커서 설정 */
   transition: all 0.3s ease;
   cursor: pointer;
   text-align: center;
 }
 
-/* 4.1 ⭐️ '신규 예약하기' (Hero 버튼) 스타일 */
+/* 4.1 '신규 예약하기' (Hero 버튼) 스타일 */
 .reservation-section.section-reserve-hero {
+  /* 1행에서 3개 컬럼 전체를 차지하도록 확장 */
   grid-column: 1 / -1;
   min-height: 250px;
 }
 
-/* 4.2 ⭐️ 하단 3개 버튼 스타일 */
+/* 4.2 하단 3개 버튼 스타일 */
 .reservation-section.section-secondary {
   min-height: 300px;
 }
 
 
-/* 5. 카드 호버 효과 (select-card와 동일) */
+/* 5. 카드 호버 효과 */
 .reservation-section:hover {
+  /* 호버 시 위로 살짝 올라오고 그림자 강조 (인하대 파란색) */
   transform: translateY(-8px);
   box-shadow: 0 12px 24px rgba(0, 75, 141, 0.1);
 }
 
 /* 6. 버튼/내부 요소 스타일 */
 .menu-button {
+  /* 카드 전체를 버튼처럼 사용하기 위한 스타일 재설정 */
   border: none;
   background: none;
   cursor: pointer;
@@ -96,8 +115,9 @@
   height: 100%;
 }
 
-/* 7. 아이콘 래퍼 (select-icon-wrapper와 동일) */
+/* 7. 아이콘 래퍼 */
 .menu-icon-wrapper {
+  /* 아이콘 배경 원형 스타일 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -110,8 +130,9 @@
   margin-bottom: 1.5rem;
 }
 
-/* 8. 텍스트 (제목) (select-text와 동일) */
+/* 8. 텍스트 (제목) */
 .menu-text {
+  /* 메뉴 제목 텍스트 스타일 */
   font-size: 1.6rem;
   font-weight: 700;
   text-align: center;
@@ -120,8 +141,9 @@
   transition: color 0.3s ease;
 }
 
-/* 9. 설명 텍스트 (select-description과 동일) */
+/* 9. 설명 텍스트 */
 .menu-description {
+  /* 메뉴 설명 텍스트 스타일 */
   font-size: 0.95rem;
   color: #666;
   text-align: center;
@@ -129,9 +151,9 @@
 }
 
 
-/* 10. ⭐️ 카드별 호버 시 색상 변경 테마 적용 (수정) */
+/* 10. 카드별 호버 시 색상 변경 테마 적용 */
 
-/* Hero 버튼 - '신규 예약하기' (파랑/메인 강조) */
+/* Hero 버튼 - '신규 예약하기' (파랑/메인 강조 테마) */
 .reservation-section.section-reserve-hero:hover .menu-icon-wrapper {
   background-color: #004B8D;
   color: #ffffff;
@@ -141,10 +163,9 @@
   color: #004B8D;
 }
 
-/* ⭐️ [수정] Secondary 버튼 - '월별 현황 보기' (청록 계열) */
+/* Secondary 버튼 - '월별 현황 보기' (청록 계열 테마) */
 .reservation-section.section-calendar-toggle:hover .menu-icon-wrapper {
   background-color: #0d9488;
-  /* 청록색 */
   color: #ffffff;
 }
 
@@ -152,7 +173,7 @@
   color: #0d9488;
 }
 
-/* ⭐️ [수정] Secondary 버튼 - '예약 내역/수정' (초록 계열) */
+/* Secondary 버튼 - '예약 내역/수정' (초록 계열 테마) */
 .reservation-section.section-history:hover .menu-icon-wrapper {
   background-color: #15803d;
   color: #ffffff;
@@ -162,7 +183,7 @@
   color: #15803d;
 }
 
-/* ⭐️ [수정] Secondary 버튼 - '불편 사항 접수' (주황 계열) */
+/* Secondary 버튼 - '불편 사항 접수' (주황 계열 테마) */
 .reservation-section.section-complaint:hover .menu-icon-wrapper {
   background-color: #e67e22;
   color: #ffffff;
@@ -173,25 +194,29 @@
 }
 
 
-/* ⭐ 모바일 대응 (1+3 구조 스태킹) */
+/* 11. 모바일 대응 (1+3 구조 스태킹) */
 @media (max-width: 768px) {
   .menu-card-grid {
+    /* 모바일에서 1개의 컬럼으로 변경 */
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
   .reservation-section.section-reserve-hero,
   .reservation-section.section-secondary {
+    /* 모든 카드가 전체 너비를 차지하도록 설정 */
     grid-column: 1 / -1;
+    /* 모바일에서는 최소 높이 제한 해제 */
     min-height: unset;
-    /* 모바일 높이 제한 해제 */
   }
 
   .main-page-title {
+    /* 제목 폰트 크기 조정 */
     font-size: 2rem;
   }
 
   .main-page-welcome {
+    /* 환영 메시지 폰트 크기 조정 */
     font-size: 1rem;
   }
 }

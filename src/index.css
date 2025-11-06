@@ -1,5 +1,14 @@
 /* src/index.css */
 
+/* -------------------------------------- */
+/* Tailwind CSS 기본 임포트 */
+/* -------------------------------------- */
+
+/* Tailwind CSS의 기본 스타일(브라우저 초기화, 기본 HTML 요소 스타일)을 적용합니다. */
 @tailwind base;
+
+/* Tailwind CSS의 컴포넌트 클래스(버튼, 카드 등 재사용 가능한 유틸리티 조합)를 적용합니다. */
 @tailwind components;
+
+/* Tailwind CSS의 핵심 유틸리티 클래스(flex, pt-4, text-center 등)를 적용합니다. */
 @tailwind utilities;

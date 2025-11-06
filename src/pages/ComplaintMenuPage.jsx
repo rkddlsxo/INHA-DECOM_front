@@ -1,28 +1,37 @@
 import React from 'react';
 import './ComplaintMenuPage.css';
-// ⭐️ 아이콘 import: 접수 (BsPencilSquare), 내역 (BsListCheck), 뒤로가기 (BsArrowLeft)
+// 필요한 아이콘 (접수, 내역, 뒤로가기) 임포트
 import { BsPencilSquare, BsListCheck, BsArrowLeft } from 'react-icons/bs';
 
+/**
+ * 불편 사항 관련 서비스(접수, 내역 조회)를 선택하는 메뉴 컴포넌트입니다.
+ * @param {object} props - 컴포넌트 속성
+ * @param {function} props.onNavigate - 페이지 이동을 처리하는 함수
+ */
 const ComplaintMenuPage = ({ onNavigate }) => {
 
+    /**
+     * 메뉴 섹션 클릭 시 지정된 페이지로 이동을 요청합니다.
+     * @param {string} page - 이동할 페이지의 이름
+     */
     const handleSectionClick = (page) => {
         onNavigate(page);
     };
 
     return (
-        // ⭐️ 클래스 이름: complaint-menu-wrapper
+        // 전체 레이아웃 컨테이너
         <div className="complaint-menu-wrapper">
 
-            {/* ⭐️ 왼쪽 상단 '뒤로가기' 버튼 (수정된 위치) */}
+            {/* 왼쪽 상단 '뒤로가기' 버튼: 메인 페이지로 이동 */}
             <button
-                className="back-button" // back-button 클래스 사용
-                onClick={() => handleSectionClick('main')} // 메인 메뉴(mainPages)로 이동
+                className="back-button"
+                onClick={() => handleSectionClick('main')}
             >
                 <BsArrowLeft size={16} />
                 뒤로
             </button>
 
-            {/* 헤더: 메인 페이지 UI와 유사하게 구성 */}
+            {/* 헤더 섹션 */}
             <header className="main-page-header">
                 <h1 className="main-page-title">
                     불편 사항 접수 메뉴
@@ -32,13 +41,13 @@ const ComplaintMenuPage = ({ onNavigate }) => {
                 </p>
             </header>
 
-            {/* ⭐️ 카드 그리드 (1:1 레이아웃) */}
+            {/* 카드 메뉴를 담는 그리드 레이아웃 컨테이너 */}
             <main className="menu-card-grid">
 
-                {/* '불편 사항 접수' 섹션 (카드 1) */}
+                {/* '불편 사항 접수' 카드 */}
                 <div
                     className="menu-section section-register"
-                    onClick={() => handleSectionClick('complaintPage')} // ⭐️ 접수 페이지로 이동
+                    onClick={() => handleSectionClick('complaintPage')} // 'ComplaintPage'로 이동
                 >
                     <button className="menu-button">
                         <div className="menu-icon-wrapper">
@@ -51,10 +60,10 @@ const ComplaintMenuPage = ({ onNavigate }) => {
                     </button>
                 </div>
 
-                {/* '불편 사항 내역' 섹션 (카드 2) */}
+                {/* '불편 사항 내역' 카드 */}
                 <div
                     className="menu-section section-history"
-                    onClick={() => handleSectionClick('complaintHistoryPage')} // ⭐️ 내역 페이지로 이동
+                    onClick={() => handleSectionClick('complaintHistoryPage')} // 'ComplaintHistoryPage'로 이동
                 >
                     <button className="menu-button">
                         <div className="menu-icon-wrapper">
@@ -69,7 +78,6 @@ const ComplaintMenuPage = ({ onNavigate }) => {
 
             </main>
 
-            {/* 하단 '메인으로 돌아가기' 버튼은 상단 버튼으로 대체되어 제거되었습니다. */}
         </div>
     );
 };
