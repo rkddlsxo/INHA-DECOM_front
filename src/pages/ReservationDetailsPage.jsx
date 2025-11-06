@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import './ReservationDetailsPage.css';
 
+// 상수 정의
 const LAST_PAGE_KEY = 'lastReservationSelectPage';
 const API_BASE_URL = 'http://localhost:5050/api';
 
+// 장소 사용 안내 HTML 콘텐츠 (JSX 외부에서 정의)
 const PlaceUsageGuideHTML = `
     <div>
         <p style="font-size: 14pt; font-weight: bold;">시설물 예약 및 사용 안내</p>
@@ -207,12 +209,20 @@ const PlaceUsageGuideHTML = `
 `;
 // ------------------------------------
 
+/**
+ * 예약 안내 및 유의사항을 표시하는 모달 컴포넌트입니다.
+ * @param {object} props - 컴포넌트 속성
+ * @param {boolean} props.isOpen - 모달 열림 상태
+ * @param {function} props.onClose - 모달 닫기 핸들러
+ * @param {string} props.htmlContent - 표시할 HTML 콘텐츠 (장소 사용 안내)
+ */
 const RulesModal = ({ isOpen, onClose, htmlContent }) => {
     if (!isOpen) return null;
     return (
         <div className="modal rules-modal">
             <div className="modal-content guide-modal-content">
                 <h2>🚨 장소별 예약안내 및 유의사항</h2>
+                {/* 위험한 작업: 외부 HTML을 삽입함 */}
                 <div className="guide-content-body" dangerouslySetInnerHTML={{ __html: htmlContent }} />
                 <div className="rules-action-area">
                     <button onClick={onClose} className="close-button">
@@ -225,14 +235,18 @@ const RulesModal = ({ isOpen, onClose, htmlContent }) => {
 };
 // ------------------------------------
 
-// ⭐️ [수정] 1. [재예약] 데이터를 읽어오는 함수 (컴포넌트 외부 유지)
+/**
+ * 재예약 데이터를 LocalStorage에서 읽어오고 삭제하는 함수입니다.
+ * 컴포넌트의 초기 상태 설정 시 재예약 데이터를 미리 채우기 위해 사용됩니다.
+ * @returns {object|null} 재예약 데이터 객체 또는 null
+ */
 const getRebookingData = () => {
     const data = localStorage.getItem('rebookingData');
     if (!data) {
         return null; // 재예약 데이터가 없으면 null 반환
     }
     try {
-        // ⭐️ 데이터를 읽어온 후 즉시 삭제 (일회용)
+        // 데이터를 읽어온 후 즉시 삭제 (일회용 데이터)
         localStorage.removeItem('rebookingData');
         return JSON.parse(data);
     } catch (e) {
@@ -242,25 +256,32 @@ const getRebookingData = () => {
     }
 };
 
-// ⭐️ [수정] 2. [재예약] 컴포넌트 로드 시 1회만 실행하던 변수 선언 (삭제)
-// const rebookingData = getRebookingData(); (삭제)
-// ------------------------------------
-
-
+/**
+ * 예약 상세 정보를 입력하고 최종 제출하는 페이지 컴포넌트입니다.
+ * @param {object} props - 컴포넌트 속성
+ * @param {function} props.onNavigate - 페이지 이동을 처리하는 함수
+ */
 const ReservationDetailsPage = ({ onNavigate }) => {
     // 1. 상태 관리
+    // 임시 저장된 예약 정보 (장소, 날짜, 시간)
     const [bookingData, setBookingData] = useState(null);
+    // 최종 확정 확인 모달 열림 상태
     const [isModalOpen, setIsModalOpen] = useState(false);
+    // 장소 사용 안내 모달 열림 상태
     const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
+    // 최종 제출 버튼 활성화 상태
     const [isFinalSubmitDisabled, setIsFinalSubmitDisabled] = useState(true);
+    // 필수 확인 사항 미체크 시 경고 표시 상태
     const [showCheckAlert, setShowCheckAlert] = useState(false);
+    // 이전 페이지 경로 (뒤로가기 버튼용)
     const [prevPage, setPrevPage] = useState('reservationFormSelectPage');
 
-    // ⭐️ [수정] 3. [재예약] 폼 데이터 상태 초기화 시 함수를 사용
+    // 폼 데이터 상태 (재예약 데이터로 초기화)
     const [formData, setFormData] = useState(() => {
-        // ⭐️ 이 함수는 컴포넌트 마운트 시 1회만 실행됨
-        const rebookingData = getRebookingData(); 
+        // useState의 초기값 함수는 컴포넌트 마운트 시 1회만 실행됨
+        const rebookingData = getRebookingData();
         return {
+            // 재예약 데이터가 있으면 해당 값 사용, 없으면 빈 값/기본값 사용
             organizationType: rebookingData?.organizationType || '',
             organizationName: rebookingData?.organizationName || '',
             phone: rebookingData?.phone || '',
@@ -268,19 +289,23 @@ const ReservationDetailsPage = ({ onNavigate }) => {
             eventName: rebookingData?.eventName || '',
             numPeople: rebookingData?.numPeople || 1,
             acUse: rebookingData?.acUse || 'yes',
-            rulesChecked: [false, false, false, false, false] // 체크박스는 항상 false로 시작
+            // 필수 확인 체크박스 상태 (5개)
+            rulesChecked: [false, false, false, false, false]
         };
     });
 
 
-    // 2. 데이터 로딩 및 외부 클릭 핸들러
+    // 2. 데이터 로딩 및 외부 클릭 핸들러 (컴포넌트 마운트 시)
     useEffect(() => {
+        // 임시 예약 정보 (장소, 날짜, 시간) 로드
         const storedData = localStorage.getItem('tempBookingData');
+        // 이전 페이지 경로 로드
         const storedPrevPage = localStorage.getItem(LAST_PAGE_KEY);
 
         if (storedData) {
             setBookingData(JSON.parse(storedData));
         } else {
+            // 필수 정보가 없으면 경고 후 이전 페이지로 강제 이동
             alert("예약 정보가 없습니다. 장소 선택 페이지로 돌아갑니다.");
             onNavigate(storedPrevPage || 'reservationFormSelectPage');
         }
@@ -289,7 +314,9 @@ const ReservationDetailsPage = ({ onNavigate }) => {
             setPrevPage(storedPrevPage);
         }
 
+        // 모달 외부 클릭 시 모달 닫기 핸들러
         const handleOutsideClick = (event) => {
+            // 안내사항 모달이 아닌 일반 모달만 닫음
             if (event.target.classList.contains('modal') && !event.target.classList.contains('rules-modal')) {
                 setIsModalOpen(false);
             }
@@ -299,24 +326,35 @@ const ReservationDetailsPage = ({ onNavigate }) => {
         return () => window.removeEventListener('click', handleOutsideClick);
     }, [onNavigate]);
 
-    // 3. 체크박스 상태 감시
+    // 3. 체크박스 상태 감시 (모든 규칙 동의 여부 확인)
     useEffect(() => {
         const allChecked = formData.rulesChecked.every(checked => checked);
+        // 모든 체크박스에 동의해야 최종 제출 버튼 활성화
         setIsFinalSubmitDisabled(!allChecked);
         if (allChecked) {
-            setShowCheckAlert(false);
+            setShowCheckAlert(false); // 모두 체크되면 경고 메시지 숨김
         }
     }, [formData.rulesChecked]);
 
     // 4. 이벤트 핸들러
+
+    /**
+     * 일반 입력 필드 (select, input text) 변경을 처리합니다.
+     * @param {object} e - 이벤트 객체
+     */
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         setFormData(prev => ({
             ...prev,
+            // numPeople의 경우 숫자만 허용하도록 필터링
             [id]: id === 'numPeople' ? value.replace(/[^0-9]/g, '') : value
         }));
     };
 
+    /**
+     * 냉난방 사용 유무 라디오 버튼 변경을 처리합니다.
+     * @param {object} e - 이벤트 객체
+     */
     const handleRadioChange = (e) => {
         setFormData(prev => ({
             ...prev,
@@ -324,6 +362,11 @@ const ReservationDetailsPage = ({ onNavigate }) => {
         }));
     };
 
+    /**
+     * 규칙 확인 체크박스 변경을 처리하는 고차 함수입니다.
+     * @param {number} index - rulesChecked 배열의 인덱스
+     * @returns {function} 이벤트 핸들러 함수
+     */
     const handleRuleCheck = (index) => (e) => {
         const newRulesChecked = [...formData.rulesChecked];
         newRulesChecked[index] = e.target.checked;
@@ -333,24 +376,36 @@ const ReservationDetailsPage = ({ onNavigate }) => {
         }));
     };
 
+    /**
+     * 폼 제출 시 최종 확정 모달을 열고 필수 입력 항목을 검사합니다.
+     * @param {object} e - 폼 제출 이벤트 객체
+     */
     const handleOpenModal = (e) => {
         e.preventDefault();
+        // 필수 입력 항목 유효성 검사
         if (!formData.organizationType || !formData.organizationName || !formData.phone || !formData.email || !formData.eventName || formData.numPeople < 1) {
             alert("필수 입력 항목(사용단체, 단체명/이름, 연락처, 이메일, 행사명, 인원)을 모두 채워주세요.");
             return;
         }
         setIsModalOpen(true);
-        setShowCheckAlert(true);
+        setShowCheckAlert(true); // 모달 열림과 동시에 미체크 경고 준비
     };
 
+    /**
+     * 장소별 안내 및 유의사항 모달을 엽니다.
+     * @param {object} e - 이벤트 객체
+     */
     const handleOpenRulesModal = (e) => {
         setIsRulesModalOpen(true);
-        e.stopPropagation(); 
+        e.stopPropagation();
     };
 
+    /**
+     * 안내 모달 내부에서 '확인' 버튼 클릭 시 호출되며, 첫 번째 규칙에 체크하고 모달을 닫습니다.
+     */
     const handleRuleCheckFromModal = () => {
         const newRulesChecked = [...formData.rulesChecked];
-        newRulesChecked[0] = true; 
+        newRulesChecked[0] = true; // 첫 번째 필수 규칙 자동 체크
         setFormData(prev => ({
             ...prev,
             rulesChecked: newRulesChecked
@@ -358,7 +413,11 @@ const ReservationDetailsPage = ({ onNavigate }) => {
         setIsRulesModalOpen(false);
     };
 
+    /**
+     * 최종 예약 확정 및 서버 제출을 처리합니다.
+     */
     const handleFinalSubmit = async () => {
+        // 모든 규칙에 동의했는지 최종 확인
         if (isFinalSubmitDisabled) {
             setShowCheckAlert(true);
             alert("모든 필수 확인 사항에 동의해야 최종 확정이 가능합니다.");
@@ -367,20 +426,21 @@ const ReservationDetailsPage = ({ onNavigate }) => {
 
         if (!bookingData) return;
 
+        // 제출할 예약 데이터 객체 구성
         const newBooking = {
             date: bookingData.date,
             startTime: bookingData.startTime,
             endTime: bookingData.endTime,
             roomName: bookingData.roomName,
             roomLocation: bookingData.roomLocation,
-            applicant: formData.organizationName,
+            applicant: formData.organizationName, // 단체명 또는 예약자 이름
             phone: formData.phone,
             email: formData.email,
             eventName: formData.eventName,
             numPeople: parseInt(formData.numPeople) || 1,
             acUse: formData.acUse,
             organizationType: formData.organizationType,
-            status: '확정대기'
+            status: '확정대기' // 초기 상태
         };
 
         try {
@@ -391,6 +451,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                 return;
             }
 
+            // 예약 제출 API 호출
             const response = await fetch(`${API_BASE_URL}/bookings`, {
                 method: 'POST',
                 headers: {
@@ -405,13 +466,12 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                 throw new Error(`예약 제출 실패: ${errorData.message || response.statusText}`);
             }
 
+            // 성공 시 임시 저장된 데이터 삭제
             localStorage.removeItem('tempBookingData');
             localStorage.removeItem(LAST_PAGE_KEY);
-            // ⭐️ 4. [재예약] 재예약 데이터는 getRebookingData에서 이미 삭제되었음
-            // localStorage.removeItem('rebookingData'); (불필요)
 
             alert(`🎉 ${formData.organizationName}님의 예약이 접수되었습니다! (상태: 확정대기)`);
-            onNavigate('main');
+            onNavigate('main'); // 메인 페이지로 이동
 
         } catch (error) {
             console.error('Final Submit Error:', error);
@@ -419,6 +479,9 @@ const ReservationDetailsPage = ({ onNavigate }) => {
         }
     };
 
+    /**
+     * 이전 페이지로 돌아갑니다. (장소/날짜 선택 페이지)
+     */
     const handleGoBack = () => {
         onNavigate(prevPage);
     };
@@ -426,6 +489,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
 
     // 5. 렌더링
     if (!bookingData) {
+        // 예약 정보 로딩 중/유효하지 않을 때 대체 UI
         return (
             <div className="p-8 text-center">
                 <p>예약 정보를 로딩 중이거나 유효하지 않습니다.</p>
@@ -442,6 +506,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
     return (
         <div className="reservationDetails-container">
             <div className="absolute top-4 left-4">
+                {/* 뒤로가기 버튼 */}
                 <button
                     onClick={handleGoBack}
                     className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition z-10"
@@ -452,6 +517,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
 
             <h1 className="mt-8">예약 상세 정보 입력</h1>
 
+            {/* 선택된 예약 정보 요약 */}
             <div className="summary-box">
                 <h2>선택하신 예약 정보 확인</h2>
                 <div className="summary-item">
@@ -472,7 +538,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                 </div>
             </div>
 
-            {/* ⭐️ 폼은 [수정]된 useState 로직에 의해 자동으로 채워짐 */}
+            {/* 상세 정보 입력 폼 */}
             <form className="input-form" onSubmit={handleOpenModal}>
 
                 <div className="form-group">
@@ -567,12 +633,13 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                 </button>
             </form>
 
-            {/* 최종 확정 모달 */}
+            {/* 최종 확정 모달 (필수 확인 사항 체크) */}
             {isModalOpen && (
                 <div className="modal">
                     <div className="modal-content">
                         <h2>🚨 예약 전 필수 확인 사항</h2>
                         <div className="rules-list">
+                            {/* 1. 장소별 안내사항 확인 체크박스 (문구 클릭 시 안내 모달 열림) */}
                             <div className="rule-item" onClick={handleOpenRulesModal}>
                                 <label className={formData.rulesChecked[0] ? 'rule-checked' : 'rule-unchecked'}>
                                     <input type="checkbox" className="required-check" checked={formData.rulesChecked[0]} onChange={handleRuleCheck(0)} disabled />
@@ -582,12 +649,14 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                                     <p style={{ color: 'red', fontSize: '0.8em', marginTop: '5px' }}>* 안내사항을 확인하고 체크해야 합니다. **문구 클릭 시 안내 창 열림**</p>
                                 )}
                             </div>
+                            {/* 2. 학교 주요행사 양보 체크박스 */}
                             <div className="rule-item">
                                 <label>
                                     <input type="checkbox" className="required-check" checked={formData.rulesChecked[1]} onChange={handleRuleCheck(1)} />
                                     학교 주요행사 발생시 양보하겠습니다.
                                 </label>
                             </div>
+                            {/* 3. 예약 불가 항목 확인 체크박스 */}
                             <div className="rule-item">
                                 <label>
                                     <input type="checkbox" className="required-check" checked={formData.rulesChecked[2]} onChange={handleRuleCheck(2)} />
@@ -602,12 +671,14 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                                     <li>학생신분으로서 부적절한 경우</li>
                                 </ul>
                             </div>
+                            {/* 4. 수업 방해 금지 체크박스 */}
                             <div className="rule-item">
                                 <label>
                                     <input type="checkbox" className="required-check" checked={formData.rulesChecked[3]} onChange={handleRuleCheck(3)} />
                                     운동장,다목적구장, 농구장등 기타외부장소를 이용하는 사용자의 경우 해당 시설에서 수업 진행시 수업에 방해되는 행동과 소음을 자제하여 주시기 바랍니다.
                                 </label>
                             </div>
+                            {/* 5. 사용자 준수사항 불이행 시 패널티 확인 체크박스 */}
                             <div className="rule-item">
                                 <label>
                                     <input type="checkbox" className="required-check" checked={formData.rulesChecked[4]} onChange={handleRuleCheck(4)} />
@@ -641,7 +712,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
             {/* 장소 안내 모달 렌더링 */}
             <RulesModal
                 isOpen={isRulesModalOpen}
-                onClose={handleRuleCheckFromModal}
+                onClose={handleRuleCheckFromModal} // 닫으면 첫 번째 규칙 자동 체크
                 htmlContent={PlaceUsageGuideHTML}
             />
         </div>

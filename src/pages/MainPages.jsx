@@ -2,15 +2,26 @@ import React from 'react';
 import './Mainpage.css';
 import { BsCalendarPlus, BsCalendarWeek, BsCheck2Square, BsExclamationTriangle } from 'react-icons/bs';
 
+/**
+ * 시설 예약 및 관련 서비스를 선택하는 메인 메뉴 컴포넌트입니다.
+ * @param {object} props - 컴포넌트 속성
+ * @param {function} props.onNavigate - 페이지 이동을 처리하는 함수
+ */
 const MainPages = ({ onNavigate }) => {
 
+  /**
+   * 메뉴 항목 클릭 시 지정된 페이지로 이동을 요청합니다.
+   * @param {string} page - 이동할 페이지의 이름 (예: 'reservationFormSelectPage')
+   */
   const handleSectionClick = (page) => {
     onNavigate(page);
   };
 
   return (
+    // 전체 레이아웃 컨테이너
     <div className="facility-menu-wrapper">
 
+      {/* 페이지 헤더 (제목 및 환영 메시지) */}
       <header className="main-page-header">
         <h1 className="main-page-title">
           시설 예약 메뉴
@@ -20,12 +31,13 @@ const MainPages = ({ onNavigate }) => {
         </p>
       </header>
 
+      {/* 카드 메뉴를 담는 그리드 레이아웃 컨테이너 */}
       <main className="menu-card-grid">
 
-        {/* 1. '신규 예약하기' (최상단 Hero 버튼) */}
+        {/* 1. '신규 예약하기' 카드 (메인 버튼 역할) */}
         <div
           className="reservation-section section-reserve-hero"
-          onClick={() => handleSectionClick('reservationFormSelectPage')}
+          onClick={() => handleSectionClick('reservationFormSelectPage')} // 예약 폼 선택 페이지로 이동
         >
           <button className="menu-button">
             <div className="menu-icon-wrapper">
@@ -38,11 +50,10 @@ const MainPages = ({ onNavigate }) => {
           </button>
         </div>
 
-        {/* 2. '월별 현황 보기' (하단 1/3) */}
+        {/* 2. '월별 현황 보기' 카드 */}
         <div
-          // ⭐️ [수정] 고유 클래스(section-calendar-toggle)를 다시 추가합니다.
           className="reservation-section section-secondary section-calendar-toggle"
-          onClick={() => handleSectionClick('monthlyCalendarPage')}
+          onClick={() => handleSectionClick('monthlyCalendarPage')} // 월별 캘린더 페이지로 이동
         >
           <button className="menu-button">
             <div className="menu-icon-wrapper">
@@ -55,11 +66,10 @@ const MainPages = ({ onNavigate }) => {
           </button>
         </div>
 
-        {/* 3. '예약 내역/수정' (하단 2/3) */}
+        {/* 3. '예약 내역/수정' 카드 */}
         <div
-          // ⭐️ [수정] 고유 클래스(section-history)를 다시 추가합니다.
           className="reservation-section section-secondary section-history"
-          onClick={() => handleSectionClick('bookingHistory')}
+          onClick={() => handleSectionClick('bookingHistory')} // 예약 내역 페이지로 이동
         >
           <button className="menu-button">
             <div className="menu-icon-wrapper">
@@ -72,10 +82,10 @@ const MainPages = ({ onNavigate }) => {
           </button>
         </div>
 
-        {/* 4. '불편 사항 접수' (하단 3/3) */}
+        {/* 4. '불편 사항 접수' 카드 */}
         <div
           className="reservation-section section-secondary section-complaint"
-          onClick={() => handleSectionClick('complaintMenuPage')}
+          onClick={() => handleSectionClick('complaintMenuPage')} // 불편 사항 메뉴 페이지로 이동
         >
           <button className="menu-button">
             <div className="menu-icon-wrapper">

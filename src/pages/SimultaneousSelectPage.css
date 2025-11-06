@@ -1,19 +1,22 @@
-/* 1. 장소 목록 스크롤 영역 (스크롤 제거) */
-.room-list-scroll-area {
-    /* 💡 [수정] 스크롤이 생기지 않도록 설정 (내용 길이에 따라 높이 자동 조절) */
-    max-height: unset;
-    /* 높이 제한 해제 */
-    overflow-y: unset;
-    /* 스크롤바 숨김 */
+/* -------------------------------------- */
+/* SimultaneousSelectPage.css (시공간 동시 선택 페이지) */
+/* -------------------------------------- */
 
-    /* 스크롤 관련 마진/패딩 제거 */
+/* 1. 장소 목록 스크롤 영역 (스크롤 제거 및 높이 해제) */
+.room-list-scroll-area {
+    /* 높이 제한을 해제하여 내용 길이에 따라 높이 자동 조절 */
+    max-height: unset;
+    /* 세로 스크롤바 숨김 */
+    overflow-y: unset;
+
+    /* 불필요한 스크롤 관련 마진/패딩 제거 */
     padding-right: 0;
     margin-right: 0;
 }
 
 /* --- 카테고리 필터 UI 스타일 --- */
 
-/* 2. 카테고리 그룹 전체 Wrapper (클릭 영역) */
+/* 2. 카테고리 그룹 전체 Wrapper (클릭 가능한 영역) */
 .category-group-wrapper {
     margin-bottom: 15px;
     border: 1px solid #e0e0e0;
@@ -25,10 +28,12 @@
 
 /* 3. 카테고리 헤더 (내부 텍스트 영역) */
 .category-header {
+    /* 내부 콘텐츠 정렬 */
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px;
+    /* 기본 배경 및 폰트 */
     background-color: #f8f9fa;
     font-size: 1.1em;
     font-weight: 600;
@@ -38,30 +43,35 @@
 }
 
 .category-group-wrapper:hover .category-header {
+    /* Wrapper에 호버 시 Header 배경 변경 */
     background-color: #f1f1f1;
 }
 
 .category-header strong {
+    /* 강조 텍스트 색상 (인하대 블루) */
     color: #004B8D;
-    /* 인하대 블루 */
 }
 
-/* 4. 토글 아이콘 스타일 (제거됨) */
+/* 4. 토글 아이콘 스타일 (사용하지 않음) */
 .toggle-icon {
+    /* 아이콘 숨김 */
     display: none;
 }
 
-/* --- ⭐️⭐️⭐️ 선택된 카테고리 강조 스타일 (통합) ⭐️⭐️⭐️ --- */
+/* --- 선택된 카테고리 강조 스타일 (통합) --- */
 
 /* 5. 선택된 상태의 Wrapper 스타일 */
 .category-group-wrapper.selected-filter {
+    /* 테두리 및 그림자 강조 */
     border: 2px solid #004B8D;
     box-shadow: 0 4px 10px rgba(0, 75, 141, 0.15);
+    /* 옅은 배경색 */
     background-color: #e6f7ff;
 }
 
 /* 6. 선택된 상태의 Header 스타일 (배경과 텍스트 색상 변경) */
 .category-group-wrapper.selected-filter .category-header {
+    /* 배경색을 인하대 블루로 설정 */
     background-color: #004B8D;
     color: #ffffff;
     font-weight: 700;
@@ -69,10 +79,11 @@
 }
 
 .category-group-wrapper.selected-filter .category-header:hover {
-    background-color: #003a6d;
     /* 선택된 상태에서 호버 시 약간 더 진한 색상 */
+    background-color: #003a6d;
 }
 
 .category-group-wrapper.selected-filter .category-header strong {
+    /* 강조 텍스트를 흰색으로 변경 */
     color: #ffffff;
 }

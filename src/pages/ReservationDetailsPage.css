@@ -1,18 +1,23 @@
-/* src/pages/ReservationDetailsPage.css */
+/* -------------------------------------- */
+/* ReservationDetailsPage.css (예약 상세 정보 입력 페이지) */
+/* -------------------------------------- */
 
 /* ==================================== */
 /* 1. 기본 레이아웃 및 페이지 스타일 */
 /* ==================================== */
 .reservationDetails-container {
+    /* 페이지 중앙 정렬 및 최대 너비 설정 */
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     background-color: #f8f9fa;
+    /* 뒤로가기 버튼 위치 기준점 */
     position: relative;
 }
 
 body {
+    /* 바디 기본 폰트 및 배경 설정 (주로 부모 컨테이너 스타일 재정의) */
     font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
     display: flex;
     flex-direction: column;
@@ -22,13 +27,14 @@ body {
 }
 
 h1 {
+    /* 페이지 제목 스타일 */
     color: #007bff;
     margin-bottom: 30px;
     font-size: 2.2em;
     text-align: center;
 }
 
-/* 뒤로 가기 버튼 컨테이너 */
+/* 뒤로 가기 버튼 컨테이너 위치 지정 */
 .absolute {
     position: absolute;
 }
@@ -45,10 +51,12 @@ h1 {
 /* 2. 예약 확인 섹션 (.summary-box) */
 /* ------------------------------------ */
 .summary-box {
+    /* 선택된 예약 정보 요약 박스 */
     width: 80%;
     max-width: 800px;
     padding: 25px;
     margin: 0 auto 40px;
+    /* 배경 및 테두리 (옅은 파란색 계열) */
     background-color: #e9f7ff;
     border: 1px solid #cce5ff;
     border-radius: 10px;
@@ -56,6 +64,7 @@ h1 {
 }
 
 .summary-box h2 {
+    /* 요약 박스 제목 스타일 */
     color: #007bff;
     border-bottom: 2px solid #007bff;
     padding-bottom: 10px;
@@ -65,12 +74,14 @@ h1 {
 }
 
 .summary-item {
+    /* 개별 요약 항목 */
     font-size: 1.1em;
     margin-bottom: 10px;
     line-height: 1.5;
 }
 
 .summary-item strong {
+    /* 항목 라벨 (예: 장소:, 시간:) 고정 너비 */
     display: inline-block;
     width: 120px;
     color: #333;
@@ -81,6 +92,7 @@ h1 {
 /* 3. 입력 폼 섹션 (.input-form) */
 /* ------------------------------------ */
 .input-form {
+    /* 상세 정보 입력 폼 박스 */
     width: 80%;
     max-width: 800px;
     padding: 30px;
@@ -91,12 +103,14 @@ h1 {
 }
 
 .form-group {
+    /* 개별 폼 그룹 (라벨 + 입력 필드) */
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
 }
 
 .form-group label {
+    /* 라벨 스타일 */
     font-weight: bold;
     color: #495057;
     margin-bottom: 8px;
@@ -104,6 +118,7 @@ h1 {
 
 .form-group input:not([type="radio"]),
 .form-group select {
+    /* 입력 필드 및 선택 박스 스타일 */
     padding: 10px 15px;
     border: 1px solid #ced4da;
     border-radius: 5px;
@@ -113,12 +128,14 @@ h1 {
 
 .form-group input:focus,
 .form-group select:focus {
+    /* 포커스 시 스타일 */
     border-color: #007bff;
     outline: none;
 }
 
 /* 라디오 버튼 그룹 */
 .radio-group {
+    /* 라디오 버튼을 가로로 배열 */
     display: flex;
     gap: 20px;
     margin-top: 5px;
@@ -130,11 +147,13 @@ h1 {
 
 /* 폼 제출 버튼 스타일 */
 .submit-button {
+    /* 최종 예약 확정 및 제출 버튼 (주요 액션) */
     padding: 15px 40px;
     font-size: 1.2em;
     font-weight: bold;
     color: white;
     background-color: #28a745;
+    /* 초록색 */
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -143,20 +162,19 @@ h1 {
     width: 100%;
 }
 
-/* 🚀 추가된 버튼 스타일 (.placeholder-button) */
+/* 추가된 버튼 스타일 (.placeholder-button) */
 .placeholder-button {
+    /* 임시/보조 액션 버튼 (주황색 계열) */
     padding: 15px 40px;
     font-size: 1.2em;
     font-weight: bold;
     color: white;
     background-color: #ffc107;
-    /* 주황색 계열 */
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s;
     margin-top: 10px;
-    /* 최종 제출 버튼과의 간격 조정 */
     margin-bottom: 10px;
     width: 100%;
 }
@@ -172,12 +190,14 @@ h1 {
 /* 4. 모달 공통 스타일 */
 /* ==================================== */
 .modal {
+    /* 전체 화면 오버레이 */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    /* 내용을 화면 중앙에 배치 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -185,17 +205,18 @@ h1 {
 }
 
 .modal-content {
+    /* 모달 내부 컨테이너 */
     background-color: white;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
     overflow: hidden;
-    /* 내부 스크롤을 위해 컨테이너는 숨김 */
 }
 
 /* 모달 닫기 버튼 (모달 내) */
 .close-button {
+    /* 모달 하단의 확인/닫기 버튼 */
     width: 100%;
     padding: 10px;
     background-color: #1890ff;
@@ -218,6 +239,7 @@ h1 {
 /* ==================================== */
 
 .modal-content h2 {
+    /* 모달 제목 스타일 (경고/필수 확인 강조) */
     color: #dc3545;
     border-bottom: 2px solid #dc3545;
     padding-bottom: 10px;
@@ -225,25 +247,28 @@ h1 {
 }
 
 .rules-list {
+    /* 규칙 목록 영역: 최대 높이 제한 및 스크롤 */
     max-height: 400px;
     overflow-y: auto;
     padding-right: 15px;
 }
 
 .rule-item {
+    /* 개별 규칙 항목 */
     margin-bottom: 15px;
 }
 
 .rule-item label {
+    /* 체크박스 라벨 텍스트 정렬 */
     display: flex;
     align-items: flex-start;
     font-size: 1em;
 }
 
-/* 💡 문구 클릭 가능 스타일 (첫 번째 항목) */
+/* 문구 클릭 가능 스타일 (첫 번째 항목) */
 .rules-list .rule-item:first-child {
-    cursor: pointer;
     /* 전체 영역에 포인터 커서 */
+    cursor: pointer;
     user-select: none;
 }
 
@@ -252,10 +277,9 @@ h1 {
 }
 
 .rules-list .rule-item:first-child label span {
+    /* 텍스트 부분에 포인터 커서 및 밑줄로 클릭 가능 강조 */
     cursor: pointer;
-    /* 텍스트 부분에 포인터 커서를 명시적으로 적용 */
     text-decoration: underline;
-    /* 밑줄로 클릭 가능 강조 */
     text-underline-offset: 3px;
     text-decoration-color: #007bff;
 }
@@ -266,6 +290,7 @@ h1 {
 
 
 .rule-item input[type="checkbox"] {
+    /* 체크박스 크기 및 위치 조정 */
     margin-top: 5px;
     margin-right: 10px;
     transform: scale(1.5);
@@ -276,6 +301,7 @@ h1 {
 }
 
 .rule-item ul {
+    /* 중첩 리스트 스타일 */
     margin-top: 5px;
     padding-left: 30px;
     font-size: 0.9em;
@@ -283,23 +309,27 @@ h1 {
 }
 
 .contact-info {
+    /* 문의처 정보 영역 */
     margin: 20px 0;
     border-color: #eee;
 }
 
 .contact-info p:first-child {
+    /* 문의처 제목 (강조) */
     font-size: 0.9em;
     color: #dc3545;
     font-weight: bold;
 }
 
 .contact-info p:last-child {
+    /* 상세 문의처 정보 */
     font-size: 0.85em;
     color: #888;
     margin: 5px 0;
 }
 
 .final-submit-button {
+    /* 모달 내 최종 확정 버튼 */
     margin-top: 20px;
     padding: 12px 30px;
     font-size: 1.1em;
@@ -313,11 +343,13 @@ h1 {
 }
 
 .final-submit-button:disabled {
+    /* 비활성화 상태 (덜 밝은 초록색) */
     background-color: #90ee90;
     cursor: not-allowed;
 }
 
 #check-alert {
+    /* 미체크 경고 메시지 */
     color: #dc3545;
     text-align: center;
     margin-top: 10px;
@@ -328,6 +360,7 @@ h1 {
 /* 7. 장소별 이용 안내 모달 스타일 (.rules-modal) */
 /* ==================================== */
 .rules-modal .modal-content {
+    /* 안내 모달 최대 크기 및 스크롤 설정 */
     max-width: 90vw;
     width: 800px;
     max-height: 90vh;
@@ -335,6 +368,7 @@ h1 {
 }
 
 .guide-modal-content h2 {
+    /* 안내 모달 제목 */
     text-align: center;
     margin-top: 0;
     margin-bottom: 20px;
@@ -343,6 +377,7 @@ h1 {
 }
 
 .guide-content-body {
+    /* 안내 내용 본문 영역: 스크롤 가능 */
     max-height: 70vh;
     overflow-y: auto;
     overflow-x: auto;
@@ -353,6 +388,7 @@ h1 {
 
 /* HWP 스타일 제거 후 새로 정의된 테이블 스타일 */
 .guide-content-body table.guide-table {
+    /* 테이블 너비 및 최소 너비 설정 */
     width: 100% !important;
     min-width: 760px;
     border-collapse: collapse;
@@ -363,6 +399,7 @@ h1 {
 
 .guide-content-body td,
 .guide-content-body th {
+    /* 테이블 셀 테두리 및 패딩 */
     border: 1px solid #000;
     padding: 8px 10px;
     vertical-align: top;
@@ -405,6 +442,7 @@ h1 {
 }
 
 .guide-content-body .guide-note {
+    /* 테이블 하단 안내/주의 사항 */
     font-size: 0.9em;
     color: #666;
     margin-top: 10px;
