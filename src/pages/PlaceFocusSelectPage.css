@@ -1,7 +1,10 @@
-/* PlaceFocusSelectPage.css (직관성 개선 버전) */
-
-/* ⭐️ TimeFocusSelectPage.css와 동일한 스타일 적용 */
-.reservation-combined-container {
+/*
+========================================
+ ⭐️ 1. 캘린더 페이지 레이아웃 (공통) ⭐️
+========================================
+*/
+.reservation-combined-container,
+.calendar-page-container {
     padding: 3rem 2rem;
     max-width: 1400px;
     margin: 0 auto;
@@ -12,8 +15,9 @@
     box-sizing: border-box;
 }
 
-/* --- 1. 헤더 및 뒤로가기 (이전과 동일) --- */
-.back-btn {
+/* 뒤로가기 버튼 (공통) */
+.back-btn,
+.back-button {
     position: absolute;
     top: 1.5rem;
     left: 1.5rem;
@@ -32,13 +36,16 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
 }
-.back-btn:hover {
+.back-btn:hover,
+.back-button:hover {
     background-color: #ffffff;
-    transform: translateY(-2px);
+    transform: translateY(-px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
+
+/* 페이지 제목 (공통) */
 .page-title {
-    color: #004B8D; /* 인하대 메인 색상 */
+    color: #004B8D;
     text-align: center;
     margin-bottom: 0.75rem;
     font-size: 2.25rem;
@@ -52,7 +59,7 @@
     margin-bottom: 3rem;
 }
 
-/* --- 2. 메인 레이아웃 (2단) (이전과 동일) --- */
+/* PlaceFocusSelectPage 2단 레이아웃 */
 .selection-area-wrapper {
     display: flex;
     gap: 2.5rem;
@@ -67,7 +74,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 .room-list-box {
-    flex: 0 0 380px; /* 너비 고정 */
+    flex: 0 0 380px;
     max-height: 85vh;
     overflow-y: auto;
 }
@@ -87,7 +94,290 @@
     gap: 0.75rem;
 }
 
-/* --- 3. 장소 목록 (트리 뷰) (이전과 동일) --- */
+
+/* MonthlyCalendarPage 중앙 레이아웃 */
+.main-page-calendar-wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 3rem;
+    background: #ffffff;
+    position: relative;
+}
+.main-calendar-title {
+    color: #004B8D;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 1rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+    justify-content: center;
+}
+.main-calendar-controls { margin-bottom: 1.5rem; }
+.main-calendar-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f8f9fa;
+    font-weight: 500;
+    cursor: pointer;
+}
+.calendar-error-text {
+    color: #dc3545;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+.calendar-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    color: #004B8D;
+    border-radius: 16px;
+    font-size: 1.2rem;
+}
+
+/*
+========================================
+ ⭐️ 2. 캘린더 컨트롤 (공통) ⭐️
+========================================
+*/
+/* ⭐️ [신규] 뷰 토글 버튼 */
+.view-toggle-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #004B8D;
+    background-color: #e6f0f8;
+    border: 1px solid #b3d1ea;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+}
+.view-toggle-button:hover {
+    background-color: #d1e3f5;
+}
+.view-toggle-button svg {
+    transition: transform 0.3s ease;
+}
+.view-toggle-button.is-flipped svg {
+    transform: rotate(180deg);
+}
+
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+}
+.calendar-header button {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+.calendar-header button:hover { background-color: #e0e0e0; }
+.calendar-header button:disabled {
+    background-color: #f9f9f9;
+    color: #bbb;
+    cursor: not-allowed;
+}
+.calendar-header-day {
+    font-weight: 600;
+    padding: 0.5rem 0;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+
+/*
+========================================
+ ⭐️ 3. ⭐️ 3D 카드 뒤집기 (신규/핵심) ⭐️
+========================================
+*/
+
+/* 1. 3D 공간 설정 */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    text-align: center;
+    /* ⭐️ 3D 원근감 부여 */
+    perspective: 1000px;
+}
+
+/* 2. 셀의 높이를 고정할 컨테이너 (기존 .day-cell을 대체) */
+.day-cell-container {
+    min-height: 70px; /* ⭐️ 높이 살짝 늘림 */
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+/* 3. 실제로 뒤집어질 내부 래퍼 */
+.day-cell-flipper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+/* 4. 컨테이너에 .is-flipped 클래스가 붙으면 180도 회전 */
+.day-cell-container.is-flipped .day-cell-flipper {
+    transform: rotateY(180deg);
+}
+
+/* 5. 카드 앞면 / 뒷면 공통 스타일 */
+.cell-front,
+.cell-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* 뒷면 숨기기 */
+    
+    /* ⭐️ 기존 .day-cell의 스타일을 여기로 이동 ⭐️ */
+    padding: 0.75rem 0.25rem;
+    border: 1px solid #f1f1f1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+}
+
+/* 6. 카드 앞면 (기존 .day-cell 스타일) */
+.cell-front {
+    /* ⭐️ 기존 .day-cell의 모든 상태 클래스를 .cell-front가 받음 */
+}
+.cell-front .date-number {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+.cell-front .availability-status {
+    font-size: 0.75rem;
+}
+
+/* 7. 카드 뒷면 (시간대별 뷰) */
+.cell-back {
+    transform: rotateY(180deg);
+    background-color: #f0f3f5;
+    color: #333;
+    padding: 0; /* 내부 블록으로 채움 */
+    justify-content: stretch; /* 꽉 차게 */
+    overflow: hidden; /* 둥근 모서리 적용 */
+}
+
+.period-block {
+    flex: 1; /* 1:1:1 비율 */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+}
+.period-block:last-child {
+    border-bottom: none;
+}
+
+/* 시간대별 상태 색상 */
+.period-block.available { background-color: #dcfce7; color: #15803d; }
+.period-block.partial   { background-color: #fef9c3; color: #a16207; }
+.period-block.booked    { background-color: #fef2f2; color: #b91c1c; }
+.period-block.past      { background-color: #f1f1f1; color: #aaa; }
+.period-block.loading   { background-color: #f8f9fa; color: #ccc; }
+
+
+/*
+========================================
+ ⭐️ 4. 캘린더 셀 상태 (앞면) (기존) ⭐️
+========================================
+*/
+.cell-front.available {
+    background-color: #f0f9f0; /* 연한 초록 */
+    color: #15803d; /* 진한 초록 */
+}
+
+/* --- ⭐️ (수정) Heat Map 색상 적용 ⭐️ --- */
+.cell-front.partial.partial-low {
+    background-color: #fefce8; /* 연한 노랑 */
+    color: #a16207;
+}
+.cell-front.partial.partial-mid {
+    background-color: #fef08a; /* 중간 노랑 */
+    color: #854d0e;
+}
+.cell-front.partial.partial-high {
+    background-color: #fbbf24; /* 진한 노랑 (주황) */
+    color: #713f12;
+}
+
+.cell-front.booked {
+    background-color: #fef2f2; /* 연한 빨강 */
+    color: #b91c1c; /* 진한 빨강 */
+    cursor: default;
+}
+.cell-front.past-date {
+    background-color: #f1f1f1; /* 회색 */
+    color: #aaa;
+    cursor: default;
+}
+/* 호버 효과 */
+.cell-front.available:not(.past-date):not(.selected-date):hover {
+    background-color: #dcfce7; /* 더 진한 초록 */
+    border-color: #15803d;
+}
+.cell-front.partial:not(.selected-date):not(.past-date):hover {
+    filter: brightness(95%);
+    border-color: #a16207;
+}
+
+/* 선택된 날짜 */
+.cell-front.selected-date {
+    border: 2px solid #004B8D;
+    box-shadow: 0 0 0 2px rgba(0, 75, 141, 0.3);
+    font-weight: 700;
+}
+.cell-front.selected-date .date-number,
+.cell-front.selected-date .availability-status {
+    color: #004B8D;
+}
+
+
+/*
+========================================
+ ⭐️ 5. PlaceFocusSelectPage (좌측/하단) ⭐️
+========================================
+*/
+/* --- 3. 장소 목록 (트리 뷰) --- */
 .instruction-text-small {
     font-size: 0.9rem;
     color: #666;
@@ -160,123 +450,7 @@
     color: #343a40;
 }
 
-/* --- 4. 달력 (이전과 동일) --- */
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #333;
-}
-.calendar-header button {
-    padding: 0.4rem 0.8rem;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
-    cursor: pointer;
-    border-radius: 5px;
-    font-weight: 600;
-    transition: background-color 0.2s;
-}
-.calendar-header button:hover {
-    background-color: #e0e0e0;
-}
-.calendar-header button:disabled {
-    background-color: #f9f9f9;
-    color: #bbb;
-    cursor: not-allowed;
-}
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-    text-align: center;
-}
-.calendar-header-day {
-    font-weight: 600;
-    padding: 0.5rem 0;
-    color: #555;
-    font-size: 0.9rem;
-}
-
-/* --- (수정) 달력 셀 --- */
-.calendar-grid>.day-cell {
-    padding: 0.75rem 0.25rem;
-    border: 1px solid #f1f1f1;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    min-height: 60px;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    /* 기본 배경색 (available) */
-    background-color: #f0f9f0; 
-    color: #15803d;
-}
-
-.day-cell .date-number {
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 0.25rem;
-}
-.day-cell .availability-status {
-    font-size: 0.75rem;
-}
-
-/* (수정) 3가지 상태에 대한 명확한 배경색 및 텍스트 색상 */
-.day-cell.available {
-    background-color: #f0f9f0; /* 연한 초록 */
-    color: #15803d; /* 진한 초록 */
-}
-.day-cell.partial {
-    background-color: #fefce8; /* 연한 노랑 */
-    color: #a16207; /* 진한 노랑/갈색 */
-}
-.day-cell.partial .availability-status {
-    font-weight: 600; /* 퍼센트 강조 */
-}
-
-.day-cell.booked {
-    background-color: #fef2f2; /* 연한 빨강 */
-    color: #b91c1c; /* 진한 빨강 */
-    cursor: default;
-}
-
-.day-cell.past-date {
-    background-color: #f1f1f1; /* 회색 */
-    color: #aaa;
-    cursor: default;
-}
-
-/* (수정) 호버 효과 */
-.day-cell.available:not(.selected-date):not(.past-date):hover {
-    background-color: #dcfce7; /* 더 진한 초록 */
-    border-color: #15803d;
-}
-.day-cell.partial:not(.selected-date):not(.past-date):hover {
-    background-color: #fef9c3; /* 더 진한 노랑 */
-    border-color: #a16207;
-}
-
-
-/* (수정) 선택된 날짜 */
-.day-cell.selected-date {
-    border: 2px solid #004B8D;
-    box-shadow: 0 0 0 2px rgba(0, 75, 141, 0.3);
-    font-weight: 700;
-}
-/* 선택 시 텍스트 색상은 인하대 파란색으로 통일 */
-.day-cell.selected-date .date-number,
-.day-cell.selected-date .availability-status {
-    color: #004B8D;
-}
-
-
-/* --- 5. 시간 선택 (드롭다운) (이전과 동일) --- */
+/* --- 5. 시간 선택 (드롭다운) --- */
 .time-selection-container {
     margin-top: 2rem;
     padding: 1.5rem;
@@ -356,7 +530,7 @@
     cursor: not-allowed;
 }
 
-/* --- 6. 기타 (이전과 동일) --- */
+/* --- 6. 기타 --- */
 .booked-times-summary {
     margin-top: 2rem;
     padding: 1rem;
@@ -395,4 +569,26 @@
     margin-top: 1rem;
     font-weight: 500;
     font-size: 1.05rem;
+}
+
+/* --- ⭐️ (신규) 툴팁 스타일 ⭐️ --- */
+.calendar-tooltip {
+    position: fixed;
+    z-index: 1000;
+    padding: 10px 15px;
+    background-color: #333;
+    color: white;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    white-space: pre-wrap;
+    max-width: 250px;
+    line-height: 1.6;
+    transform: translate(10px, 10px);
+}
+
+.calendar-tooltip .tooltip-loading {
+    color: #999;
 }

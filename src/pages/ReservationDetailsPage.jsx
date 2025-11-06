@@ -225,7 +225,7 @@ const RulesModal = ({ isOpen, onClose, htmlContent }) => {
 };
 // ------------------------------------
 
-// ⭐️ 1. [재예약] 컴포넌트 외부에 localStorage 데이터를 읽어오는 함수 정의
+// ⭐️ [수정] 1. [재예약] 데이터를 읽어오는 함수 (컴포넌트 외부 유지)
 const getRebookingData = () => {
     const data = localStorage.getItem('rebookingData');
     if (!data) {
@@ -242,8 +242,8 @@ const getRebookingData = () => {
     }
 };
 
-// ⭐️ 2. [재예약] 컴포넌트 로드 시 1회만 실행
-const rebookingData = getRebookingData();
+// ⭐️ [수정] 2. [재예약] 컴포넌트 로드 시 1회만 실행하던 변수 선언 (삭제)
+// const rebookingData = getRebookingData(); (삭제)
 // ------------------------------------
 
 
@@ -256,16 +256,20 @@ const ReservationDetailsPage = ({ onNavigate }) => {
     const [showCheckAlert, setShowCheckAlert] = useState(false);
     const [prevPage, setPrevPage] = useState('reservationFormSelectPage');
 
-    // ⭐️ 3. [재예약] 폼 데이터 상태 초기값에 rebookingData 적용
-    const [formData, setFormData] = useState({
-        organizationType: rebookingData?.organizationType || '',
-        organizationName: rebookingData?.organizationName || '',
-        phone: rebookingData?.phone || '',
-        email: rebookingData?.email || '',
-        eventName: rebookingData?.eventName || '',
-        numPeople: rebookingData?.numPeople || 1,
-        acUse: rebookingData?.acUse || 'yes',
-        rulesChecked: [false, false, false, false, false] // 체크박스는 항상 false로 시작
+    // ⭐️ [수정] 3. [재예약] 폼 데이터 상태 초기화 시 함수를 사용
+    const [formData, setFormData] = useState(() => {
+        // ⭐️ 이 함수는 컴포넌트 마운트 시 1회만 실행됨
+        const rebookingData = getRebookingData(); 
+        return {
+            organizationType: rebookingData?.organizationType || '',
+            organizationName: rebookingData?.organizationName || '',
+            phone: rebookingData?.phone || '',
+            email: rebookingData?.email || '',
+            eventName: rebookingData?.eventName || '',
+            numPeople: rebookingData?.numPeople || 1,
+            acUse: rebookingData?.acUse || 'yes',
+            rulesChecked: [false, false, false, false, false] // 체크박스는 항상 false로 시작
+        };
     });
 
 
@@ -403,8 +407,8 @@ const ReservationDetailsPage = ({ onNavigate }) => {
 
             localStorage.removeItem('tempBookingData');
             localStorage.removeItem(LAST_PAGE_KEY);
-            // ⭐️ 4. [재예약] 재예약 데이터도 확실히 삭제
-            localStorage.removeItem('rebookingData');
+            // ⭐️ 4. [재예약] 재예약 데이터는 getRebookingData에서 이미 삭제되었음
+            // localStorage.removeItem('rebookingData'); (불필요)
 
             alert(`🎉 ${formData.organizationName}님의 예약이 접수되었습니다! (상태: 확정대기)`);
             onNavigate('main');
@@ -468,7 +472,7 @@ const ReservationDetailsPage = ({ onNavigate }) => {
                 </div>
             </div>
 
-            {/* ⭐️ 폼은 rebookingData에 의해 자동으로 채워짐 */}
+            {/* ⭐️ 폼은 [수정]된 useState 로직에 의해 자동으로 채워짐 */}
             <form className="input-form" onSubmit={handleOpenModal}>
 
                 <div className="form-group">
